@@ -2,13 +2,15 @@
 
 import { useState } from 'react';
 import { EPage } from '../common';
-import { Landing } from '../components';
+import { CreateAccount, Landing } from '../components';
 
 export default function Home() {
-  const [page, setPage] = useState<EPage>(EPage.Landing);
+  const [page, setPage] = useState<EPage>(EPage.CreateAccount);
 
   const renderPage = (): JSX.Element => {
     switch (page) {
+      case EPage.CreateAccount:
+        return <CreateAccount onPageChange={setPage} />;
       case EPage.Landing:
       default:
         return <Landing onPageChange={setPage} />;
