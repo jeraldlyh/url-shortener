@@ -1,4 +1,5 @@
 import { EPage, IPageProps } from '../common';
+import { Container } from './Container';
 
 interface IProps extends IPageProps {}
 
@@ -12,7 +13,7 @@ export const Landing = ({ onPageChange }: IProps) => {
   };
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center space-y-5">
+    <Container styles="space-y-5">
       <div className="flex flex-col items-center font-bold uppercase tracking-widest text-custom-white">
         <span className="text-6xl">Tiny URLs</span>
         <span className="text-9xl">Big Impact</span>
@@ -31,6 +32,6 @@ export const Landing = ({ onPageChange }: IProps) => {
           Continue
         </button>
       </div>
-    </div>
+    </Container>
   );
 };
