@@ -6,6 +6,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import {
@@ -17,8 +18,8 @@ import {
   AiOutlineRight,
 } from 'react-icons/ai';
 import { TiTickOutline } from 'react-icons/ti';
-import { BASE_URL, Container, IUrl } from '../common';
-import { UrlService } from '../services';
+import { BASE_URL, CLIENT_ROUTES, Container, IUrl } from '../common';
+import { AuthService, UrlService } from '../services';
 import { CreateUrlModal } from './CreateUrlModal';
 import { NavBar } from './NavBar';
 
@@ -37,6 +38,7 @@ export const Dashboard = () => {
     isOpen: false,
     type: '',
   });
+  const router = useRouter();
 
   useEffect(() => {
     fetchUrls();
@@ -125,8 +127,9 @@ export const Dashboard = () => {
     setToggleModal({ isOpen: false });
   };
 
-  const handleLogout = (): void => {
-    console.log('logout');
+  const handleLogout = async (): Promise<void> => {
+    await AuthService.logout();
+    router.push(CLIENT_ROUTES.HOME);
   };
 
   const handleToggleCreate = (): void => {

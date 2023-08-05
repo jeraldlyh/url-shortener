@@ -20,4 +20,9 @@ export const SERVER_ROUTES = {
     CREATE: '/url',
     GET_ALL: '/url',
   },
+  AUTH: {
+    LOGOUT: "/auth/logout",
+    LOGIN: "/auth/login",
+    SIGNUP: "/auth/signUp",
+  }
 };
