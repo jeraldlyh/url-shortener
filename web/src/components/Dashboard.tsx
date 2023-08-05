@@ -6,17 +6,18 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { QRCodeSVG } from 'qrcode.react';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
+  AiFillCopy,
   AiFillDelete,
-  AiFillPauseCircle,
+  AiFillEdit,
+  AiFillPlusCircle,
   AiOutlineLeft,
   AiOutlineRight,
 } from 'react-icons/ai';
-import { LuLogOut } from 'react-icons/lu';
-import { IPageProps, IUrl } from '../common';
-import { Container } from './Container';
+import { Container, IPageProps, IUrl } from '../common';
+import { CreateUrlModal } from './CreateUrlModal';
+import { NavBar } from './NavBar';
 
 interface IProps extends IPageProps {}
 
@@ -24,21 +25,35 @@ const getData = (): IUrl[] => [
   ...Array(30)
     .fill(0)
     .map((x, index) => ({
-      index,
       url: 'http://google.com',
       alias: 'asd',
-      created: 'asd',
+      created: new Date().toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        minute: 'numeric',
+        hour: 'numeric',
+      }),
     })),
 ];
 const data = getData();
 
+interface IToggleModal {
+  isOpen: boolean;
+  type?: 'Create' | '';
+}
+
 export const Dashboard = ({}: IProps) => {
+  /* -------------------------------------------------------------------------- */
+  /*                                   STATES                                   */
+  /* -------------------------------------------------------------------------- */
+  const [toggleModal, setToggleModal] = useState<IToggleModal>({
+    isOpen: false,
+    type: '',
+  });
+
   const columns = useMemo<ColumnDef<IUrl>[]>(
     () => [
-      {
-        header: '',
-        accessorKey: 'index',
-      },
       {
         header: 'Alias',
         cell: (info) => info.getValue(),
@@ -49,29 +64,32 @@ export const Dashboard = ({}: IProps) => {
         cell: (info) => {
           const value = info.getValue<string>();
           return (
-            <a className="hover:text-custom-gold" href={value}>
-              {value}
-            </a>
+            <div className="flex items-center space-x-2">
+              <AiFillCopy className="cursor-pointer text-lg hover:text-custom-gold-primary" />
+              <a
+                className="text-ellipsis text-custom-gold-primary"
+                href={value}
+              >
+                {value}
+              </a>
+            </div>
           );
         },
         accessorKey: 'url',
       },
       {
-        header: 'QR',
-        cell: (info) => (
-          <QRCodeSVG
-            className="h-10 w-10"
-            value={info.row.original.url}
-            level="M"
-            // imageSettings={{ excavate: true }}
-          />
-        ),
-        accessorKey: 'qr',
-      },
-      {
         header: 'Created',
         cell: (info) => info.getValue(),
         accessorKey: 'created',
+      },
+      {
+        header: 'Actions',
+        cell: () => (
+          <div className="flex space-x-3">
+            <AiFillEdit className="cursor-pointer text-lg hover:text-custom-gold-primary" />
+            <AiFillDelete className="cursor-pointer text-lg hover:text-custom-gold-primary" />
+          </div>
+        ),
       },
     ],
     [],
@@ -85,8 +103,34 @@ export const Dashboard = ({}: IProps) => {
     getPaginationRowModel: getPaginationRowModel(),
   });
 
+  /* -------------------------------------------------------------------------- */
+  /*                              HANDLER FUNCTIONS                             */
+  /* -------------------------------------------------------------------------- */
+  const resetModal = (): void => {
+    setToggleModal({ isOpen: false });
+  };
+
   const handleLogout = (): Promise<void> => {
     console.log('logout');
+  };
+
+  const handleToggleCreate = (): void => {
+    setToggleModal({
+      isOpen: true,
+      type: 'Create',
+    });
+  };
+
+  /* -------------------------------------------------------------------------- */
+  /*                              RENDER FUNCTIONS                              */
+  /* -------------------------------------------------------------------------- */
+  const renderModal = (): JSX.Element | undefined => {
+    switch (toggleModal.type) {
+      case 'Create':
+        return (
+          <CreateUrlModal isOpen={toggleModal.isOpen} onClose={resetModal} />
+        );
+    }
   };
 
   const renderTableHeader = (): JSX.Element[] => {
@@ -96,12 +140,14 @@ export const Dashboard = ({}: IProps) => {
         className="border-b-[0.5px] border-gray-500"
       >
         {headerGroup.headers.map((header, index) => (
-          <th key={header.id || index} className="py-3 text-start">
+          <th
+            key={header.id || index}
+            className="py-3 text-start"
+            colSpan={header.colSpan}
+          >
             {flexRender(header.column.columnDef.header, header.getContext())}
           </th>
         ))}
-        <th />
-        <th />
       </tr>
     ));
   };
@@ -110,19 +156,10 @@ export const Dashboard = ({}: IProps) => {
     return table.getRowModel().rows.map((row) => (
       <tr key={row.id} className="border-b-[0.5px] border-gray-500">
         {row.getVisibleCells().map((cell) => (
-          <td
-            key={cell.id}
-            className="min-w-[10px] max-w-[100px] text-ellipsis py-3"
-          >
+          <td key={cell.id} className="text-ellipsis py-4">
             {flexRender(cell.column.columnDef.cell, cell.getContext())}
           </td>
         ))}
-        <td className="w-10">
-          <AiFillPauseCircle className="cursor-pointer text-lg hover:text-custom-gold" />
-        </td>
-        <td className="w-10">
-          <AiFillDelete className="cursor-pointer text-lg hover:text-custom-gold" />
-        </td>
       </tr>
     ));
   };
@@ -153,11 +190,18 @@ export const Dashboard = ({}: IProps) => {
 
   return (
     <Container styles="py-16 space-y-5">
-      <div className="flex w-full justify-between rounded-2xl bg-custom-gray-primary px-10 py-5 text-custom-white">
-        <div className="font-bold">LinkNow</div>
-        <LuLogOut onClick={handleLogout} className="cursor-pointer text-xl" />
-      </div>
+      {renderModal()}
+      <NavBar onLogout={handleLogout} />
       <div className="flex max-h-full w-full flex-col items-center rounded-2xl bg-custom-gray-primary px-10 py-5">
+        <div className="mb-5 flex w-full items-center justify-between self-start text-2xl">
+          <span className="font-bold">Shorted URLs Dashboard</span>
+          <button
+            className="hover:text-custom-gold-primary"
+            onClick={handleToggleCreate}
+          >
+            <AiFillPlusCircle />
+          </button>
+        </div>
         <table className="w-full overflow-y-scroll">
           <thead>{renderTableHeader()}</thead>
           <tbody>{renderTableBody()}</tbody>

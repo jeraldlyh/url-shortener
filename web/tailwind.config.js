@@ -17,7 +17,15 @@ module.exports = {
                         secondary: "#BDBDBD"
                     },
                     white: "#F6F6F6",
-                    gold: "#FFCB74"
+                    gold: {
+                        primary: "#FFCB74",
+                        secondary: "#FFC35E"
+                    },
+                    qr: {
+                        primary: "#FFCB74",
+                        secondary: "#2F2F2F",
+                        tertiary: "#D8D9DA"
+                    }
                 }
             }
         },

@@ -1,8 +1,7 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import icon from '../../public/icon.png';
-import { IPageProps } from '../common';
-import { Container } from './Container';
+import { Container, IPageProps } from '../common';
 // import {AiFillEyeInvisible, AiFillEye} from "react-icons/ai"
 
 interface IProps extends IPageProps {}
@@ -48,7 +47,7 @@ export const CreateAccount = ({ onPageChange }: IProps) => {
         </button>
         <div className="text-sm">
           <span>Already have an account? </span>
-          <span className="text-custom-gold">Sign in</span>
+          <span className="text-custom-gold-primary">Sign in</span>
         </div>
       </div>
     </Container>

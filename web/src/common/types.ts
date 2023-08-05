@@ -12,8 +12,18 @@ export interface IPageProps {
 }
 
 export interface IUrl {
-  index: number;
   alias: string;
   url: string;
   created: string;
+}
+
+export interface ICreateUrl {
+  title?: string;
+  url: string;
+  qrFgColor?: string;
+}
+
+export interface IModalCallbacks {
+  onConfirm?: () => void;
+  onClose?: () => void;
 }
