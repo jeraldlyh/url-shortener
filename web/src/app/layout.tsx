@@ -25,11 +25,7 @@ export default function RootLayout({
         }}
       />
       <body>
-        <AuthProvider>
-          <div className="flex h-screen w-screen justify-center">
-            {children}
-          </div>
-        </AuthProvider>
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );
