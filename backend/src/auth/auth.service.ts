@@ -11,6 +11,10 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
+  async createAccount(account: Account): Promise<void> {
+    await this.accountService.createAccount(account);
+  }
+
   async validateUser(account: Account): Promise<string> {
     const { username, password } = account;
     const user = await this.accountService.getAccount(username);

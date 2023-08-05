@@ -38,7 +38,7 @@ export class UrlRepository {
       .where('urls', 'array-contains', { redirectHash })
       .get();
 
-    return result.empty;
+    return !result.empty;
   }
 
   async createUrl(username: string, url: Url): Promise<void> {

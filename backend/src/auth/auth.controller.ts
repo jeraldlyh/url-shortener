@@ -6,11 +6,16 @@ import { AuthService } from './auth.service';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Post('/create')
+  async createAccount(@Body() account: Account): Promise<void> {
+    return await this.authService.createAccount(account);
+  }
+
   @Post('/login')
   async login(
     @Body() account: Account,
     @Response({ passthrough: true }) response: IResponse,
-  ) {
+  ): Promise<void> {
     const token = await this.authService.validateUser(account);
 
     response.cookie('accessToken', token, { httpOnly: true });
