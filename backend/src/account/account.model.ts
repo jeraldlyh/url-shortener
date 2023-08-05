@@ -60,10 +60,10 @@ export const AccountConverter = {
             meta.title,
             meta.qrFgColor,
             meta.redirectHash,
-            meta.createdAt,
+            meta.createdAt.toDate(),
           ),
       ),
-      data.createdAt,
+      data.createdAt.toDate(),
     );
   },
 };
