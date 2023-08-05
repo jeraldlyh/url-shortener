@@ -5,7 +5,7 @@ import { EPage } from '../common';
 import { CreateAccount, Dashboard, Landing } from '../components';
 
 export default function Home() {
-  const [page, setPage] = useState<EPage>(EPage.Dashboard);
+  const [page, setPage] = useState<EPage>(EPage.Landing);
 
   const renderPage = (): JSX.Element => {
     switch (page) {
