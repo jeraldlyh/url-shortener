@@ -8,6 +8,7 @@ interface IAuthContext {
   signIn: (username: string, password: string) => void;
   signUp: (username: string, password: string) => void;
   signOut: () => void;
+  isLoading: boolean;
 }
 
 interface IAuthProvider {
@@ -19,6 +20,7 @@ const AuthContext = createContext<IAuthContext>({
   signIn: () => {},
   signUp: () => {},
   signOut: () => {},
+  isLoading: true,
 });
 
 const useAuthContext = () => useContext(AuthContext);
@@ -26,7 +28,23 @@ const useAuthContext = () => useContext(AuthContext);
 const AuthProvider = ({ children }: IAuthProvider) => {
   const auth = useAuth();
 
-  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
+  const { isLoading } = useAuth();
+
+  const renderChildren = (): React.ReactNode => {
+    console.log(isLoading);
+    if (isLoading) {
+      return (
+        <div className="flex h-screen w-screen items-center justify-center">
+          <div className="custom-loader" />
+        </div>
+      );
+    }
+    return children;
+  };
+
+  return (
+    <AuthContext.Provider value={auth}>{renderChildren()}</AuthContext.Provider>
+  );
 };
 
 export { AuthProvider, useAuthContext };

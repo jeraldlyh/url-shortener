@@ -24,6 +24,7 @@ export const SERVER_ROUTES = {
     SIGNOUT: '/auth/signOut',
     SIGNIN: '/auth/signIn',
     SIGNUP: '/auth/signUp',
+    VALIDATE: '/auth/validate',
   },
 };
 
@@ -32,3 +33,5 @@ export const WHITELISTED_ROUTES = new Set([
   CLIENT_ROUTES.SIGNUP,
   CLIENT_ROUTES.HOME,
 ]);
+
+export const DEFAULT_USER = { username: '' };

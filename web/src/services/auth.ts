@@ -19,12 +19,19 @@ const signIn = async (username: string, password: string): Promise<string> => {
   return result.data;
 };
 
-const signOut = async () => {
-  await AxiosService.post(SERVER_ROUTES.AUTH.SIGNOUT);
+const signOut = async (): Promise<void> => {
+  await AxiosService.post<void>(SERVER_ROUTES.AUTH.SIGNOUT);
+};
+
+const validateUserAuth = async (): Promise<boolean> => {
+  const result = await AxiosService.post<boolean>(SERVER_ROUTES.AUTH.VALIDATE);
+
+  return result.data;
 };
 
 export const AuthService = {
   signIn,
   signUp,
   signOut,
+  validateUserAuth,
 };

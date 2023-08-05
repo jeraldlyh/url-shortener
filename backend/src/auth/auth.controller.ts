@@ -1,8 +1,10 @@
 import { Body, Controller, Post, Response, UseGuards } from '@nestjs/common';
 import { Response as IResponse } from 'express';
 import { Account } from '../account/account.model';
+import { Auth } from './auth.decorator';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
+import { IAuth } from './auth.types';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -35,5 +37,12 @@ export class AuthController {
     @Response({ passthrough: true }) response: IResponse,
   ): Promise<void> {
     response.clearCookie('accessToken', { httpOnly: true });
+  }
+
+  @Post('/validate')
+  @UseGuards(AuthGuard)
+  async validate(@Auth() auth: IAuth): Promise<boolean> {
+    console.log(auth);
+    return await this.authService.validateToken(auth.token);
   }
 }

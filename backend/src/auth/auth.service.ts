@@ -27,4 +27,15 @@ export class AuthService {
 
     return await this.jwtService.signAsync({ username });
   }
+
+  async validateToken(token: string): Promise<boolean> {
+    try {
+      await this.jwtService.verifyAsync(token, {
+        secret: process.env.AUTH_SECRET,
+      });
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
 }

@@ -14,7 +14,7 @@ export const CreateAccount = () => {
   const [password, setPassword] = useState<string>('');
   const [hasVisibility, setHasVisibility] = useState<boolean>(false);
   const router = useRouter();
-  const { signIn } = useAuth();
+  const { signUp } = useAuth();
 
   /* -------------------------------------------------------------------------- */
   /*                              HANDLER FUNCTIONS                             */
@@ -24,7 +24,7 @@ export const CreateAccount = () => {
   };
 
   const handleOnSubmit = async (): Promise<void> => {
-    await signIn(username, password);
+    await signUp(username, password);
   };
 
   const handleGoToSignIn = (): void => {

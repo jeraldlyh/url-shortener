@@ -1,7 +1,12 @@
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { CLIENT_ROUTES, IUser, WHITELISTED_ROUTES } from '../common';
+import {
+  CLIENT_ROUTES,
+  DEFAULT_USER,
+  IUser,
+  WHITELISTED_ROUTES,
+} from '../common';
 import { AuthService } from '../services';
 import { Utils } from '../utils';
 
@@ -9,24 +14,42 @@ export const useAuth = () => {
   /* -------------------------------------------------------------------------- */
   /*                                   STATES                                   */
   /* -------------------------------------------------------------------------- */
-  const [user, setUser] = useState<IUser>({ username: '' });
+  const [user, setUser] = useState<IUser>(DEFAULT_USER);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!user.username && !WHITELISTED_ROUTES.has(pathname)) {
-      goToLanding();
-    }
+    validateIsUserLoggedIn();
   }, []);
 
   /* -------------------------------------------------------------------------- */
   /*                              HELPER FUNCTIONS                              */
   /* -------------------------------------------------------------------------- */
-  const goToLanding = () => {
+  const validateIsUserLoggedIn = async (): Promise<void> => {
+    const isPathAllowed = WHITELISTED_ROUTES.has(pathname);
+
+    if (!isPathAllowed) {
+      const isLoggedIn = await AuthService.validateUserAuth();
+
+      if (!isLoggedIn) {
+        resetUser();
+        goToLanding();
+      }
+    }
+
+    setIsLoading(false);
+  };
+
+  const resetUser = (): void => {
+    setUser(DEFAULT_USER);
+  };
+
+  const goToLanding = (): void => {
     router.push(CLIENT_ROUTES.HOME);
   };
 
-  const goToDashboard = () => {
+  const goToDashboard = (): void => {
     router.push(CLIENT_ROUTES.DASHBOARD);
   };
 
@@ -78,5 +101,5 @@ export const useAuth = () => {
     goToLanding();
   };
 
-  return { user, signIn, signUp, signOut };
+  return { user, signIn, signUp, signOut, isLoading };
 };
