@@ -8,28 +8,30 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/signUp')
-  async createAccount(
+  async signUp(
     @Body() account: Account,
     @Response({ passthrough: true }) response: IResponse,
-  ): Promise<void> {
+  ): Promise<string> {
     const token = await this.authService.createAccount(account);
 
     response.cookie('accessToken', token, { httpOnly: true });
+    return account.username;
   }
 
-  @Post('/login')
-  async login(
+  @Post('/signIn')
+  async signIn(
     @Body() account: Account,
     @Response({ passthrough: true }) response: IResponse,
-  ): Promise<void> {
+  ): Promise<string> {
     const token = await this.authService.validateUser(account);
 
     response.cookie('accessToken', token, { httpOnly: true });
+    return account.username;
   }
 
-  @Post('/logout')
+  @Post('/signOut')
   @UseGuards(AuthGuard)
-  async logout(
+  async signOut(
     @Response({ passthrough: true }) response: IResponse,
   ): Promise<void> {
     response.clearCookie('accessToken', { httpOnly: true });

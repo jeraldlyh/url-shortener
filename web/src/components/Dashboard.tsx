@@ -19,7 +19,8 @@ import {
 } from 'react-icons/ai';
 import { TiTickOutline } from 'react-icons/ti';
 import { BASE_URL, CLIENT_ROUTES, Container, IUrl } from '../common';
-import { AuthService, UrlService } from '../services';
+import { useAuth } from '../hooks';
+import { UrlService } from '../services';
 import { CreateUrlModal } from './CreateUrlModal';
 import { NavBar } from './NavBar';
 
@@ -39,6 +40,7 @@ export const Dashboard = () => {
     type: '',
   });
   const router = useRouter();
+  const { signOut } = useAuth();
 
   useEffect(() => {
     fetchUrls();
@@ -64,10 +66,10 @@ export const Dashboard = () => {
                 text={redirectUrl}
                 onCopy={() => handleCopyToClipboard(props.row.index, isCopied)}
               >
-                <label className="swap swap-rotate">
+                <label className="swap swap-rotate text-lg">
                   <input type="checkbox" />
-                  <AiFillCopy className="swap-on cursor-pointer text-lg hover:text-custom-gold-primary" />
-                  <TiTickOutline className="swap-off" />
+                  <AiFillCopy className="swap-off cursor-pointer" />
+                  <TiTickOutline className="swap-on cursor-pointer" />
                 </label>
               </CopyToClipboard>
               <a
@@ -128,7 +130,7 @@ export const Dashboard = () => {
   };
 
   const handleLogout = async (): Promise<void> => {
-    await AuthService.logout();
+    await signOut();
     router.push(CLIENT_ROUTES.HOME);
   };
 

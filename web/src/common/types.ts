@@ -24,3 +24,7 @@ export interface IModalCallbacks {
   onSubmit?: () => Promise<void>;
   onClose?: () => void;
 }
+
+export interface IUser {
+  username: string | null;
+}

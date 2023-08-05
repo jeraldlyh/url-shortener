@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Toaster } from 'react-hot-toast';
+import { AuthProvider } from '../providers';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -24,7 +25,11 @@ export default function RootLayout({
         }}
       />
       <body>
-        <div className="flex h-screen w-screen justify-center">{children}</div>
+        <AuthProvider>
+          <div className="flex h-screen w-screen justify-center">
+            {children}
+          </div>
+        </AuthProvider>
       </body>
     </html>
   );

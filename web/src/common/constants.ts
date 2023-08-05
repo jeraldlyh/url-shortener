@@ -21,8 +21,14 @@ export const SERVER_ROUTES = {
     GET_ALL: '/url',
   },
   AUTH: {
-    LOGOUT: "/auth/logout",
-    LOGIN: "/auth/login",
-    SIGNUP: "/auth/signUp",
-  }
+    SIGNOUT: '/auth/signOut',
+    SIGNIN: '/auth/signIn',
+    SIGNUP: '/auth/signUp',
+  },
 };
+
+export const WHITELISTED_ROUTES = new Set([
+  CLIENT_ROUTES.LOGIN,
+  CLIENT_ROUTES.SIGNUP,
+  CLIENT_ROUTES.HOME,
+]);

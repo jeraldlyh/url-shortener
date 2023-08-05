@@ -1,12 +1,10 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import toast from 'react-hot-toast';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import icon from '../../public/icon.png';
 import { CLIENT_ROUTES, Container } from '../common';
-import { AuthService } from '../services';
-import { Utils } from '../utils';
+import { useAuth } from '../hooks';
 
 export const CreateAccount = () => {
   /* -------------------------------------------------------------------------- */
@@ -16,6 +14,7 @@ export const CreateAccount = () => {
   const [password, setPassword] = useState<string>('');
   const [hasVisibility, setHasVisibility] = useState<boolean>(false);
   const router = useRouter();
+  const { signIn } = useAuth();
 
   /* -------------------------------------------------------------------------- */
   /*                              HANDLER FUNCTIONS                             */
@@ -25,12 +24,7 @@ export const CreateAccount = () => {
   };
 
   const handleOnSubmit = async (): Promise<void> => {
-    await toast.promise(AuthService.createAccount(username, password), {
-      loading: 'Attempting to login',
-      success: 'Logged in',
-      error: (e) => Utils.capitalize(e.response.data.message.toString()),
-    });
-    router.push(CLIENT_ROUTES.DASHBOARD);
+    await signIn(username, password);
   };
 
   const handleGoToSignIn = (): void => {
