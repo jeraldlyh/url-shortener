@@ -1,24 +1,13 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
-import { IModalCallbacks } from '../types';
+import { IBaseModalProps } from '../types';
 
-export interface IModalProps extends IModalCallbacks {
-  isOpen: boolean;
+interface IModalProps extends IBaseModalProps {
   title?: string;
   children?: React.ReactNode;
 }
 
-export const Modal = ({
-  onSubmit: onConfirm,
-  onClose,
-  isOpen,
-  title,
-  children,
-}: IModalProps) => {
-  const handleOnConfirm = (): void => {
-    onConfirm && onConfirm();
-  };
-
+export const Modal = ({ onClose, isOpen, title, children }: IModalProps) => {
   const handleOnClose = (): void => {
     onClose && onClose();
   };
@@ -57,23 +46,6 @@ export const Modal = ({
                   {title}
                 </Dialog.Title>
                 {children}
-
-                <div className="mt-4 flex justify-between space-x-4">
-                  <button
-                    type="button"
-                    className="w-full justify-center rounded-md bg-custom-gold-primary py-3 text-sm font-semibold text-custom-gray-primary hover:bg-custom-gold-secondary"
-                    onClick={handleOnConfirm}
-                  >
-                    Confirm
-                  </button>
-                  <button
-                    type="button"
-                    className="w-full justify-center rounded-md border border-custom-gold-primary bg-inherit text-sm font-semibold text-custom-gray-primary hover:border-0 hover:bg-custom-gray-secondary"
-                    onClick={handleOnClose}
-                  >
-                    Cancel
-                  </button>
-                </div>
               </Dialog.Panel>
             </Transition.Child>
           </div>

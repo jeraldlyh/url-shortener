@@ -20,9 +20,10 @@ export interface ICreateUrl {
   qrFgColor?: string;
 }
 
-export interface IModalCallbacks {
+export interface IBaseModalProps {
   onSubmit?: () => Promise<void>;
   onClose?: () => void;
+  isOpen: boolean;
 }
 
 export interface IUser {

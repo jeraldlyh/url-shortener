@@ -1,7 +1,7 @@
 import { LuLogOut } from 'react-icons/lu';
 
 interface IProps {
-  onLogout: () => void;
+  onLogout: () => Promise<void>;
 }
 
 export const NavBar = ({ onLogout }: IProps) => {

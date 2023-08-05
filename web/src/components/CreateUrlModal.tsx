@@ -2,15 +2,11 @@ import { Switch } from '@headlessui/react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { COLORS, ICreateUrl, IModalCallbacks, Modal } from '../common';
+import { COLORS, IBaseModalProps, ICreateUrl, Modal } from '../common';
 import { UrlService } from '../services';
 import { Utils } from '../utils';
 
-interface IProps extends IModalCallbacks {
-  isOpen: boolean;
-}
-
-export const CreateUrlModal = (props: IProps) => {
+export const CreateUrlModal = (props: IBaseModalProps) => {
   /* -------------------------------------------------------------------------- */
   /*                                   STATES                                   */
   /* -------------------------------------------------------------------------- */
@@ -135,6 +131,22 @@ export const CreateUrlModal = (props: IProps) => {
           </div>
           {renderQrCode()}
         </div>
+      </div>
+      <div className="mt-4 flex justify-between space-x-4">
+        <button
+          type="button"
+          className="w-full justify-center rounded-md bg-custom-gold-primary py-3 text-sm font-semibold text-custom-gray-primary hover:bg-custom-gold-secondary"
+          onClick={handleSubmit}
+        >
+          Confirm
+        </button>
+        <button
+          type="button"
+          className="w-full justify-center rounded-md border border-custom-gold-primary bg-inherit text-sm font-semibold text-custom-gray-primary hover:border-0 hover:bg-custom-gray-secondary"
+          onClick={props.onClose}
+        >
+          Cancel
+        </button>
       </div>
     </Modal>
   );

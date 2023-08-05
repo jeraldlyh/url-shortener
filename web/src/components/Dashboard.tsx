@@ -12,21 +12,24 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import {
   AiFillCopy,
   AiFillDelete,
-  AiFillEdit,
+  AiFillEye,
   AiFillPlusCircle,
   AiOutlineLeft,
   AiOutlineRight,
 } from 'react-icons/ai';
 import { TiTickOutline } from 'react-icons/ti';
-import { BASE_URL, CLIENT_ROUTES, Container, IUrl } from '../common';
+import { BASE_URL, Container, IUrl } from '../common';
 import { useAuth } from '../hooks';
 import { UrlService } from '../services';
 import { CreateUrlModal } from './CreateUrlModal';
 import { NavBar } from './NavBar';
+import { ViewUrlModal } from './ViewUrlModal';
 
 interface IToggleModal {
   isOpen: boolean;
-  type?: 'Create' | '';
+  type: 'Create' | 'View' | '';
+  redirectUrl: string;
+  fgColor?: string;
 }
 
 export const Dashboard = () => {
@@ -36,8 +39,10 @@ export const Dashboard = () => {
   const [urls, setUrls] = useState<IUrl[]>([]);
   const [copiedUrls, setCopiedUrls] = useState<Set<number>>(new Set());
   const [toggleModal, setToggleModal] = useState<IToggleModal>({
-    isOpen: false,
-    type: '',
+    isOpen: true,
+    type: 'View',
+    redirectUrl: '',
+    fgColor: '',
   });
   const router = useRouter();
   const { signOut } = useAuth();
@@ -50,7 +55,8 @@ export const Dashboard = () => {
     () => [
       {
         header: 'Title',
-        cell: (props) => props.getValue(),
+        cell: (props) =>
+          props.getValue() || props.row.original.url.split('.')[1],
         accessorKey: 'title',
       },
       {
@@ -60,11 +66,22 @@ export const Dashboard = () => {
           const redirectUrl = `${BASE_URL}/url/${redirectHash}`;
           const isCopied = copiedUrls.has(props.row.index);
 
+          // NOTE: Prevent user from copying multiple times
+          const handleCopyToClipboard = (): boolean => {
+            if (isCopied) return false;
+
+            const updatedCopiedUrls = new Set(copiedUrls);
+            updatedCopiedUrls.add(props.row.index);
+
+            setCopiedUrls(updatedCopiedUrls);
+            return true;
+          };
+
           return (
             <div className="flex items-center space-x-2">
               <CopyToClipboard
                 text={redirectUrl}
-                onCopy={() => handleCopyToClipboard(props.row.index, isCopied)}
+                onCopy={handleCopyToClipboard}
               >
                 <label className="swap swap-rotate text-lg">
                   <input type="checkbox" />
@@ -97,12 +114,28 @@ export const Dashboard = () => {
       },
       {
         header: 'Actions',
-        cell: () => (
-          <div className="flex space-x-3">
-            <AiFillEdit className="cursor-pointer text-lg hover:text-custom-gold-primary" />
-            <AiFillDelete className="cursor-pointer text-lg hover:text-custom-gold-primary" />
-          </div>
-        ),
+        cell: (props) => {
+          const handleViewUrl = (): void => {
+            const redirectUrl = `${BASE_URL}/url/${props.row.original.redirectHash}`;
+
+            setToggleModal({
+              isOpen: true,
+              redirectUrl,
+              fgColor: props.row.original.qrFgColor,
+              type: 'View',
+            });
+          };
+
+          return (
+            <div className="flex space-x-3 text-lg">
+              <AiFillEye
+                className="cursor-pointer hover:text-custom-gold-primary"
+                onClick={handleViewUrl}
+              />
+              <AiFillDelete className="cursor-pointer hover:text-custom-gold-primary" />
+            </div>
+          );
+        },
       },
     ],
     [copiedUrls],
@@ -126,35 +159,20 @@ export const Dashboard = () => {
   };
 
   const resetModal = (): void => {
-    setToggleModal({ isOpen: false });
-  };
-
-  const handleLogout = async (): Promise<void> => {
-    await signOut();
-    router.push(CLIENT_ROUTES.HOME);
+    setToggleModal({ isOpen: false, redirectUrl: '', fgColor: '', type: '' });
   };
 
   const handleToggleCreate = (): void => {
     setToggleModal({
       isOpen: true,
       type: 'Create',
+      redirectUrl: '',
     });
   };
 
   const handleCreateUrl = async (): Promise<void> => {
     await fetchUrls();
     resetModal();
-  };
-
-  // NOTE: Prevent user from copying multiple times
-  const handleCopyToClipboard = (index: number, isCopied: boolean): boolean => {
-    if (isCopied) return false;
-
-    const updatedCopiedUrls = new Set(copiedUrls);
-    updatedCopiedUrls.add(index);
-
-    setCopiedUrls(updatedCopiedUrls);
-    return true;
   };
 
   /* -------------------------------------------------------------------------- */
@@ -170,6 +188,8 @@ export const Dashboard = () => {
             onSubmit={handleCreateUrl}
           />
         );
+      case 'View':
+        return <ViewUrlModal {...toggleModal} onClose={resetModal} />;
     }
   };
 
@@ -244,7 +264,7 @@ export const Dashboard = () => {
   return (
     <Container styles="py-16 space-y-5">
       {renderModal()}
-      <NavBar onLogout={handleLogout} />
+      <NavBar onLogout={signOut} />
       <div className="flex max-h-full w-full flex-col items-center rounded-2xl border border-neutral p-10">
         <div className="mb-5 flex w-full items-center justify-between self-start text-2xl">
           <span className="font-bold">Shorted URLs Dashboard</span>
