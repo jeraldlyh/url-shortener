@@ -6,7 +6,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   AiFillCopy,
   AiFillDelete,
@@ -15,7 +15,8 @@ import {
   AiOutlineLeft,
   AiOutlineRight,
 } from 'react-icons/ai';
-import { Container, IPageProps, IUrl } from '../common';
+import { BASE_URL, Container, IPageProps, IUrl } from '../common';
+import { UrlService } from '../services';
 import { CreateUrlModal } from './CreateUrlModal';
 import { NavBar } from './NavBar';
 
@@ -26,8 +27,9 @@ const getData = (): IUrl[] => [
     .fill(0)
     .map((x, index) => ({
       url: 'http://google.com',
-      alias: 'asd',
-      created: new Date().toLocaleDateString('en-US', {
+      title: 'asd',
+      redirectHash: 'a',
+      createdAt: new Date().toLocaleDateString('en-US', {
         month: 'short',
         day: 'numeric',
         year: 'numeric',
@@ -47,40 +49,47 @@ export const Dashboard = ({}: IProps) => {
   /* -------------------------------------------------------------------------- */
   /*                                   STATES                                   */
   /* -------------------------------------------------------------------------- */
+  const [urls, setUrls] = useState<IUrl[]>([]);
   const [toggleModal, setToggleModal] = useState<IToggleModal>({
     isOpen: false,
     type: '',
   });
 
+  useEffect(() => {
+    fetchUrls();
+  }, []);
+
   const columns = useMemo<ColumnDef<IUrl>[]>(
     () => [
       {
-        header: 'Alias',
+        header: 'Title',
         cell: (info) => info.getValue(),
-        accessorKey: 'alias',
+        accessorKey: 'title',
       },
       {
         header: 'URL',
         cell: (info) => {
-          const value = info.getValue<string>();
+          const redirectHash = info.getValue<string>();
+          const redirectUrl = `${BASE_URL}/url/${redirectHash}`;
+
           return (
             <div className="flex items-center space-x-2">
               <AiFillCopy className="cursor-pointer text-lg hover:text-custom-gold-primary" />
               <a
                 className="text-ellipsis text-custom-gold-primary"
-                href={value}
+                href={redirectUrl}
               >
-                {value}
+                {redirectUrl}
               </a>
             </div>
           );
         },
-        accessorKey: 'url',
+        accessorKey: 'redirectHash',
       },
       {
         header: 'Created',
         cell: (info) => info.getValue(),
-        accessorKey: 'created',
+        accessorKey: 'createdAt',
       },
       {
         header: 'Actions',
@@ -106,11 +115,17 @@ export const Dashboard = ({}: IProps) => {
   /* -------------------------------------------------------------------------- */
   /*                              HANDLER FUNCTIONS                             */
   /* -------------------------------------------------------------------------- */
+  const fetchUrls = async (): Promise<void> => {
+    const urls = await UrlService.getAllUrls();
+
+    setUrls(urls);
+  };
+
   const resetModal = (): void => {
     setToggleModal({ isOpen: false });
   };
 
-  const handleLogout = (): Promise<void> => {
+  const handleLogout = (): void => {
     console.log('logout');
   };
 

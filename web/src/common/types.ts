@@ -12,9 +12,11 @@ export interface IPageProps {
 }
 
 export interface IUrl {
-  alias: string;
   url: string;
-  created: string;
+  title?: string;
+  qrFgColor?: string;
+  redirectHash: string;
+  createdAt: string;
 }
 
 export interface ICreateUrl {
