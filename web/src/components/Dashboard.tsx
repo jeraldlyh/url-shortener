@@ -15,37 +15,17 @@ import {
   AiOutlineLeft,
   AiOutlineRight,
 } from 'react-icons/ai';
-import { BASE_URL, Container, IPageProps, IUrl } from '../common';
+import { BASE_URL, Container, IUrl } from '../common';
 import { UrlService } from '../services';
 import { CreateUrlModal } from './CreateUrlModal';
 import { NavBar } from './NavBar';
-
-interface IProps extends IPageProps {}
-
-const getData = (): IUrl[] => [
-  ...Array(30)
-    .fill(0)
-    .map((x, index) => ({
-      url: 'http://google.com',
-      title: 'asd',
-      redirectHash: 'a',
-      createdAt: new Date().toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        minute: 'numeric',
-        hour: 'numeric',
-      }),
-    })),
-];
-const data = getData();
 
 interface IToggleModal {
   isOpen: boolean;
   type?: 'Create' | '';
 }
 
-export const Dashboard = ({}: IProps) => {
+export const Dashboard = () => {
   /* -------------------------------------------------------------------------- */
   /*                                   STATES                                   */
   /* -------------------------------------------------------------------------- */
@@ -104,6 +84,7 @@ export const Dashboard = ({}: IProps) => {
     [],
   );
 
+  const data = urls as IUrl[];
   const table = useReactTable({
     data,
     columns,
@@ -117,7 +98,6 @@ export const Dashboard = ({}: IProps) => {
   /* -------------------------------------------------------------------------- */
   const fetchUrls = async (): Promise<void> => {
     const urls = await UrlService.getAllUrls();
-
     setUrls(urls);
   };
 

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
+import { Toaster } from 'react-hot-toast';
 import './globals.css';
-
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -14,7 +14,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        gutter={8}
+        containerClassName=""
+        toastOptions={{
+          duration: 5000,
+        }}
+      />
+      <body>
+        <div className="flex h-screen w-screen justify-center bg-custom-black">
+          {children}
+        </div>
+      </body>
     </html>
   );
 }

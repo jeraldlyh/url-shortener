@@ -1,17 +1,27 @@
-import { Container, EPage, IPageProps } from '../common';
+import { useRouter } from 'next/navigation';
+import { CLIENT_ROUTES, Container } from '../common';
 import { LandingIcon } from './LandingIcon';
 
-interface IProps extends IPageProps {}
+export const Landing = () => {
+  /* -------------------------------------------------------------------------- */
+  /*                                   STATES                                   */
+  /* -------------------------------------------------------------------------- */
+  const router = useRouter();
 
-export const Landing = ({ onPageChange }: IProps) => {
+  /* -------------------------------------------------------------------------- */
+  /*                              HANDLER FUNCTIONS                             */
+  /* -------------------------------------------------------------------------- */
   const handleGetStarted = (): void => {
-    onPageChange(EPage.CreateAccount);
+    router.push(CLIENT_ROUTES.SIGNUP);
   };
 
   const handleContinue = (): void => {
-    onPageChange(EPage.SignIn);
+    router.push(CLIENT_ROUTES.LOGIN);
   };
 
+  /* -------------------------------------------------------------------------- */
+  /*                                   RENDER                                   */
+  /* -------------------------------------------------------------------------- */
   return (
     <Container styles="relative space-y-5 justify-center">
       <LandingIcon />
@@ -27,7 +37,7 @@ export const Landing = ({ onPageChange }: IProps) => {
           Get started
         </button>
         <button
-          className="btn btn-secondary btn-lg font-semibold"
+          className="btn btn-secondary btn-outline btn-lg font-semibold"
           onClick={handleContinue}
         >
           Continue

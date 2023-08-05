@@ -7,3 +7,10 @@ export const COLORS = {
 };
 
 export const BASE_URL = process.env.BACKEND_URL || 'http://localhost:8000';
+
+export const CLIENT_ROUTES = {
+  HOME: '/',
+  DASHBOARD: '/dashboard',
+  LOGIN: '/login',
+  SIGNUP: '/signUp',
+};
