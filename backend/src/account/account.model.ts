@@ -54,7 +54,14 @@ export const AccountConverter = {
       data.username,
       data.password,
       data.urls.map(
-        (meta) => new Url(meta.url, meta.title, meta.qrFgColor, meta.createdAt),
+        (meta) =>
+          new Url(
+            meta.url,
+            meta.title,
+            meta.qrFgColor,
+            meta.redirectHash,
+            meta.createdAt,
+          ),
       ),
       data.createdAt,
     );

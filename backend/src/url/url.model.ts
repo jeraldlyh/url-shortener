@@ -1,11 +1,12 @@
 import { Transform, TransformFnParams } from 'class-transformer';
 import { IsNotEmpty, IsOptional, IsString, IsUrl } from 'class-validator';
-import { BaseModel } from '../common';
+import { BaseModel, IBaseModel } from '../common';
 
-export interface IUrl {
+export interface IUrl extends IBaseModel {
   url: string;
   title?: string;
   qrFgColor?: string;
+  redirectHash: string;
 }
 
 export class Url extends BaseModel implements IUrl {
@@ -23,10 +24,19 @@ export class Url extends BaseModel implements IUrl {
   @IsOptional()
   public qrFgColor?: string;
 
-  constructor(url: string, title: string, qrFgColor: string, createdAt: Date) {
+  public redirectHash: string;
+
+  constructor(
+    url: string,
+    title: string,
+    qrFgColor: string,
+    redirectHash: string,
+    createdAt: Date,
+  ) {
     super(createdAt);
     this.url = url;
     this.title = title;
     this.qrFgColor = qrFgColor;
+    this.redirectHash = redirectHash;
   }
 }

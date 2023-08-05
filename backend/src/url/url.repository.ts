@@ -7,6 +7,16 @@ import { Url } from './url.model';
 export class UrlRepository {
   private readonly accountCollection: string = 'account';
 
+  async validateIfUrlExist(redirectHash: string): Promise<boolean> {
+    const result = await firebase
+      .firestore()
+      .collection(this.accountCollection)
+      .where('urls', 'array-contains', { redirectHash })
+      .get();
+
+    return result.empty;
+  }
+
   async createUrl(username: string, url: Url): Promise<void> {
     await firebase
       .firestore()
