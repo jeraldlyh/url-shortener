@@ -1,6 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import * as cookieParser from 'cookie-parser';
 import firebase from 'firebase-admin';
 import { AppModule } from './app/app.module';
 
@@ -21,6 +22,7 @@ async function bootstrap() {
   });
 
   app.useGlobalPipes(new ValidationPipe());
+  app.use(cookieParser());
   await app.listen(process.env.PORT || 8000);
 }
 bootstrap();

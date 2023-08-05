@@ -1,5 +1,4 @@
-import { EPage, IPageProps } from '../common';
-import { Container } from './Container';
+import { Container, EPage, IPageProps } from '../common';
 
 interface IProps extends IPageProps {}
 
@@ -20,13 +19,13 @@ export const Landing = ({ onPageChange }: IProps) => {
       </div>
       <div className="flex flex-col space-y-3 text-xl font-bold">
         <button
-          className="rounded-3xl border-2 border-transparent bg-custom-gold px-7 py-2 uppercase hover:border-custom-gold hover:bg-black"
+          className="bg-custom-gold-primary hover:border-custom-gold-primary rounded-3xl border-2 border-transparent px-7 py-2 uppercase hover:bg-black"
           onClick={handleGetStarted}
         >
           Get started
         </button>
         <button
-          className="rounded-3xl border-2 border-custom-gold px-7 py-2 uppercase hover:bg-custom-gold hover:text-custom-gray"
+          className="border-custom-gold-primary hover:bg-custom-gold-primary rounded-3xl border-2 px-7 py-2 uppercase hover:text-custom-gray-primary"
           onClick={handleContinue}
         >
           Continue

@@ -12,9 +12,20 @@ module.exports = {
             colors: {
                 custom: {
                     black: "#111111",
-                    gray: "#2F2F2F",
+                    gray: {
+                        primary: "#2F2F2F",
+                        secondary: "#BDBDBD"
+                    },
                     white: "#F6F6F6",
-                    gold: "#FFCB74"
+                    gold: {
+                        primary: "#FFCB74",
+                        secondary: "#FFC35E"
+                    },
+                    qr: {
+                        primary: "#FFCB74",
+                        secondary: "#2F2F2F",
+                        tertiary: "#D8D9DA"
+                    }
                 }
             }
         },
