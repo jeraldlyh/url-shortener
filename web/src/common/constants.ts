@@ -14,3 +14,10 @@ export const CLIENT_ROUTES = {
   LOGIN: '/login',
   SIGNUP: '/signUp',
 };
+
+export const SERVER_ROUTES = {
+  URL: {
+    CREATE: '/url',
+    GET_ALL: '/url',
+  },
+};

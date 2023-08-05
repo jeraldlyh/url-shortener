@@ -116,6 +116,11 @@ export const Dashboard = () => {
     });
   };
 
+  const handleCreateUrl = async (): Promise<void> => {
+    await fetchUrls();
+    resetModal();
+  };
+
   /* -------------------------------------------------------------------------- */
   /*                              RENDER FUNCTIONS                              */
   /* -------------------------------------------------------------------------- */
@@ -123,7 +128,11 @@ export const Dashboard = () => {
     switch (toggleModal.type) {
       case 'Create':
         return (
-          <CreateUrlModal isOpen={toggleModal.isOpen} onClose={resetModal} />
+          <CreateUrlModal
+            isOpen={toggleModal.isOpen}
+            onClose={resetModal}
+            onSubmit={handleCreateUrl}
+          />
         );
     }
   };
@@ -160,6 +169,16 @@ export const Dashboard = () => {
   };
 
   const renderPagination = (): JSX.Element => {
+    if (!urls || urls?.length === 0) {
+      return (
+        <button
+          className="btn btn-primary my-4 w-full"
+          onClick={handleToggleCreate}
+        >
+          Create your first link
+        </button>
+      );
+    }
     return (
       <div className="mt-5 flex h-10 rounded-xl bg-custom-gray-secondary/10">
         <button

@@ -20,6 +20,6 @@ export interface ICreateUrl {
 }
 
 export interface IModalCallbacks {
-  onConfirm?: () => void;
+  onSubmit?: () => Promise<void>;
   onClose?: () => void;
 }

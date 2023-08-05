@@ -9,7 +9,7 @@ export interface IModalProps extends IModalCallbacks {
 }
 
 export const Modal = ({
-  onConfirm,
+  onSubmit: onConfirm,
   onClose,
   isOpen,
   title,
