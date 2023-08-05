@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import firebase from 'firebase-admin';
+import { AccountConverter } from '../account/account.model';
 import { Url } from './url.model';
 
 @Injectable()
@@ -11,7 +12,8 @@ export class UrlRepository {
       .firestore()
       .collection(this.accountCollection)
       .doc(username)
-      .set({
+      .withConverter(AccountConverter)
+      .update({
         urls: firebase.firestore.FieldValue.arrayUnion(url),
       });
   }

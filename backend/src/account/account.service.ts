@@ -19,7 +19,6 @@ export class AccountService {
     if (existingUser) throw new BadRequestException('Account already exists');
 
     const salt = await genSalt(+process.env.AUTH_SALT_ROUNDS);
-    console.log(salt, 'gen');
     const hashedPassword = await hash(account.password, salt);
 
     account.password = hashedPassword;

@@ -2,7 +2,7 @@ import { Transform, TransformFnParams } from 'class-transformer';
 import { IsNotEmpty, IsString, Length } from 'class-validator';
 import { DocumentData, QueryDocumentSnapshot } from 'firebase-admin/firestore';
 import { BaseModel } from '../common';
-import { IUrl } from '../url/url.model';
+import { IUrl, Url } from '../url/url.model';
 
 interface IAccount {
   username: string;
@@ -42,7 +42,7 @@ export const AccountConverter = {
     return {
       username: account.username,
       password: account.password,
-      urls: [],
+      urls: account.urls || [],
       createdAt: new Date(),
     };
   },
@@ -50,6 +50,13 @@ export const AccountConverter = {
   fromFirestore(snapshot: QueryDocumentSnapshot): Account {
     const data = snapshot.data();
 
-    return new Account(data.username, data.password, data.urls, data.createdAt);
+    return new Account(
+      data.username,
+      data.password,
+      data.urls.map(
+        (meta) => new Url(meta.url, meta.title, meta.qrFgColor, meta.createdAt),
+      ),
+      data.createdAt,
+    );
   },
 };

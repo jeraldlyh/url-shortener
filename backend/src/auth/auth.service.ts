@@ -3,7 +3,6 @@ import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcrypt';
 import { Account } from '../account/account.model';
 import { AccountService } from '../account/account.service';
-import { IJwtToken } from './auth.types';
 
 @Injectable()
 export class AuthService {
@@ -12,7 +11,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateUser(account: Account): Promise<IJwtToken> {
+  async validateUser(account: Account): Promise<string> {
     const { username, password } = account;
     const user = await this.accountService.getAccount(username);
 
@@ -20,8 +19,6 @@ export class AuthService {
 
     if (!result) throw new UnauthorizedException();
 
-    return {
-      accessToken: await this.jwtService.signAsync({ username }),
-    };
+    return await this.jwtService.signAsync({ username });
   }
 }
