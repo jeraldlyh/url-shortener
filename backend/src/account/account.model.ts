@@ -1,8 +1,16 @@
 import { Transform, TransformFnParams } from 'class-transformer';
 import { IsNotEmpty, IsString, Length } from 'class-validator';
 import { DocumentData, QueryDocumentSnapshot } from 'firebase-admin/firestore';
+import { BaseModel } from '../common';
+import { IUrl } from '../url/url.model';
 
-export class Account {
+interface IAccount {
+  username: string;
+  password: string;
+  urls?: IUrl[];
+}
+
+export class Account extends BaseModel implements IAccount {
   @IsString()
   @Transform(({ value }: TransformFnParams) => value?.trim())
   @IsNotEmpty()
@@ -14,12 +22,18 @@ export class Account {
   @Length(8)
   public password: string;
 
-  public createdAt: Date;
+  public urls?: IUrl[];
 
-  constructor(username: string, password: string, createdAt: Date) {
+  constructor(
+    username: string,
+    password: string,
+    urls: IUrl[],
+    createdAt: Date,
+  ) {
+    super(createdAt);
     this.username = username;
     this.password = password;
-    this.createdAt = createdAt;
+    this.urls = urls;
   }
 }
 
@@ -28,6 +42,7 @@ export const AccountConverter = {
     return {
       username: account.username,
       password: account.password,
+      urls: [],
       createdAt: new Date(),
     };
   },
@@ -35,6 +50,6 @@ export const AccountConverter = {
   fromFirestore(snapshot: QueryDocumentSnapshot): Account {
     const data = snapshot.data();
 
-    return new Account(data.username, data.password, data.createdAt);
+    return new Account(data.username, data.password, data.urls, data.createdAt);
   },
 };
