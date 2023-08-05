@@ -7,8 +7,13 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/create')
-  async createAccount(@Body() account: Account): Promise<void> {
-    return await this.authService.createAccount(account);
+  async createAccount(
+    @Body() account: Account,
+    @Response({ passthrough: true }) response: IResponse,
+  ): Promise<void> {
+    const token = await this.authService.createAccount(account);
+
+    response.cookie('accessToken', token, { httpOnly: true });
   }
 
   @Post('/login')

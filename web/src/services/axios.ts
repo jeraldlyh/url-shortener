@@ -3,11 +3,11 @@ import { BASE_URL } from '../common';
 
 const AxiosService = axios.create({
   baseURL: BASE_URL,
-  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
     Accept: '*/*',
   },
+  withCredentials: true,
 });
 
 export default AxiosService;
