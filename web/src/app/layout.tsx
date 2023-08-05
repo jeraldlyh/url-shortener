@@ -13,7 +13,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme="dark">
       <Toaster
         position="top-center"
         reverseOrder={false}
@@ -24,9 +24,7 @@ export default function RootLayout({
         }}
       />
       <body>
-        <div className="flex h-screen w-screen justify-center bg-custom-black">
-          {children}
-        </div>
+        <div className="flex h-screen w-screen justify-center">{children}</div>
       </body>
     </html>
   );

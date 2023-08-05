@@ -6,9 +6,11 @@ interface IProps {
 
 export const NavBar = ({ onLogout }: IProps) => {
   return (
-    <div className="flex w-full justify-between rounded-2xl bg-custom-gray-primary px-10 py-5 text-2xl text-custom-white">
+    <div className="navbar flex justify-between rounded-2xl bg-neutral px-10 text-xl text-neutral-content">
       <div className="font-bold">LinkNow</div>
-      <LuLogOut onClick={onLogout} className="cursor-pointer" />
+      <button onClick={onLogout}>
+        <LuLogOut />
+      </button>
     </div>
   );
 };

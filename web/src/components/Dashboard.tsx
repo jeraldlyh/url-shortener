@@ -7,6 +7,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { useEffect, useMemo, useState } from 'react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import {
   AiFillCopy,
   AiFillDelete,
@@ -15,6 +16,7 @@ import {
   AiOutlineLeft,
   AiOutlineRight,
 } from 'react-icons/ai';
+import { TiTickOutline } from 'react-icons/ti';
 import { BASE_URL, Container, IUrl } from '../common';
 import { UrlService } from '../services';
 import { CreateUrlModal } from './CreateUrlModal';
@@ -30,6 +32,7 @@ export const Dashboard = () => {
   /*                                   STATES                                   */
   /* -------------------------------------------------------------------------- */
   const [urls, setUrls] = useState<IUrl[]>([]);
+  const [copiedUrls, setCopiedUrls] = useState<Set<number>>(new Set());
   const [toggleModal, setToggleModal] = useState<IToggleModal>({
     isOpen: false,
     type: '',
@@ -43,18 +46,28 @@ export const Dashboard = () => {
     () => [
       {
         header: 'Title',
-        cell: (info) => info.getValue(),
+        cell: (props) => props.getValue(),
         accessorKey: 'title',
       },
       {
         header: 'URL',
-        cell: (info) => {
-          const redirectHash = info.getValue<string>();
+        cell: (props) => {
+          const redirectHash = props.getValue<string>();
           const redirectUrl = `${BASE_URL}/url/${redirectHash}`;
+          const isCopied = copiedUrls.has(props.row.index);
 
           return (
             <div className="flex items-center space-x-2">
-              <AiFillCopy className="cursor-pointer text-lg hover:text-custom-gold-primary" />
+              <CopyToClipboard
+                text={redirectUrl}
+                onCopy={() => handleCopyToClipboard(props.row.index, isCopied)}
+              >
+                <label className="swap swap-rotate">
+                  <input type="checkbox" />
+                  <AiFillCopy className="swap-on cursor-pointer text-lg hover:text-custom-gold-primary" />
+                  <TiTickOutline className="swap-off" />
+                </label>
+              </CopyToClipboard>
               <a
                 className="text-ellipsis text-custom-gold-primary"
                 href={redirectUrl}
@@ -68,7 +81,14 @@ export const Dashboard = () => {
       },
       {
         header: 'Created',
-        cell: (info) => info.getValue(),
+        cell: (props) =>
+          new Date(props.getValue<string>()).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+            minute: 'numeric',
+            hour: 'numeric',
+          }),
         accessorKey: 'createdAt',
       },
       {
@@ -81,7 +101,7 @@ export const Dashboard = () => {
         ),
       },
     ],
-    [],
+    [copiedUrls],
   );
 
   const data = urls as IUrl[];
@@ -121,6 +141,17 @@ export const Dashboard = () => {
     resetModal();
   };
 
+  // NOTE: Prevent user from copying multiple times
+  const handleCopyToClipboard = (index: number, isCopied: boolean): boolean => {
+    if (isCopied) return false;
+
+    const updatedCopiedUrls = new Set(copiedUrls);
+    updatedCopiedUrls.add(index);
+
+    setCopiedUrls(updatedCopiedUrls);
+    return true;
+  };
+
   /* -------------------------------------------------------------------------- */
   /*                              RENDER FUNCTIONS                              */
   /* -------------------------------------------------------------------------- */
@@ -146,7 +177,7 @@ export const Dashboard = () => {
         {headerGroup.headers.map((header, index) => (
           <th
             key={header.id || index}
-            className="py-3 text-start"
+            className="p-4 text-start"
             colSpan={header.colSpan}
           >
             {flexRender(header.column.columnDef.header, header.getContext())}
@@ -160,7 +191,7 @@ export const Dashboard = () => {
     return table.getRowModel().rows.map((row) => (
       <tr key={row.id} className="border-b-[0.5px] border-gray-500">
         {row.getVisibleCells().map((cell) => (
-          <td key={cell.id} className="text-ellipsis py-4">
+          <td key={cell.id} className="text-ellipsis px-4 py-5">
             {flexRender(cell.column.columnDef.cell, cell.getContext())}
           </td>
         ))}
@@ -180,19 +211,22 @@ export const Dashboard = () => {
       );
     }
     return (
-      <div className="mt-5 flex h-10 rounded-xl bg-custom-gray-secondary/10">
+      <div className="join mt-4">
         <button
-          className="h-full w-8 px-2 hover:rounded-l-xl hover:bg-custom-gray-secondary/25 disabled:cursor-not-allowed"
+          className="btn join-item disabled:cursor-not-allowed"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
           <AiOutlineLeft />
         </button>
-        <div className="flex h-full cursor-pointer items-center px-3 font-medium uppercase hover:bg-custom-gray-secondary/25">
-          Page {table.getPageCount()}
-        </div>
         <button
-          className="h-full w-8 px-2 hover:rounded-r-xl hover:bg-custom-gray-secondary/25 disabled:cursor-not-allowed"
+          className="btn join-item"
+          disabled={!table.getCanPreviousPage() && !table.getCanNextPage()}
+        >
+          Page {table.getPageCount()}
+        </button>
+        <button
+          className="btn join-item disabled:cursor-not-allowed"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
@@ -206,7 +240,7 @@ export const Dashboard = () => {
     <Container styles="py-16 space-y-5">
       {renderModal()}
       <NavBar onLogout={handleLogout} />
-      <div className="flex max-h-full w-full flex-col items-center rounded-2xl bg-custom-gray-primary px-10 py-5">
+      <div className="flex max-h-full w-full flex-col items-center rounded-2xl border border-neutral p-10">
         <div className="mb-5 flex w-full items-center justify-between self-start text-2xl">
           <span className="font-bold">Shorted URLs Dashboard</span>
           <button

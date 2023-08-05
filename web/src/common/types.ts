@@ -11,6 +11,7 @@ export interface IUrl {
   qrFgColor?: string;
   redirectHash: string;
   createdAt: string;
+  copied?: boolean;
 }
 
 export interface ICreateUrl {

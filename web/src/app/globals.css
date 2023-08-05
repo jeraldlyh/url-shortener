@@ -9,9 +9,3 @@
     font-family: ui-sans-serif, system-ui, 'Inter', 'Roboto', sans-serif;
   }
 }
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-}
