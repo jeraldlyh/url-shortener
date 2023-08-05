@@ -10,3 +10,10 @@ export enum EPage {
 export interface IPageProps {
   onPageChange: React.Dispatch<React.SetStateAction<EPage>>;
 }
+
+export interface IUrl {
+  index: number;
+  alias: string;
+  url: string;
+  created: string;
+}

@@ -26,7 +26,7 @@ export const Landing = ({ onPageChange }: IProps) => {
           Get started
         </button>
         <button
-          className="rounded-3xl border-2 border-custom-gold px-7 py-2 uppercase hover:bg-custom-gold hover:text-custom-gray"
+          className="rounded-3xl border-2 border-custom-gold px-7 py-2 uppercase hover:bg-custom-gold hover:text-custom-gray-primary"
           onClick={handleContinue}
         >
           Continue

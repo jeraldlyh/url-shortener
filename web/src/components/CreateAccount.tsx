@@ -17,7 +17,7 @@ export const CreateAccount = ({ onPageChange }: IProps) => {
 
   return (
     <Container>
-      <div className="flex w-[524px] flex-col items-center justify-center rounded-2xl bg-custom-gray p-20">
+      <div className="flex w-[524px] flex-col items-center justify-center rounded-2xl bg-custom-gray-primary p-20">
         <div className="h-[100px] w-[100px]">
           <Image src={icon} sizes="100vw" alt="logo" />
         </div>
