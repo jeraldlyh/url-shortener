@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import firebase from 'firebase-admin';
 import { flatten } from 'lodash';
 import { AccountConverter } from '../account/account.model';
-import { IUrl, Url } from './url.model';
+import { IUrl, Url, UrlConverter } from './url.model';
 
 @Injectable()
 export class UrlRepository {
@@ -50,5 +50,15 @@ export class UrlRepository {
       .update({
         urls: firebase.firestore.FieldValue.arrayUnion(url),
       });
+  }
+
+  async updateQrCodes(username: string, urls: Url[]): Promise<void> {
+    const serializedUrls = urls.map((url) => UrlConverter.toFirestore(url));
+
+    await firebase
+      .firestore()
+      .collection(this.accountCollection)
+      .doc(username)
+      .update({ urls: serializedUrls });
   }
 }

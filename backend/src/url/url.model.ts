@@ -1,12 +1,23 @@
-import { Transform, TransformFnParams, Type } from 'class-transformer';
+import {
+  instanceToPlain,
+  Transform,
+  TransformFnParams,
+  Type,
+} from 'class-transformer';
 import {
   IsBoolean,
   IsNotEmpty,
+  IsObject,
   IsOptional,
   IsString,
   IsUrl,
   ValidateNested,
 } from 'class-validator';
+import {
+  DocumentData,
+  QueryDocumentSnapshot,
+  Timestamp,
+} from 'firebase-admin/firestore';
 import { BaseModel, IBaseModel } from '../common';
 
 export interface IUrl extends IBaseModel {
@@ -36,6 +47,23 @@ export class QrCode implements IQrCode {
   }
 }
 
+export class CreateQrCodeDto implements Pick<IUrl, 'redirectHash'> {
+  @IsString()
+  @IsNotEmpty()
+  @Transform(({ value }: TransformFnParams) => value?.trim())
+  redirectHash: string;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => QrCode)
+  qrCode: IQrCode;
+
+  constructor(redirectHash: string, qrCode: IQrCode) {
+    this.redirectHash = redirectHash;
+    this.qrCode = qrCode;
+  }
+}
+
 export class Url extends BaseModel implements IUrl {
   @IsString()
   @IsNotEmpty()
@@ -59,7 +87,7 @@ export class Url extends BaseModel implements IUrl {
     qrCode: IQrCode,
     redirectHash: string,
     isDeleted: boolean,
-    createdAt: Date,
+    createdAt: Date | Timestamp,
   ) {
     super(createdAt, isDeleted);
     this.url = url;
@@ -68,3 +96,28 @@ export class Url extends BaseModel implements IUrl {
     this.redirectHash = redirectHash;
   }
 }
+
+export const UrlConverter = {
+  toFirestore(data: IUrl): DocumentData {
+    return {
+      url: data.url,
+      title: data.title,
+      qrCode: instanceToPlain(data.qrCode),
+      redirectHash: data.redirectHash,
+      isDeleted: data.isDeleted,
+      createdAt: data.createdAt,
+    };
+  },
+  fromFirestore(snapshot: QueryDocumentSnapshot<IUrl>): IUrl {
+    const data = snapshot.data();
+
+    return new Url(
+      data.url,
+      data.title,
+      new QrCode(data.qrCode.fgColor, data.qrCode.isCreated),
+      data.redirectHash,
+      data.isDeleted,
+      data.createdAt,
+    );
+  },
+};
