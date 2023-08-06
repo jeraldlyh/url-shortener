@@ -39,8 +39,8 @@ export const Dashboard = () => {
   const [urls, setUrls] = useState<IUrl[]>([]);
   const [copiedUrls, setCopiedUrls] = useState<Set<number>>(new Set());
   const [toggleModal, setToggleModal] = useState<IToggleModal>({
-    isOpen: true,
-    type: 'View',
+    isOpen: false,
+    type: '',
     redirectUrl: '',
     fgColor: '',
   });

@@ -29,3 +29,9 @@ export interface IBaseModalProps {
 export interface IUser {
   username: string | null;
 }
+
+export interface IDownload {
+  option: 'PNG' | 'SVG';
+  description: string;
+  handleDownload: () => void;
+}

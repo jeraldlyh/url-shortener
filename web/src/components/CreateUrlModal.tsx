@@ -1,4 +1,3 @@
-import { Switch } from '@headlessui/react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -115,18 +114,12 @@ export const CreateUrlModal = (props: IBaseModalProps) => {
             <span className="italic">(optional)</span>
           </div>
           <div className="flex items-center space-x-3">
-            <Switch
+            <input
+              type="checkbox"
+              className="toggle"
               checked={enabled}
-              onChange={setEnabled}
-              className={`${enabled ? 'bg-custom-gold-primary' : 'bg-[#DBE0EB]'}
-          relative inline-flex h-6 w-14 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
-            >
-              <span
-                aria-hidden="true"
-                className={`${enabled ? 'translate-x-6' : 'translate-x-0'}
-            pointer-events-none inline-block h-5 w-7 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
-              />
-            </Switch>
+              onChange={() => setEnabled(!enabled)}
+            />
             <span>Generate a QR code for anyone to scan it</span>
           </div>
           {renderQrCode()}
