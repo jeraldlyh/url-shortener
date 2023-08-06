@@ -12,12 +12,16 @@ const createUrl = async (url: ICreateUrl): Promise<void> => {
 };
 
 const createQrCode = async (qrCode: ICreateQrCode): Promise<void> => {
-  console.log(qrCode);
   await AxiosService.post(SERVER_ROUTES.URL.QR_CODE, qrCode);
+};
+
+const deleteUrl = async (redirectHash: string): Promise<void> => {
+  await AxiosService.delete(`${SERVER_ROUTES.URL.CREATE}/${redirectHash}`);
 };
 
 export const UrlService = {
   getAllUrls,
   createUrl,
   createQrCode,
+  deleteUrl,
 };

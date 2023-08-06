@@ -12,7 +12,7 @@ interface IBaseQrCode {
 export interface IUrl {
   url: string;
   title?: string;
-  redirectHash?: string;
+  redirectHash: string;
   qrCode: IBaseQrCode;
   copied?: boolean;
   createdAt: string;

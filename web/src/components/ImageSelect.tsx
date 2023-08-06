@@ -11,7 +11,7 @@ interface IProps {
   onChange: (option: string) => void;
 }
 
-export const ImageSelect = ({ selected, images, onChange }: IProps) => {
+export const ImageTypeSelect = ({ selected, images, onChange }: IProps) => {
   /* -------------------------------------------------------------------------- */
   /*                                   RENDER                                   */
   /* -------------------------------------------------------------------------- */

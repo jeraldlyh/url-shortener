@@ -11,7 +11,7 @@ import {
 } from '../common';
 import { UrlService } from '../services';
 import { Utils } from '../utils';
-import { ImageSelect } from './ImageSelect';
+import { ImageTypeSelect } from './ImageSelect';
 
 interface IProps extends TModalProps, IQrCode {}
 
@@ -59,7 +59,7 @@ export const ViewUrlModal = ({
   /* -------------------------------------------------------------------------- */
   const defaultOption = IMAGE_DOWNLOAD_TYPES[0];
   const [selected, setSelected] = useState<IDownload>(defaultOption);
-  const [fgColor, setFgColor] = useState<string>('#00000');
+  const [fgColor, setFgColor] = useState<string>('#000000');
 
   /* -------------------------------------------------------------------------- */
   /*                              HANDLER FUNCTIONS                             */
@@ -141,7 +141,7 @@ export const ViewUrlModal = ({
           />
         </div>
         <div className="my-5 flex w-full flex-col space-y-2">
-          <ImageSelect
+          <ImageTypeSelect
             selected={selected.option}
             images={IMAGE_DOWNLOAD_TYPES}
             onChange={handleOnChange}
