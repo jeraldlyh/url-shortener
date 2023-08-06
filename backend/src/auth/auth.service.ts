@@ -21,6 +21,8 @@ export class AuthService {
     const { username, password } = account;
     const user = await this.accountService.getAccount(username);
 
+    if (!user) throw new UnauthorizedException();
+
     const result = await compare(password, user.password);
 
     if (!result) throw new UnauthorizedException();

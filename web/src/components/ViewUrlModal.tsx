@@ -2,18 +2,18 @@ import QRCode from 'qrcode.react';
 import { Fragment, useState } from 'react';
 import toast from 'react-hot-toast';
 import {
+  ICallbacks,
   IDownload,
   IQrCode,
   Modal,
   MODAL_IDS,
   QrCodeCanvas,
-  TModalProps,
 } from '../common';
 import { UrlService } from '../services';
 import { Utils } from '../utils';
-import { ImageSelect } from './ImageSelect';
+import { ImageTypeSelect } from './ImageSelect';
 
-interface IProps extends TModalProps, IQrCode {}
+interface IProps extends ICallbacks, IQrCode {}
 
 const handleDownloadQr = (link: string): void => {
   const anchor = document.createElement('a');
@@ -58,8 +58,9 @@ export const ViewUrlModal = ({
   /*                                    STATE                                   */
   /* -------------------------------------------------------------------------- */
   const defaultOption = IMAGE_DOWNLOAD_TYPES[0];
+  const defaultColor = '#000000';
   const [selected, setSelected] = useState<IDownload>(defaultOption);
-  const [fgColor, setFgColor] = useState<string>('#00000');
+  const [fgColor, setFgColor] = useState<string>(defaultColor);
 
   /* -------------------------------------------------------------------------- */
   /*                              HANDLER FUNCTIONS                             */
@@ -90,7 +91,18 @@ export const ViewUrlModal = ({
         error: (e) => Utils.capitalize(e.response.data.message.toString()),
       },
     );
+    await cleanUp();
+  };
+
+  const handleDownload = (): void => {
+    selected.handleDownload();
+    cleanUp();
+  };
+
+  const cleanUp = async (): Promise<void> => {
     onSubmit && (await onSubmit());
+    setSelected(defaultOption);
+    setFgColor(defaultColor);
   };
 
   /* -------------------------------------------------------------------------- */
@@ -109,20 +121,6 @@ export const ViewUrlModal = ({
             onPresetChange={setFgColor}
             onTextChange={setFgColor}
           />
-          <div className="mt-5 flex w-full space-x-4">
-            <button
-              className="btn btn-primary w-full flex-shrink"
-              onClick={handleSubmit}
-            >
-              Generate
-            </button>
-            <button
-              className="btn btn-secondary w-full flex-shrink"
-              onClick={onClose}
-            >
-              Cancel
-            </button>
-          </div>
         </Fragment>
       );
 
@@ -141,22 +139,11 @@ export const ViewUrlModal = ({
           />
         </div>
         <div className="my-5 flex w-full flex-col space-y-2">
-          <ImageSelect
+          <ImageTypeSelect
             selected={selected.option}
             images={IMAGE_DOWNLOAD_TYPES}
             onChange={handleOnChange}
           />
-        </div>
-        <div className="flex w-full flex-col space-y-2">
-          <button
-            className="btn btn-primary w-full"
-            onClick={selected.handleDownload}
-          >
-            Generate
-          </button>
-          <button className="btn btn-secondary w-full" onClick={onClose}>
-            Cancel
-          </button>
         </div>
       </Fragment>
     );
@@ -168,6 +155,9 @@ export const ViewUrlModal = ({
       title={
         isCreated ? 'Your QR code is ready 🥳' : 'Start generating your QR code'
       }
+      submitText={isCreated ? 'Download' : 'Generate'}
+      onSubmit={isCreated ? handleDownload : handleSubmit}
+      onClose={onClose}
     >
       <div className="flex w-full flex-col items-center">{renderBody()}</div>
     </Modal>

@@ -22,6 +22,7 @@ export const SERVER_ROUTES = {
     CREATE: '/url',
     GET_ALL: '/url',
     QR_CODE: '/url/qr',
+    DELETE: '/url',
   },
   AUTH: {
     SIGNOUT: '/auth/signOut',
@@ -37,7 +38,6 @@ export const WHITELISTED_ROUTES = new Set([
   CLIENT_ROUTES.HOME,
 ]);
 
-export const DEFAULT_USER = { username: '' };
 export const DEFAULT_QR_CODE: IQrCode = {
   isCreated: false,
   redirectUrl: '',
@@ -47,6 +47,7 @@ export const DEFAULT_QR_CODE: IQrCode = {
 export const MODAL_IDS = {
   CREATE_URL: 'create-url',
   VIEW_URL: 'view-url',
+  DELETE_URL: 'delete-url',
 };
 
 export const PRESET_COLORS = [

@@ -12,19 +12,23 @@ interface IBaseQrCode {
 export interface IUrl {
   url: string;
   title?: string;
-  redirectHash?: string;
+  redirectHash: string;
   qrCode: IBaseQrCode;
   copied?: boolean;
   createdAt: string;
 }
 
-export interface IBaseModalProps {
-  id: string;
-  onSubmit?: () => Promise<void>;
+export interface ICallbacks {
+  onSubmit?: () => Promise<void> | void;
   onClose?: () => void;
 }
-
-export type TModalProps = Omit<IBaseModalProps, 'id'>;
+export interface IBaseModalProps extends ICallbacks {
+  id: string;
+  title?: string;
+  children?: React.ReactNode;
+  isSubmitDisabled?: boolean;
+  submitText: string;
+}
 
 export interface IUser {
   username: string | null;

@@ -28,6 +28,7 @@ import {
 import { useAuth } from '../hooks';
 import { UrlService } from '../services';
 import { CreateUrlModal } from './CreateUrlModal';
+import { DeleteUrlModal } from './DeleteUrlModal';
 import { NavBar } from './NavBar';
 import { ViewUrlModal } from './ViewUrlModal';
 
@@ -37,7 +38,8 @@ export const Dashboard = () => {
   /* -------------------------------------------------------------------------- */
   const [urls, setUrls] = useState<IUrl[]>([]);
   const [copiedUrls, setCopiedUrls] = useState<Set<number>>(new Set());
-  const [qrCode, setQrCode] = useState<IQrCode>(DEFAULT_QR_CODE);
+  const [viewQrCode, setViewQrCode] = useState<IQrCode>(DEFAULT_QR_CODE);
+  const [deleteRedirectHash, setDeleteRedirectHash] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { signOut } = useAuth();
 
@@ -77,7 +79,7 @@ export const Dashboard = () => {
                 text={redirectUrl}
                 onCopy={handleCopyToClipboard}
               >
-                <label className="swap-rotate swap text-lg">
+                <label className="swap swap-rotate text-lg">
                   <input type="checkbox" />
                   <AiFillCopy className="swap-off cursor-pointer" />
                   <TiTickOutline className="swap-on cursor-pointer" />
@@ -109,19 +111,25 @@ export const Dashboard = () => {
       {
         header: 'Actions',
         cell: (props) => {
+          const {
+            redirectHash,
+            qrCode: { fgColor, isCreated },
+          } = props.row.original;
+
           const handleViewUrl = (): void => {
-            const {
-              redirectHash,
-              qrCode: { fgColor, isCreated },
-            } = props.row.original;
             const redirectUrl = `${BASE_URL}/url/${redirectHash}`;
 
-            setQrCode({
+            setViewQrCode({
               isCreated,
               redirectUrl,
               fgColor,
             });
             handleOpenModal('VIEW_URL');
+          };
+
+          const handleDeleteUrl = (): void => {
+            setDeleteRedirectHash(redirectHash);
+            handleOpenModal('DELETE_URL');
           };
 
           return (
@@ -130,7 +138,10 @@ export const Dashboard = () => {
                 className="cursor-pointer hover:text-custom-gold-primary"
                 onClick={handleViewUrl}
               />
-              <AiOutlineDelete className="cursor-pointer hover:text-custom-gold-primary" />
+              <AiOutlineDelete
+                className="cursor-pointer hover:text-custom-gold-primary"
+                onClick={handleDeleteUrl}
+              />
             </div>
           );
         },
@@ -171,14 +182,11 @@ export const Dashboard = () => {
     modal.close();
   };
 
-  const handleCreateUrl = async (): Promise<void> => {
+  const resetModal = async (id: keyof typeof MODAL_IDS): Promise<void> => {
     await fetchUrls();
-    handleCloseModal('CREATE_URL');
-  };
-
-  const handleCreateQrCode = async (): Promise<void> => {
-    await fetchUrls();
-    handleCloseModal('VIEW_URL');
+    handleCloseModal(id);
+    setDeleteRedirectHash('');
+    setViewQrCode(DEFAULT_QR_CODE);
   };
 
   /* -------------------------------------------------------------------------- */
@@ -188,13 +196,18 @@ export const Dashboard = () => {
     return (
       <Fragment>
         <CreateUrlModal
-          onSubmit={handleCreateUrl}
+          onSubmit={() => resetModal('CREATE_URL')}
           onClose={() => handleCloseModal('CREATE_URL')}
         />
         <ViewUrlModal
-          {...qrCode}
-          onSubmit={handleCreateQrCode}
+          {...viewQrCode}
+          onSubmit={() => resetModal('VIEW_URL')}
           onClose={() => handleCloseModal('VIEW_URL')}
+        />
+        <DeleteUrlModal
+          redirectHash={deleteRedirectHash}
+          onSubmit={() => resetModal('DELETE_URL')}
+          onClose={() => handleCloseModal('DELETE_URL')}
         />
       </Fragment>
     );
@@ -269,10 +282,10 @@ export const Dashboard = () => {
   };
 
   return (
-    <Container styles="py-16">
+    <Container styles="my-4">
       {renderModal()}
       <NavBar onLogout={signOut} />
-      <div className="mt-5 flex max-h-full w-full flex-col items-center rounded-2xl border border-neutral p-10">
+      <div className="mt-5 flex w-full flex-col items-center rounded-2xl border border-neutral p-10">
         <div className="mb-5 flex w-full items-center justify-between self-start text-2xl">
           <span className="font-bold">Dashboard</span>
           <button

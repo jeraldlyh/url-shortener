@@ -28,7 +28,7 @@ export class UrlRepository {
       .withConverter(AccountConverter)
       .get();
 
-    return result.data().urls;
+    return result.data().urls.filter((url) => !url.isDeleted);
   }
 
   async validateIfUrlExist(redirectHash: string): Promise<boolean> {
@@ -54,7 +54,7 @@ export class UrlRepository {
 
   async updateQrCodes(username: string, urls: Url[]): Promise<void> {
     const serializedUrls = urls.map((url) => UrlConverter.toFirestore(url));
-
+    console.log(serializedUrls);
     await firebase
       .firestore()
       .collection(this.accountCollection)

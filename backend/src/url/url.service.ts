@@ -53,4 +53,16 @@ export class UrlService {
 
     return await this.urlRepository.updateQrCodes(username, updatedUrls);
   }
+
+  async deleteUrl(username: string, redirectHash: string) {
+    const urls = await this.urlRepository.getAllUrlByUsername(username);
+    const updatedUrls = urls.map((url) => {
+      if (url.redirectHash === redirectHash) {
+        url.isDeleted = true;
+      }
+      return url;
+    });
+
+    return await this.urlRepository.updateQrCodes(username, updatedUrls);
+  }
 }
