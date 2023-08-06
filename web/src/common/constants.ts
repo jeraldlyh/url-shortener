@@ -11,7 +11,7 @@ export const BASE_URL = process.env.BACKEND_URL || 'http://localhost:8000';
 export const CLIENT_ROUTES = {
   HOME: '/',
   DASHBOARD: '/dashboard',
-  LOGIN: '/login',
+  SIGNIN: '/signIn',
   SIGNUP: '/signUp',
 };
 
@@ -29,7 +29,7 @@ export const SERVER_ROUTES = {
 };
 
 export const WHITELISTED_ROUTES = new Set([
-  CLIENT_ROUTES.LOGIN,
+  CLIENT_ROUTES.SIGNIN,
   CLIENT_ROUTES.SIGNUP,
   CLIENT_ROUTES.HOME,
 ]);

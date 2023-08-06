@@ -6,7 +6,7 @@ import icon from '../../public/icon.png';
 import { CLIENT_ROUTES, Container } from '../common';
 import { useAuth } from '../hooks';
 
-export const CreateAccount = () => {
+export const SignIn = () => {
   /* -------------------------------------------------------------------------- */
   /*                                   STATES                                   */
   /* -------------------------------------------------------------------------- */
@@ -14,7 +14,7 @@ export const CreateAccount = () => {
   const [password, setPassword] = useState<string>('');
   const [hasVisibility, setHasVisibility] = useState<boolean>(false);
   const router = useRouter();
-  const { signUp } = useAuth();
+  const { signIn } = useAuth();
 
   /* -------------------------------------------------------------------------- */
   /*                              HANDLER FUNCTIONS                             */
@@ -24,11 +24,11 @@ export const CreateAccount = () => {
   };
 
   const handleOnSubmit = async (): Promise<void> => {
-    await signUp(username, password);
+    await signIn(username, password);
   };
 
-  const handleGoToSignIn = (): void => {
-    router.push(CLIENT_ROUTES.LOGIN);
+  const handleGoToSignUp = (): void => {
+    router.push(CLIENT_ROUTES.SIGNUP);
   };
 
   const isButtonDisabled = () => !username || !password;
@@ -38,7 +38,7 @@ export const CreateAccount = () => {
   /* -------------------------------------------------------------------------- */
   return (
     <Container styles="justify-center">
-      <div className="flex flex-col items-center justify-center rounded-2xl">
+      <div className="flex w-full max-w-md flex-col items-center justify-center rounded-2xl">
         <div className="h-[100px] w-[100px]">
           <Image src={icon} sizes="100vw" alt="logo" />
         </div>
@@ -46,7 +46,7 @@ export const CreateAccount = () => {
           Create an account
         </span>
         <span className="mb-8 text-center text-sm italic text-custom-white">
-          An account allows you to create and delete shortened URLs
+          Unlock the full power of shortened links
         </span>
         <input
           className="input input-bordered mb-2 w-full"
@@ -80,15 +80,15 @@ export const CreateAccount = () => {
           onClick={handleOnSubmit}
           disabled={isButtonDisabled()}
         >
-          Create
+          Sign In
         </button>
         <div className="text-sm">
-          <span>Already have an account? </span>
+          <span>Don't have an account? </span>
           <button
             className="btn-link text-custom-gold-primary"
-            onClick={handleGoToSignIn}
+            onClick={handleGoToSignUp}
           >
-            Sign in
+            Create an account
           </button>
         </div>
       </div>

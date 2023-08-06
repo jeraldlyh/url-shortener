@@ -16,7 +16,7 @@ export const Landing = () => {
   };
 
   const handleContinue = (): void => {
-    router.push(CLIENT_ROUTES.LOGIN);
+    router.push(CLIENT_ROUTES.SIGNIN);
   };
 
   /* -------------------------------------------------------------------------- */

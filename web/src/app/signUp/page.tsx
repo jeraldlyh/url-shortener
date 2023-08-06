@@ -1,6 +1,6 @@
 'use client';
-import { CreateAccount } from '../../components';
+import { SignUp } from '../../components';
 
-export default function SignUp() {
-  return <CreateAccount />;
+export default function SignUpPage() {
+  return <SignUp />;
 }
