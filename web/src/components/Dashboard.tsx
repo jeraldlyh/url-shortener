@@ -6,54 +6,46 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import {
   AiFillCopy,
   AiFillDelete,
-  AiFillEdit,
+  AiFillEye,
   AiFillPlusCircle,
   AiOutlineLeft,
   AiOutlineRight,
 } from 'react-icons/ai';
-import { BASE_URL, Container, IPageProps, IUrl } from '../common';
+import { TiTickOutline } from 'react-icons/ti';
+import { BASE_URL, Container, IUrl } from '../common';
+import { useAuth } from '../hooks';
 import { UrlService } from '../services';
 import { CreateUrlModal } from './CreateUrlModal';
 import { NavBar } from './NavBar';
-
-interface IProps extends IPageProps {}
-
-const getData = (): IUrl[] => [
-  ...Array(30)
-    .fill(0)
-    .map((x, index) => ({
-      url: 'http://google.com',
-      title: 'asd',
-      redirectHash: 'a',
-      createdAt: new Date().toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        minute: 'numeric',
-        hour: 'numeric',
-      }),
-    })),
-];
-const data = getData();
+import { ViewUrlModal } from './ViewUrlModal';
 
 interface IToggleModal {
   isOpen: boolean;
-  type?: 'Create' | '';
+  type: 'Create' | 'View' | '';
+  redirectUrl: string;
+  fgColor?: string;
 }
 
-export const Dashboard = ({}: IProps) => {
+export const Dashboard = () => {
   /* -------------------------------------------------------------------------- */
   /*                                   STATES                                   */
   /* -------------------------------------------------------------------------- */
   const [urls, setUrls] = useState<IUrl[]>([]);
+  const [copiedUrls, setCopiedUrls] = useState<Set<number>>(new Set());
   const [toggleModal, setToggleModal] = useState<IToggleModal>({
-    isOpen: false,
-    type: '',
+    isOpen: true,
+    type: 'View',
+    redirectUrl: '',
+    fgColor: '',
   });
+  const router = useRouter();
+  const { signOut } = useAuth();
 
   useEffect(() => {
     fetchUrls();
@@ -63,18 +55,40 @@ export const Dashboard = ({}: IProps) => {
     () => [
       {
         header: 'Title',
-        cell: (info) => info.getValue(),
+        cell: (props) =>
+          props.getValue() || props.row.original.url.split('.')[1],
         accessorKey: 'title',
       },
       {
         header: 'URL',
-        cell: (info) => {
-          const redirectHash = info.getValue<string>();
+        cell: (props) => {
+          const redirectHash = props.getValue<string>();
           const redirectUrl = `${BASE_URL}/url/${redirectHash}`;
+          const isCopied = copiedUrls.has(props.row.index);
+
+          // NOTE: Prevent user from copying multiple times
+          const handleCopyToClipboard = (): boolean => {
+            if (isCopied) return false;
+
+            const updatedCopiedUrls = new Set(copiedUrls);
+            updatedCopiedUrls.add(props.row.index);
+
+            setCopiedUrls(updatedCopiedUrls);
+            return true;
+          };
 
           return (
             <div className="flex items-center space-x-2">
-              <AiFillCopy className="cursor-pointer text-lg hover:text-custom-gold-primary" />
+              <CopyToClipboard
+                text={redirectUrl}
+                onCopy={handleCopyToClipboard}
+              >
+                <label className="swap swap-rotate text-lg">
+                  <input type="checkbox" />
+                  <AiFillCopy className="swap-off cursor-pointer" />
+                  <TiTickOutline className="swap-on cursor-pointer" />
+                </label>
+              </CopyToClipboard>
               <a
                 className="text-ellipsis text-custom-gold-primary"
                 href={redirectUrl}
@@ -88,22 +102,46 @@ export const Dashboard = ({}: IProps) => {
       },
       {
         header: 'Created',
-        cell: (info) => info.getValue(),
+        cell: (props) =>
+          new Date(props.getValue<string>()).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+            minute: 'numeric',
+            hour: 'numeric',
+          }),
         accessorKey: 'createdAt',
       },
       {
         header: 'Actions',
-        cell: () => (
-          <div className="flex space-x-3">
-            <AiFillEdit className="cursor-pointer text-lg hover:text-custom-gold-primary" />
-            <AiFillDelete className="cursor-pointer text-lg hover:text-custom-gold-primary" />
-          </div>
-        ),
+        cell: (props) => {
+          const handleViewUrl = (): void => {
+            const redirectUrl = `${BASE_URL}/url/${props.row.original.redirectHash}`;
+
+            setToggleModal({
+              isOpen: true,
+              redirectUrl,
+              fgColor: props.row.original.qrFgColor,
+              type: 'View',
+            });
+          };
+
+          return (
+            <div className="flex space-x-3 text-lg">
+              <AiFillEye
+                className="cursor-pointer hover:text-custom-gold-primary"
+                onClick={handleViewUrl}
+              />
+              <AiFillDelete className="cursor-pointer hover:text-custom-gold-primary" />
+            </div>
+          );
+        },
       },
     ],
-    [],
+    [copiedUrls],
   );
 
+  const data = urls as IUrl[];
   const table = useReactTable({
     data,
     columns,
@@ -117,23 +155,24 @@ export const Dashboard = ({}: IProps) => {
   /* -------------------------------------------------------------------------- */
   const fetchUrls = async (): Promise<void> => {
     const urls = await UrlService.getAllUrls();
-
     setUrls(urls);
   };
 
   const resetModal = (): void => {
-    setToggleModal({ isOpen: false });
-  };
-
-  const handleLogout = (): void => {
-    console.log('logout');
+    setToggleModal({ isOpen: false, redirectUrl: '', fgColor: '', type: '' });
   };
 
   const handleToggleCreate = (): void => {
     setToggleModal({
       isOpen: true,
       type: 'Create',
+      redirectUrl: '',
     });
+  };
+
+  const handleCreateUrl = async (): Promise<void> => {
+    await fetchUrls();
+    resetModal();
   };
 
   /* -------------------------------------------------------------------------- */
@@ -143,8 +182,14 @@ export const Dashboard = ({}: IProps) => {
     switch (toggleModal.type) {
       case 'Create':
         return (
-          <CreateUrlModal isOpen={toggleModal.isOpen} onClose={resetModal} />
+          <CreateUrlModal
+            isOpen={toggleModal.isOpen}
+            onClose={resetModal}
+            onSubmit={handleCreateUrl}
+          />
         );
+      case 'View':
+        return <ViewUrlModal {...toggleModal} onClose={resetModal} />;
     }
   };
 
@@ -157,7 +202,7 @@ export const Dashboard = ({}: IProps) => {
         {headerGroup.headers.map((header, index) => (
           <th
             key={header.id || index}
-            className="py-3 text-start"
+            className="p-4 text-start"
             colSpan={header.colSpan}
           >
             {flexRender(header.column.columnDef.header, header.getContext())}
@@ -171,7 +216,7 @@ export const Dashboard = ({}: IProps) => {
     return table.getRowModel().rows.map((row) => (
       <tr key={row.id} className="border-b-[0.5px] border-gray-500">
         {row.getVisibleCells().map((cell) => (
-          <td key={cell.id} className="text-ellipsis py-4">
+          <td key={cell.id} className="text-ellipsis px-4 py-5">
             {flexRender(cell.column.columnDef.cell, cell.getContext())}
           </td>
         ))}
@@ -180,20 +225,33 @@ export const Dashboard = ({}: IProps) => {
   };
 
   const renderPagination = (): JSX.Element => {
-    return (
-      <div className="mt-5 flex h-10 rounded-xl bg-custom-gray-secondary/10">
+    if (!urls || urls?.length === 0) {
+      return (
         <button
-          className="h-full w-8 px-2 hover:rounded-l-xl hover:bg-custom-gray-secondary/25 disabled:cursor-not-allowed"
+          className="btn btn-primary my-4 w-full"
+          onClick={handleToggleCreate}
+        >
+          Create your first link
+        </button>
+      );
+    }
+    return (
+      <div className="join mt-4">
+        <button
+          className="btn join-item disabled:cursor-not-allowed"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
           <AiOutlineLeft />
         </button>
-        <div className="flex h-full cursor-pointer items-center px-3 font-medium uppercase hover:bg-custom-gray-secondary/25">
-          Page {table.getPageCount()}
-        </div>
         <button
-          className="h-full w-8 px-2 hover:rounded-r-xl hover:bg-custom-gray-secondary/25 disabled:cursor-not-allowed"
+          className="btn join-item"
+          disabled={!table.getCanPreviousPage() && !table.getCanNextPage()}
+        >
+          Page {table.getPageCount()}
+        </button>
+        <button
+          className="btn join-item disabled:cursor-not-allowed"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
@@ -206,8 +264,8 @@ export const Dashboard = ({}: IProps) => {
   return (
     <Container styles="py-16 space-y-5">
       {renderModal()}
-      <NavBar onLogout={handleLogout} />
-      <div className="flex max-h-full w-full flex-col items-center rounded-2xl bg-custom-gray-primary px-10 py-5">
+      <NavBar onLogout={signOut} />
+      <div className="flex max-h-full w-full flex-col items-center rounded-2xl border border-neutral p-10">
         <div className="mb-5 flex w-full items-center justify-between self-start text-2xl">
           <span className="font-bold">Shorted URLs Dashboard</span>
           <button

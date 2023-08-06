@@ -30,5 +30,8 @@ module.exports = {
             }
         },
     },
-    plugins: [],
+    plugins: [require("@tailwindcss/typography"), require("daisyui")],
+    daisyui: {
+        themes: ["dark", "light"]
+    }
 }

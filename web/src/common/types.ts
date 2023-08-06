@@ -1,14 +1,8 @@
-import React from 'react';
-
 export enum EPage {
   Landing,
   SignIn,
   CreateAccount,
   Dashboard,
-}
-
-export interface IPageProps {
-  onPageChange: React.Dispatch<React.SetStateAction<EPage>>;
 }
 
 export interface IUrl {
@@ -17,6 +11,7 @@ export interface IUrl {
   qrFgColor?: string;
   redirectHash: string;
   createdAt: string;
+  copied?: boolean;
 }
 
 export interface ICreateUrl {
@@ -25,7 +20,12 @@ export interface ICreateUrl {
   qrFgColor?: string;
 }
 
-export interface IModalCallbacks {
-  onConfirm?: () => void;
+export interface IBaseModalProps {
+  onSubmit?: () => Promise<void>;
   onClose?: () => void;
+  isOpen: boolean;
+}
+
+export interface IUser {
+  username: string | null;
 }

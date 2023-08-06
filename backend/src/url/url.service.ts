@@ -17,13 +17,14 @@ export class UrlService {
 
   async createUrl(username: string, url: Url): Promise<void> {
     const nanoid = customAlphabet(this.ALPHABETS);
-    const redirectHash = nanoid(this.URL_LENGTH);
+    let redirectHash = nanoid(this.URL_LENGTH);
 
-    const isHashExists = await this.urlRepository.validateIfUrlExist(
-      redirectHash,
-    );
+    // NOTE: Chances of collisions can be found here: https://zelark.github.io/nano-id-cc/
+    while (await this.urlRepository.validateIfUrlExist(redirectHash)) {
+      redirectHash = nanoid(this.URL_LENGTH);
+    }
 
-    url.redirectHash = isHashExists ? nanoid(this.URL_LENGTH) : redirectHash;
+    url.redirectHash = redirectHash;
     url.createdAt = new Date();
     return await this.urlRepository.createUrl(username, url);
   }

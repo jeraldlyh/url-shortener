@@ -1,13 +1,15 @@
 import { Switch } from '@headlessui/react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useState } from 'react';
-import { COLORS, ICreateUrl, IModalCallbacks, Modal } from '../common';
+import toast from 'react-hot-toast';
+import { COLORS, IBaseModalProps, ICreateUrl, Modal } from '../common';
+import { UrlService } from '../services';
+import { Utils } from '../utils';
 
-interface IProps extends IModalCallbacks {
-  isOpen: boolean;
-}
-
-export const CreateUrlModal = (props: IProps) => {
+export const CreateUrlModal = (props: IBaseModalProps) => {
+  /* -------------------------------------------------------------------------- */
+  /*                                   STATES                                   */
+  /* -------------------------------------------------------------------------- */
   const [enabled, setEnabled] = useState<boolean>(false);
   const [payload, setPayload] = useState<ICreateUrl>({
     title: '',
@@ -15,6 +17,9 @@ export const CreateUrlModal = (props: IProps) => {
     qrFgColor: '#000000',
   });
 
+  /* -------------------------------------------------------------------------- */
+  /*                              HANDLER FUNCTIONS                             */
+  /* -------------------------------------------------------------------------- */
   const handleOnChange = (key: keyof typeof payload, value: string): void => {
     setPayload({
       ...payload,
@@ -29,6 +34,19 @@ export const CreateUrlModal = (props: IProps) => {
     });
   };
 
+  const handleSubmit = async (): Promise<void> => {
+    await toast.promise(UrlService.createUrl(payload), {
+      loading: 'Creating url...',
+      success: 'Successfully created a new url',
+      error: (e) => Utils.capitalize(e.response.data.message.toString()),
+    });
+
+    props.onSubmit && (await props.onSubmit());
+  };
+
+  /* -------------------------------------------------------------------------- */
+  /*                                   RENDER                                   */
+  /* -------------------------------------------------------------------------- */
   const renderQrCode = (): JSX.Element | undefined => {
     if (!enabled) return;
 
@@ -71,7 +89,7 @@ export const CreateUrlModal = (props: IProps) => {
   };
 
   return (
-    <Modal title="Create a shortened URL" {...props}>
+    <Modal title="Create a shortened URL" {...props} onSubmit={handleSubmit}>
       <div className="flex flex-col space-y-4 text-custom-gray-primary">
         <div className="flex flex-col space-y-2">
           <span className="font-semibold">Destination</span>
@@ -113,6 +131,22 @@ export const CreateUrlModal = (props: IProps) => {
           </div>
           {renderQrCode()}
         </div>
+      </div>
+      <div className="mt-4 flex justify-between space-x-4">
+        <button
+          type="button"
+          className="w-full justify-center rounded-md bg-custom-gold-primary py-3 text-sm font-semibold text-custom-gray-primary hover:bg-custom-gold-secondary"
+          onClick={handleSubmit}
+        >
+          Confirm
+        </button>
+        <button
+          type="button"
+          className="w-full justify-center rounded-md border border-custom-gold-primary bg-inherit text-sm font-semibold text-custom-gray-primary hover:border-0 hover:bg-custom-gray-secondary"
+          onClick={props.onClose}
+        >
+          Cancel
+        </button>
       </div>
     </Modal>
   );

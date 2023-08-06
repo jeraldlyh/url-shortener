@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
+import { Toaster } from 'react-hot-toast';
+import { AuthProvider } from '../providers';
 import './globals.css';
-
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -13,8 +14,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" data-theme="dark">
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        gutter={8}
+        containerClassName=""
+        toastOptions={{
+          duration: 5000,
+        }}
+      />
+      <body>
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }
