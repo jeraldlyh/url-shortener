@@ -40,7 +40,7 @@ export const DEFAULT_USER = { username: '' };
 export const DEFAULT_QR_CODE: IQrCode = {
   isCreated: false,
   redirectUrl: '',
-  fgColor: '',
+  fgColor: '#000000',
 };
 
 export const MODAL_IDS = {

@@ -17,12 +17,6 @@ export interface IUrl {
   createdAt: string;
 }
 
-export interface ICreateUrl {
-  title?: string;
-  url: string;
-  qrFgColor?: string;
-}
-
 export interface IBaseModalProps {
   id: string;
   onSubmit?: () => Promise<void>;
@@ -45,4 +39,10 @@ export interface IQrCode {
   isCreated: boolean;
   redirectUrl?: string;
   fgColor?: string;
+}
+
+export interface ICreateUrl {
+  url: string;
+  title?: string;
+  qrCode: IQrCode;
 }
