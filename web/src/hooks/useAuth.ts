@@ -30,9 +30,14 @@ export const useAuth = () => {
     const isPathAllowed = WHITELISTED_ROUTES.has(pathname);
 
     if (!isPathAllowed) {
-      const isLoggedIn = await AuthService.validateUserAuth();
+      try {
+        const isLoggedIn = await AuthService.validateUserAuth();
 
-      if (!isLoggedIn) {
+        if (!isLoggedIn) {
+          resetUser();
+          goToLanding();
+        }
+      } catch (error) {
         resetUser();
         goToLanding();
       }
