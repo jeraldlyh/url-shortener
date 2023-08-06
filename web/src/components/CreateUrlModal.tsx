@@ -14,7 +14,7 @@ import {
 import { UrlService } from '../services';
 import { Utils } from '../utils';
 
-export const CreateUrlModal = (props: TModalProps) => {
+export const CreateUrlModal = ({ onClose, onSubmit }: TModalProps) => {
   /* -------------------------------------------------------------------------- */
   /*                                   STATES                                   */
   /* -------------------------------------------------------------------------- */
@@ -102,7 +102,7 @@ export const CreateUrlModal = (props: TModalProps) => {
       error: (e) => Utils.capitalize(e.response.data.message.toString()),
     });
 
-    props.onSubmit && (await props.onSubmit());
+    onSubmit && (await onSubmit());
   };
 
   const isSubmitDisabled = (): boolean => {
@@ -146,7 +146,6 @@ export const CreateUrlModal = (props: TModalProps) => {
 
   return (
     <Modal
-      {...props}
       id={MODAL_IDS.CREATE_URL}
       title="Create a shortened URL"
       onSubmit={handleSubmit}
@@ -202,7 +201,7 @@ export const CreateUrlModal = (props: TModalProps) => {
         </button>
         <button
           className="btn btn-secondary w-full flex-shrink"
-          onClick={props.onClose}
+          onClick={onClose}
         >
           Cancel
         </button>

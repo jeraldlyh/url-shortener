@@ -21,6 +21,7 @@ export const SERVER_ROUTES = {
   URL: {
     CREATE: '/url',
     GET_ALL: '/url',
+    QR_CODE: '/url/qr',
   },
   AUTH: {
     SIGNOUT: '/auth/signOut',

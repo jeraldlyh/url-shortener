@@ -5,14 +5,15 @@ export enum EPage {
   Dashboard,
 }
 
+interface IBaseQrCode {
+  isCreated: boolean;
+  fgColor: string;
+}
 export interface IUrl {
   url: string;
   title?: string;
   redirectHash?: string;
-  qrCode: {
-    fgColor: string;
-    isCreated: boolean;
-  };
+  qrCode: IBaseQrCode;
   copied?: boolean;
   createdAt: string;
 }
@@ -34,10 +35,14 @@ export interface IDownload {
   description: string;
   handleDownload: () => void;
 }
+export interface ICreateQrCode {
+  qrCode: IBaseQrCode;
+  redirectHash: string;
+}
 
 export interface IQrCode {
-  isCreated: boolean;
   redirectUrl: string;
+  isCreated: boolean;
   fgColor: string;
 }
 

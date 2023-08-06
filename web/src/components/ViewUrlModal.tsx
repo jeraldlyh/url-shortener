@@ -1,7 +1,7 @@
 import QRCode from 'qrcode.react';
 import { Fragment, useState } from 'react';
+import toast from 'react-hot-toast';
 import {
-  DEFAULT_QR_CODE,
   IDownload,
   IQrCode,
   Modal,
@@ -9,6 +9,8 @@ import {
   QrCodeCanvas,
   TModalProps,
 } from '../common';
+import { UrlService } from '../services';
+import { Utils } from '../utils';
 import { ImageSelect } from './ImageSelect';
 
 interface IProps extends TModalProps, IQrCode {}
@@ -46,14 +48,18 @@ const IMAGE_DOWNLOAD_TYPES: IDownload[] = [
   },
 ];
 
-export const ViewUrlModal = (props: IProps) => {
+export const ViewUrlModal = ({
+  isCreated,
+  redirectUrl,
+  onClose,
+  onSubmit,
+}: IProps) => {
   /* -------------------------------------------------------------------------- */
   /*                                    STATE                                   */
   /* -------------------------------------------------------------------------- */
-  const { isCreated, redirectUrl, fgColor, ...otherProps } = props;
   const defaultOption = IMAGE_DOWNLOAD_TYPES[0];
   const [selected, setSelected] = useState<IDownload>(defaultOption);
-  const [qrCode, setQrCode] = useState<IQrCode>(DEFAULT_QR_CODE);
+  const [fgColor, setFgColor] = useState<string>('#00000');
 
   /* -------------------------------------------------------------------------- */
   /*                              HANDLER FUNCTIONS                             */
@@ -66,14 +72,26 @@ export const ViewUrlModal = (props: IProps) => {
     setSelected(selectedOption);
   };
 
-  const handleFgColorChange = (value: string): void => {
-    setQrCode({
-      ...qrCode,
-      fgColor: value,
-    });
-  };
+  const handleSubmit = async (): Promise<void> => {
+    const tokens = redirectUrl.split('/');
+    const redirectHash = tokens[tokens.length - 1];
 
-  const handleSubmit = (): Promise<void> => {};
+    await toast.promise(
+      UrlService.createQrCode({
+        qrCode: {
+          fgColor,
+          isCreated: true,
+        },
+        redirectHash,
+      }),
+      {
+        loading: 'Creating QR code...',
+        success: 'Successfully created a QR code',
+        error: (e) => Utils.capitalize(e.response.data.message.toString()),
+      },
+    );
+    onSubmit && (await onSubmit());
+  };
 
   /* -------------------------------------------------------------------------- */
   /*                                   RENDER                                   */
@@ -82,11 +100,14 @@ export const ViewUrlModal = (props: IProps) => {
     if (!isCreated)
       return (
         <Fragment>
+          <span className="font-semilight mb-5 text-sm italic">
+            You have yet to create a QR code for this URL
+          </span>
           <QrCodeCanvas
-            fgColor={qrCode.fgColor}
+            fgColor={fgColor}
             url={redirectUrl}
-            onPresetChange={handleFgColorChange}
-            onTextChange={handleFgColorChange}
+            onPresetChange={setFgColor}
+            onTextChange={setFgColor}
           />
           <div className="mt-5 flex w-full space-x-4">
             <button
@@ -97,7 +118,7 @@ export const ViewUrlModal = (props: IProps) => {
             </button>
             <button
               className="btn btn-secondary w-full flex-shrink"
-              onClick={props.onClose}
+              onClick={onClose}
             >
               Cancel
             </button>
@@ -133,7 +154,7 @@ export const ViewUrlModal = (props: IProps) => {
           >
             Generate
           </button>
-          <button className="btn btn-secondary w-full" onClick={props.onClose}>
+          <button className="btn btn-secondary w-full" onClick={onClose}>
             Cancel
           </button>
         </div>
@@ -147,7 +168,6 @@ export const ViewUrlModal = (props: IProps) => {
       title={
         isCreated ? 'Your QR code is ready 🥳' : 'Start generating your QR code'
       }
-      {...otherProps}
     >
       <div className="flex w-full flex-col items-center">{renderBody()}</div>
     </Modal>
