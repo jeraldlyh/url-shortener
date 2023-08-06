@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { customAlphabet } from 'nanoid';
-import { IUrl, Url } from './url.model';
+import { CreateQrCodeDto, IUrl, Url } from './url.model';
 import { UrlRepository } from './url.repository';
 
 @Injectable()
@@ -38,5 +38,19 @@ export class UrlService {
     console.log(urls, entry, redirectHash);
 
     return entry?.url;
+  }
+
+  async createQrCode(username: string, qrCode: CreateQrCodeDto): Promise<void> {
+    const { redirectHash, ...rest } = qrCode;
+    const urls = await this.urlRepository.getAllUrlByUsername(username);
+
+    const updatedUrls = urls.map((url) => {
+      if (url.redirectHash === redirectHash) {
+        url.qrCode = rest.qrCode;
+      }
+      return url;
+    });
+
+    return await this.urlRepository.updateQrCodes(username, updatedUrls);
   }
 }

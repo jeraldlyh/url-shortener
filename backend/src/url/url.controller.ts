@@ -10,7 +10,7 @@ import {
 import { Auth } from '../auth/auth.decorator';
 import { AuthGuard } from '../auth/auth.guard';
 import { IAuth } from '../auth/auth.types';
-import { IUrl, Url } from './url.model';
+import { CreateQrCodeDto, IUrl, Url } from './url.model';
 import { UrlService } from './url.service';
 
 @Controller('url')
@@ -40,5 +40,13 @@ export class UrlController {
   @Post()
   async createUrl(@Auth() auth: IAuth, @Body() url: Url): Promise<void> {
     return await this.urlService.createUrl(auth.username, url);
+  }
+
+  @Post('/qr')
+  async createQrCode(
+    @Auth() auth: IAuth,
+    @Body() qrCode: CreateQrCodeDto,
+  ): Promise<void> {
+    return await this.urlService.createQrCode(auth.username, qrCode);
   }
 }

@@ -1,10 +1,14 @@
 import { Transform, TransformFnParams } from 'class-transformer';
 import { IsNotEmpty, IsString, Length } from 'class-validator';
-import { DocumentData, QueryDocumentSnapshot } from 'firebase-admin/firestore';
-import { BaseModel } from '../common';
+import {
+  DocumentData,
+  QueryDocumentSnapshot,
+  Timestamp,
+} from 'firebase-admin/firestore';
+import { BaseModel, IBaseModel } from '../common';
 import { IUrl, QrCode, Url } from '../url/url.model';
 
-interface IAccount {
+export interface IAccount extends IBaseModel {
   username: string;
   password: string;
   urls?: IUrl[];
@@ -29,7 +33,7 @@ export class Account extends BaseModel implements IAccount {
     password: string,
     urls: IUrl[],
     isDeleted: boolean,
-    createdAt: Date,
+    createdAt: Date | Timestamp,
   ) {
     super(createdAt, isDeleted);
     this.username = username;
@@ -39,7 +43,7 @@ export class Account extends BaseModel implements IAccount {
 }
 
 export const AccountConverter = {
-  toFirestore(account: Account): DocumentData {
+  toFirestore(account: IAccount): DocumentData {
     return {
       username: account.username,
       password: account.password,
@@ -49,7 +53,7 @@ export const AccountConverter = {
     };
   },
 
-  fromFirestore(snapshot: QueryDocumentSnapshot): Account {
+  fromFirestore(snapshot: QueryDocumentSnapshot<IAccount>): IAccount {
     const data = snapshot.data();
 
     return new Account(
@@ -63,11 +67,11 @@ export const AccountConverter = {
             new QrCode(meta.qrCode.fgColor, meta.qrCode.isCreated),
             meta.redirectHash,
             meta.isDeleted,
-            meta.createdAt.toDate(),
+            (meta.createdAt as Timestamp).toDate(),
           ),
       ),
       data.isDeleted,
-      data.createdAt.toDate(),
+      (data.createdAt as Timestamp).toDate(),
     );
   },
 };

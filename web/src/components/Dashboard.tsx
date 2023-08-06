@@ -176,6 +176,11 @@ export const Dashboard = () => {
     handleCloseModal('CREATE_URL');
   };
 
+  const handleCreateQrCode = async (): Promise<void> => {
+    await fetchUrls();
+    handleCloseModal('VIEW_URL');
+  };
+
   /* -------------------------------------------------------------------------- */
   /*                              RENDER FUNCTIONS                              */
   /* -------------------------------------------------------------------------- */
@@ -183,11 +188,12 @@ export const Dashboard = () => {
     return (
       <Fragment>
         <CreateUrlModal
-          onClose={() => handleCloseModal('CREATE_URL')}
           onSubmit={handleCreateUrl}
+          onClose={() => handleCloseModal('CREATE_URL')}
         />
         <ViewUrlModal
           {...qrCode}
+          onSubmit={handleCreateQrCode}
           onClose={() => handleCloseModal('VIEW_URL')}
         />
       </Fragment>
@@ -263,10 +269,10 @@ export const Dashboard = () => {
   };
 
   return (
-    <Container styles="py-16 space-y-5">
+    <Container styles="py-16">
       {renderModal()}
       <NavBar onLogout={signOut} />
-      <div className="flex max-h-full w-full flex-col items-center rounded-2xl border border-neutral p-10">
+      <div className="mt-5 flex max-h-full w-full flex-col items-center rounded-2xl border border-neutral p-10">
         <div className="mb-5 flex w-full items-center justify-between self-start text-2xl">
           <span className="font-bold">Dashboard</span>
           <button

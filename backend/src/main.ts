@@ -20,6 +20,7 @@ async function bootstrap() {
   firebase.initializeApp({
     credential: firebase.credential.cert(serviceAccount),
   });
+  firebase.firestore().settings({ ignoreUndefinedProperties: true });
 
   app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser());
