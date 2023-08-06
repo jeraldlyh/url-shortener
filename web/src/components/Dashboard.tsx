@@ -6,31 +6,30 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import {
   AiFillCopy,
-  AiFillDelete,
-  AiFillEye,
   AiFillPlusCircle,
+  AiOutlineCloudDownload,
+  AiOutlineDelete,
   AiOutlineLeft,
   AiOutlineRight,
 } from 'react-icons/ai';
 import { TiTickOutline } from 'react-icons/ti';
-import { BASE_URL, Container, IUrl } from '../common';
+import {
+  BASE_URL,
+  Container,
+  DEFAULT_QR_CODE,
+  IQrCode,
+  IUrl,
+  MODAL_IDS,
+} from '../common';
 import { useAuth } from '../hooks';
 import { UrlService } from '../services';
 import { CreateUrlModal } from './CreateUrlModal';
 import { NavBar } from './NavBar';
 import { ViewUrlModal } from './ViewUrlModal';
-
-interface IToggleModal {
-  isOpen: boolean;
-  type: 'Create' | 'View' | '';
-  redirectUrl: string;
-  fgColor?: string;
-}
 
 export const Dashboard = () => {
   /* -------------------------------------------------------------------------- */
@@ -38,13 +37,8 @@ export const Dashboard = () => {
   /* -------------------------------------------------------------------------- */
   const [urls, setUrls] = useState<IUrl[]>([]);
   const [copiedUrls, setCopiedUrls] = useState<Set<number>>(new Set());
-  const [toggleModal, setToggleModal] = useState<IToggleModal>({
-    isOpen: true,
-    type: 'View',
-    redirectUrl: '',
-    fgColor: '',
-  });
-  const router = useRouter();
+  const [qrCode, setQrCode] = useState<IQrCode>(DEFAULT_QR_CODE);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const { signOut } = useAuth();
 
   useEffect(() => {
@@ -83,7 +77,7 @@ export const Dashboard = () => {
                 text={redirectUrl}
                 onCopy={handleCopyToClipboard}
               >
-                <label className="swap swap-rotate text-lg">
+                <label className="swap-rotate swap text-lg">
                   <input type="checkbox" />
                   <AiFillCopy className="swap-off cursor-pointer" />
                   <TiTickOutline className="swap-on cursor-pointer" />
@@ -116,23 +110,27 @@ export const Dashboard = () => {
         header: 'Actions',
         cell: (props) => {
           const handleViewUrl = (): void => {
-            const redirectUrl = `${BASE_URL}/url/${props.row.original.redirectHash}`;
+            const {
+              redirectHash,
+              qrCode: { fgColor, isCreated },
+            } = props.row.original;
+            const redirectUrl = `${BASE_URL}/url/${redirectHash}`;
 
-            setToggleModal({
-              isOpen: true,
+            setQrCode({
+              isCreated,
               redirectUrl,
-              fgColor: props.row.original.qrFgColor,
-              type: 'View',
+              fgColor,
             });
+            handleOpenModal('VIEW_URL');
           };
 
           return (
             <div className="flex space-x-3 text-lg">
-              <AiFillEye
+              <AiOutlineCloudDownload
                 className="cursor-pointer hover:text-custom-gold-primary"
                 onClick={handleViewUrl}
               />
-              <AiFillDelete className="cursor-pointer hover:text-custom-gold-primary" />
+              <AiOutlineDelete className="cursor-pointer hover:text-custom-gold-primary" />
             </div>
           );
         },
@@ -156,41 +154,44 @@ export const Dashboard = () => {
   const fetchUrls = async (): Promise<void> => {
     const urls = await UrlService.getAllUrls();
     setUrls(urls);
+    setIsLoading(false);
   };
 
-  const resetModal = (): void => {
-    setToggleModal({ isOpen: false, redirectUrl: '', fgColor: '', type: '' });
+  const handleOpenModal = (id: keyof typeof MODAL_IDS): void => {
+    const modalId = MODAL_IDS[id];
+    const modal = document.getElementById(modalId) as HTMLFormElement;
+
+    modal.showModal();
   };
 
-  const handleToggleCreate = (): void => {
-    setToggleModal({
-      isOpen: true,
-      type: 'Create',
-      redirectUrl: '',
-    });
+  const handleCloseModal = (id: keyof typeof MODAL_IDS): void => {
+    const modalId = MODAL_IDS[id];
+    const modal = document.getElementById(modalId) as HTMLFormElement;
+
+    modal.close();
   };
 
   const handleCreateUrl = async (): Promise<void> => {
     await fetchUrls();
-    resetModal();
+    handleCloseModal('CREATE_URL');
   };
 
   /* -------------------------------------------------------------------------- */
   /*                              RENDER FUNCTIONS                              */
   /* -------------------------------------------------------------------------- */
-  const renderModal = (): JSX.Element | undefined => {
-    switch (toggleModal.type) {
-      case 'Create':
-        return (
-          <CreateUrlModal
-            isOpen={toggleModal.isOpen}
-            onClose={resetModal}
-            onSubmit={handleCreateUrl}
-          />
-        );
-      case 'View':
-        return <ViewUrlModal {...toggleModal} onClose={resetModal} />;
-    }
+  const renderModal = (): JSX.Element => {
+    return (
+      <Fragment>
+        <CreateUrlModal
+          onClose={() => handleCloseModal('CREATE_URL')}
+          onSubmit={handleCreateUrl}
+        />
+        <ViewUrlModal
+          {...qrCode}
+          onClose={() => handleCloseModal('VIEW_URL')}
+        />
+      </Fragment>
+    );
   };
 
   const renderTableHeader = (): JSX.Element[] => {
@@ -229,7 +230,7 @@ export const Dashboard = () => {
       return (
         <button
           className="btn btn-primary my-4 w-full"
-          onClick={handleToggleCreate}
+          onClick={() => handleOpenModal('CREATE_URL')}
         >
           Create your first link
         </button>
@@ -267,10 +268,10 @@ export const Dashboard = () => {
       <NavBar onLogout={signOut} />
       <div className="flex max-h-full w-full flex-col items-center rounded-2xl border border-neutral p-10">
         <div className="mb-5 flex w-full items-center justify-between self-start text-2xl">
-          <span className="font-bold">Shorted URLs Dashboard</span>
+          <span className="font-bold">Dashboard</span>
           <button
             className="hover:text-custom-gold-primary"
-            onClick={handleToggleCreate}
+            onClick={() => handleOpenModal('CREATE_URL')}
           >
             <AiFillPlusCircle />
           </button>

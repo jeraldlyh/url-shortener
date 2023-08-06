@@ -1,36 +1,101 @@
-import { Switch } from '@headlessui/react';
 import { QRCodeSVG } from 'qrcode.react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { COLORS, IBaseModalProps, ICreateUrl, Modal } from '../common';
+import { BiError } from 'react-icons/bi';
+import { ValidationError } from 'yup';
+import {
+  CREATE_URL_SCHEMA,
+  DEFAULT_QR_CODE,
+  ICreateUrl,
+  Modal,
+  MODAL_IDS,
+  PRESET_COLORS,
+  TModalProps,
+} from '../common';
 import { UrlService } from '../services';
 import { Utils } from '../utils';
 
-export const CreateUrlModal = (props: IBaseModalProps) => {
+export const CreateUrlModal = (props: TModalProps) => {
   /* -------------------------------------------------------------------------- */
   /*                                   STATES                                   */
   /* -------------------------------------------------------------------------- */
-  const [enabled, setEnabled] = useState<boolean>(false);
   const [payload, setPayload] = useState<ICreateUrl>({
     title: '',
     url: '',
-    qrFgColor: '#000000',
+    qrCode: DEFAULT_QR_CODE,
   });
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
+  useEffect(() => {
+    console.log(payload);
+  }, [payload]);
   /* -------------------------------------------------------------------------- */
   /*                              HANDLER FUNCTIONS                             */
   /* -------------------------------------------------------------------------- */
-  const handleOnChange = (key: keyof typeof payload, value: string): void => {
-    setPayload({
-      ...payload,
-      [key]: value,
-    });
+  const handleOnChange = async (
+    key: keyof typeof payload,
+    value: string | boolean,
+  ): Promise<void> => {
+    switch (key) {
+      case 'title':
+      case 'url':
+        try {
+          await CREATE_URL_SCHEMA.validate(payload);
+          setErrorMessage('');
+        } catch (error) {
+          setErrorMessage((error as ValidationError).message);
+        } finally {
+          setPayload({
+            ...payload,
+            [key]: value,
+          });
+        }
+        return;
+      case 'qrCode':
+        if (typeof value === 'boolean') {
+          setPayload({
+            ...payload,
+            qrCode: {
+              ...payload.qrCode,
+              isCreated: value,
+            },
+          });
+        } else {
+          // NOTE: Prevent user from deleting hashtag
+          const newInput = value as string;
+          const isHashTag = newInput.length < 1;
+          const isExceedChar = newInput.length > 7;
+          const isAlphaNumeric =
+            newInput === '#' ||
+            Utils.isAlphaNumeric(newInput.charAt(newInput.length - 1));
+          const isFirstCharHashTag = newInput.charAt(0) === '#';
+
+          if (
+            !isFirstCharHashTag ||
+            isHashTag ||
+            isExceedChar ||
+            !isAlphaNumeric
+          )
+            return;
+
+          setPayload({
+            ...payload,
+            qrCode: {
+              ...payload.qrCode,
+              fgColor: newInput,
+            },
+          });
+        }
+    }
   };
 
   const handleOnColorPreset = (value: string): void => {
     setPayload({
       ...payload,
-      qrFgColor: value,
+      qrCode: {
+        ...payload.qrCode,
+        fgColor: value,
+      },
     });
   };
 
@@ -44,105 +109,132 @@ export const CreateUrlModal = (props: IBaseModalProps) => {
     props.onSubmit && (await props.onSubmit());
   };
 
+  const isSubmitDisabled = (): boolean => {
+    return !payload.url || !!errorMessage;
+  };
+
   /* -------------------------------------------------------------------------- */
   /*                                   RENDER                                   */
   /* -------------------------------------------------------------------------- */
   const renderQrCode = (): JSX.Element | undefined => {
-    if (!enabled) return;
+    if (!payload.qrCode.isCreated) return;
+
+    const renderPresetColours = (): JSX.Element[] => {
+      return PRESET_COLORS.map((color) => (
+        <button
+          className="h-9 w-9 rounded-full"
+          style={{ backgroundColor: color }}
+          onClick={() => handleOnColorPreset(color)}
+        />
+      ));
+    };
 
     return (
-      <div className="flex flex-col items-center">
-        <div className="flex w-full items-center justify-between">
-          <div className="flex">
-            <div
-              className={`h-11 w-11 rounded-l-lg bg-[${payload.qrFgColor}]`}
-              style={{ backgroundColor: payload.qrFgColor }}
-            />
-            <input
-              className="w-25 rounded-r-lg border border-custom-gray-secondary bg-inherit p-2 placeholder:text-sm placeholder:italic focus:border focus:border-custom-gold-primary focus:outline-none"
-              placeholder="#000000"
-              type="text"
-              value={payload.qrFgColor}
-              onChange={(e) => handleOnChange('qrFgColor', e.target.value)}
-            />
-          </div>
-          <button
-            className="h-9 w-9 rounded-full bg-custom-qr-primary"
-            onClick={() => handleOnColorPreset(COLORS.QR.PRIMARY)}
+      <div className="flex w-full flex-col items-center space-y-4">
+        <div className="input-group w-full">
+          <div
+            className={`h-auto w-1/6 rounded-l-lg bg-[${payload.qrCode.fgColor}]`}
+            style={{ backgroundColor: payload.qrCode.fgColor }}
           />
-          <button
-            className="h-9 w-9 rounded-full bg-custom-qr-secondary"
-            onClick={() => handleOnColorPreset(COLORS.QR.SECONDARY)}
-          />
-          <button
-            className="h-9 w-9 rounded-full bg-custom-qr-tertiary"
-            onClick={() => handleOnColorPreset(COLORS.QR.TERTIARY)}
+          <input
+            className="input input-bordered w-5/6 px-3 italic placeholder:text-sm focus:outline-none"
+            placeholder="#000000"
+            type="text"
+            value={payload.qrCode.fgColor}
+            onChange={(e) => handleOnChange('qrCode', e.target.value)}
           />
         </div>
-        <QRCodeSVG
-          className="my-7"
-          value={payload.url}
-          fgColor={payload.qrFgColor}
-        />
+        <div className="w-full">
+          <div className="mb-2 self-start">
+            <span className="font-semibold">Presets </span>
+            <span className="italic">(optional)</span>
+          </div>
+          <div className="flex w-full">
+            <div className="grid w-1/3 grid-cols-3 gap-4">
+              {renderPresetColours()}
+            </div>
+            <div className="mx-auto rounded-lg border border-base-content/20 p-4">
+              <QRCodeSVG value={payload.url} fgColor={payload.qrCode.fgColor} />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderErrorMessage = (): JSX.Element | undefined => {
+    if (!errorMessage) return;
+
+    return (
+      <div
+        className="tooltip tooltip-left absolute right-0 top-0"
+        data-tip={errorMessage}
+      >
+        <button className="focused:outline-none btn border-none bg-inherit text-2xl text-error hover:bg-inherit">
+          <BiError />
+        </button>
       </div>
     );
   };
 
   return (
-    <Modal title="Create a shortened URL" {...props} onSubmit={handleSubmit}>
-      <div className="flex flex-col space-y-4 text-custom-gray-primary">
-        <div className="flex flex-col space-y-2">
-          <span className="font-semibold">Destination</span>
-          <input
-            className="rounded-lg border border-custom-gray-secondary bg-inherit p-2 placeholder:text-sm placeholder:italic focus:border focus:border-custom-gold-primary focus:outline-none"
-            placeholder="https://jeraldlyh.com"
-            onChange={(e) => handleOnChange('url', e.target.value)}
-          />
+    <Modal
+      {...props}
+      id={MODAL_IDS.CREATE_URL}
+      title="Create a shortened URL"
+      onSubmit={handleSubmit}
+    >
+      <div className="flex flex-col space-y-2">
+        <div className="flex flex-col">
+          <span className="mb-2 font-semibold">Destination</span>
+          <div className="relative w-full">
+            <input
+              className="input input-bordered w-full px-3 placeholder:text-sm placeholder:italic focus:outline-none"
+              placeholder="https://jeraldlyh.com"
+              onChange={(e) => handleOnChange('url', e.target.value)}
+            />
+            {renderErrorMessage()}
+          </div>
         </div>
-        <div className="flex flex-col space-y-2">
-          <div>
+        <div className="flex flex-col">
+          <div className="mb-2">
             <span className="font-semibold">Title </span>
             <span className="italic">(optional)</span>
           </div>
           <input
-            className="rounded-lg border border-custom-gray-secondary bg-inherit p-2 placeholder:text-sm placeholder:italic focus:border focus:border-custom-gold-primary focus:outline-none"
+            className="input input-bordered px-3 placeholder:text-sm placeholder:italic focus:outline-none"
             onChange={(e) => handleOnChange('title', e.target.value)}
           />
         </div>
-        <div className="flex flex-col space-y-2">
-          <div>
+        <div className="flex flex-col">
+          <div className="mb-2">
             <span className="font-semibold">QR code </span>
             <span className="italic">(optional)</span>
           </div>
-          <div className="flex items-center space-x-3">
-            <Switch
-              checked={enabled}
-              onChange={setEnabled}
-              className={`${enabled ? 'bg-custom-gold-primary' : 'bg-[#DBE0EB]'}
-          relative inline-flex h-6 w-14 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
-            >
-              <span
-                aria-hidden="true"
-                className={`${enabled ? 'translate-x-6' : 'translate-x-0'}
-            pointer-events-none inline-block h-5 w-7 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
-              />
-            </Switch>
+          <div className="mb-2 flex items-center space-x-3">
+            <input
+              type="checkbox"
+              className="toggle"
+              checked={payload.qrCode.isCreated}
+              onChange={() =>
+                handleOnChange('qrCode', !payload.qrCode.isCreated)
+              }
+            />
             <span>Generate a QR code for anyone to scan it</span>
           </div>
-          {renderQrCode()}
         </div>
+        {renderQrCode()}
       </div>
-      <div className="mt-4 flex justify-between space-x-4">
+      <div className="mt-5 flex justify-between space-x-4">
         <button
-          type="button"
-          className="w-full justify-center rounded-md bg-custom-gold-primary py-3 text-sm font-semibold text-custom-gray-primary hover:bg-custom-gold-secondary"
+          className="btn btn-primary w-1/2 flex-shrink"
           onClick={handleSubmit}
+          disabled={isSubmitDisabled()}
         >
           Confirm
         </button>
         <button
-          type="button"
-          className="w-full justify-center rounded-md border border-custom-gold-primary bg-inherit text-sm font-semibold text-custom-gray-primary hover:border-0 hover:bg-custom-gray-secondary"
+          className="btn btn-secondary w-1/2 flex-shrink"
           onClick={props.onClose}
         >
           Cancel

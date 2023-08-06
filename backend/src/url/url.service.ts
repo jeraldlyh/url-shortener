@@ -26,6 +26,7 @@ export class UrlService {
 
     url.redirectHash = redirectHash;
     url.createdAt = new Date();
+    url.isDeleted = false;
     return await this.urlRepository.createUrl(username, url);
   }
 

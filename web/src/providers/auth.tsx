@@ -41,7 +41,7 @@ const AuthProvider = ({ children }: IAuthProvider) => {
     } else {
       const timeoutId = setTimeout(() => {
         setShowAnimation(false);
-      }, 5000);
+      }, 1500);
 
       return () => clearTimeout(timeoutId);
     }
