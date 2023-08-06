@@ -282,10 +282,10 @@ export const Dashboard = () => {
   };
 
   return (
-    <Container styles="py-16">
+    <Container styles="my-4">
       {renderModal()}
       <NavBar onLogout={signOut} />
-      <div className="mt-5 flex max-h-full w-full flex-col items-center rounded-2xl border border-neutral p-10">
+      <div className="mt-5 flex w-full flex-col items-center rounded-2xl border border-neutral p-10">
         <div className="mb-5 flex w-full items-center justify-between self-start text-2xl">
           <span className="font-bold">Dashboard</span>
           <button

@@ -5,16 +5,16 @@ import { ValidationError } from 'yup';
 import {
   CREATE_URL_SCHEMA,
   DEFAULT_QR_CODE,
+  ICallbacks,
   ICreateUrl,
   Modal,
   MODAL_IDS,
   QrCodeCanvas,
-  TModalProps,
 } from '../common';
 import { UrlService } from '../services';
 import { Utils } from '../utils';
 
-export const CreateUrlModal = ({ onClose, onSubmit }: TModalProps) => {
+export const CreateUrlModal = ({ onClose, onSubmit }: ICallbacks) => {
   /* -------------------------------------------------------------------------- */
   /*                                   STATES                                   */
   /* -------------------------------------------------------------------------- */
@@ -148,7 +148,10 @@ export const CreateUrlModal = ({ onClose, onSubmit }: TModalProps) => {
     <Modal
       id={MODAL_IDS.CREATE_URL}
       title="Create a shortened URL"
+      isSubmitDisabled={isSubmitDisabled()}
+      submitText="Confirm"
       onSubmit={handleSubmit}
+      onClose={onClose}
     >
       <div className="flex flex-col space-y-2">
         <div className="flex flex-col">
@@ -190,21 +193,6 @@ export const CreateUrlModal = ({ onClose, onSubmit }: TModalProps) => {
           </div>
         </div>
         {renderQrCode()}
-      </div>
-      <div className="mt-5 flex justify-between space-x-4">
-        <button
-          className="btn btn-primary w-full flex-shrink"
-          onClick={handleSubmit}
-          disabled={isSubmitDisabled()}
-        >
-          Confirm
-        </button>
-        <button
-          className="btn btn-secondary w-full flex-shrink"
-          onClick={onClose}
-        >
-          Cancel
-        </button>
       </div>
     </Modal>
   );
