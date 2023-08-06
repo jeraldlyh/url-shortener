@@ -10,7 +10,7 @@ export interface IUrl {
   title?: string;
   redirectHash?: string;
   qrCode: {
-    fgColor?: string;
+    fgColor: string;
     isCreated: boolean;
   };
   copied?: boolean;
@@ -37,8 +37,8 @@ export interface IDownload {
 
 export interface IQrCode {
   isCreated: boolean;
-  redirectUrl?: string;
-  fgColor?: string;
+  redirectUrl: string;
+  fgColor: string;
 }
 
 export interface ICreateUrl {

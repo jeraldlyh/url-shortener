@@ -1,5 +1,4 @@
-import { QRCodeSVG } from 'qrcode.react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { BiError } from 'react-icons/bi';
 import { ValidationError } from 'yup';
@@ -9,7 +8,7 @@ import {
   ICreateUrl,
   Modal,
   MODAL_IDS,
-  PRESET_COLORS,
+  QrCodeCanvas,
   TModalProps,
 } from '../common';
 import { UrlService } from '../services';
@@ -26,9 +25,6 @@ export const CreateUrlModal = (props: TModalProps) => {
   });
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  useEffect(() => {
-    console.log(payload);
-  }, [payload]);
   /* -------------------------------------------------------------------------- */
   /*                              HANDLER FUNCTIONS                             */
   /* -------------------------------------------------------------------------- */
@@ -119,46 +115,17 @@ export const CreateUrlModal = (props: TModalProps) => {
   const renderQrCode = (): JSX.Element | undefined => {
     if (!payload.qrCode.isCreated) return;
 
-    const renderPresetColours = (): JSX.Element[] => {
-      return PRESET_COLORS.map((color) => (
-        <button
-          className="h-9 w-9 rounded-full"
-          style={{ backgroundColor: color }}
-          onClick={() => handleOnColorPreset(color)}
-        />
-      ));
+    const handleTextChange = async (value: string) => {
+      await handleOnChange('qrCode', value);
     };
 
     return (
-      <div className="flex w-full flex-col items-center space-y-4">
-        <div className="input-group w-full">
-          <div
-            className={`h-auto w-1/6 rounded-l-lg bg-[${payload.qrCode.fgColor}]`}
-            style={{ backgroundColor: payload.qrCode.fgColor }}
-          />
-          <input
-            className="input input-bordered w-5/6 px-3 italic placeholder:text-sm focus:outline-none"
-            placeholder="#000000"
-            type="text"
-            value={payload.qrCode.fgColor}
-            onChange={(e) => handleOnChange('qrCode', e.target.value)}
-          />
-        </div>
-        <div className="w-full">
-          <div className="mb-2 self-start">
-            <span className="font-semibold">Presets </span>
-            <span className="italic">(optional)</span>
-          </div>
-          <div className="flex w-full">
-            <div className="grid w-1/3 grid-cols-3 gap-4">
-              {renderPresetColours()}
-            </div>
-            <div className="mx-auto rounded-lg border border-base-content/20 p-4">
-              <QRCodeSVG value={payload.url} fgColor={payload.qrCode.fgColor} />
-            </div>
-          </div>
-        </div>
-      </div>
+      <QrCodeCanvas
+        onPresetChange={handleOnColorPreset}
+        onTextChange={handleTextChange}
+        url={payload.url}
+        fgColor={payload.qrCode.fgColor || '#000000ba'}
+      />
     );
   };
 
@@ -227,14 +194,14 @@ export const CreateUrlModal = (props: TModalProps) => {
       </div>
       <div className="mt-5 flex justify-between space-x-4">
         <button
-          className="btn btn-primary w-1/2 flex-shrink"
+          className="btn btn-primary w-full flex-shrink"
           onClick={handleSubmit}
           disabled={isSubmitDisabled()}
         >
           Confirm
         </button>
         <button
-          className="btn btn-secondary w-1/2 flex-shrink"
+          className="btn btn-secondary w-full flex-shrink"
           onClick={props.onClose}
         >
           Cancel
