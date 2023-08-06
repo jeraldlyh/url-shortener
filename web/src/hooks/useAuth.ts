@@ -43,7 +43,7 @@ export const useAuth = () => {
   };
 
   const resetUser = (): void => {
-    setUser(defaultUser);
+    setUser(DEFAULT_USER);
   };
 
   const goToLanding = (): void => {

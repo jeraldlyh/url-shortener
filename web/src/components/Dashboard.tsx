@@ -18,7 +18,7 @@ import {
 } from 'react-icons/ai';
 import { TiTickOutline } from 'react-icons/ti';
 import {
-  BASE_URL,
+  BACKEND_BASE_URL,
   Container,
   DEFAULT_QR_CODE,
   IQrCode,
@@ -59,7 +59,7 @@ export const Dashboard = () => {
         header: 'URL',
         cell: (props) => {
           const redirectHash = props.getValue<string>();
-          const redirectUrl = `${BASE_URL}/url/${redirectHash}`;
+          const redirectUrl = `${BACKEND_BASE_URL}/url/${redirectHash}`;
           const isCopied = copiedUrls.has(props.row.index);
 
           // NOTE: Prevent user from copying multiple times
@@ -117,7 +117,7 @@ export const Dashboard = () => {
           } = props.row.original;
 
           const handleViewUrl = (): void => {
-            const redirectUrl = `${BASE_URL}/url/${redirectHash}`;
+            const redirectUrl = `${BACKEND_BASE_URL}/url/${redirectHash}`;
 
             setViewQrCode({
               isCreated,

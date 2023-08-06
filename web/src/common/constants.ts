@@ -8,7 +8,10 @@ export const COLORS = {
   },
 };
 
-export const BASE_URL = process.env.BACKEND_URL || 'http://localhost:8000';
+export const BACKEND_BASE_URL =
+  process.env.BACKEND_URL || 'http://localhost:8000';
+export const BASE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? process.env.NEXT_PUBLIC_VERCEL_URL;
 
 export const CLIENT_ROUTES = {
   HOME: '/',
