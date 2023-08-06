@@ -38,7 +38,6 @@ export const WHITELISTED_ROUTES = new Set([
   CLIENT_ROUTES.HOME,
 ]);
 
-export const DEFAULT_USER = { username: '' };
 export const DEFAULT_QR_CODE: IQrCode = {
   isCreated: false,
   redirectUrl: '',

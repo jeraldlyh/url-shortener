@@ -58,8 +58,9 @@ export const ViewUrlModal = ({
   /*                                    STATE                                   */
   /* -------------------------------------------------------------------------- */
   const defaultOption = IMAGE_DOWNLOAD_TYPES[0];
+  const defaultColor = '#000000';
   const [selected, setSelected] = useState<IDownload>(defaultOption);
-  const [fgColor, setFgColor] = useState<string>('#000000');
+  const [fgColor, setFgColor] = useState<string>(defaultColor);
 
   /* -------------------------------------------------------------------------- */
   /*                              HANDLER FUNCTIONS                             */
@@ -90,7 +91,18 @@ export const ViewUrlModal = ({
         error: (e) => Utils.capitalize(e.response.data.message.toString()),
       },
     );
+    await cleanUp();
+  };
+
+  const handleDownload = (): void => {
+    selected.handleDownload();
+    cleanUp();
+  };
+
+  const cleanUp = async (): Promise<void> => {
     onSubmit && (await onSubmit());
+    setSelected(defaultOption);
+    setFgColor(defaultColor);
   };
 
   /* -------------------------------------------------------------------------- */
@@ -144,7 +156,7 @@ export const ViewUrlModal = ({
         isCreated ? 'Your QR code is ready 🥳' : 'Start generating your QR code'
       }
       submitText={isCreated ? 'Download' : 'Generate'}
-      onSubmit={isCreated ? selected.handleDownload : handleSubmit}
+      onSubmit={isCreated ? handleDownload : handleSubmit}
       onClose={onClose}
     >
       <div className="flex w-full flex-col items-center">{renderBody()}</div>

@@ -18,11 +18,12 @@ export const CreateUrlModal = ({ onClose, onSubmit }: ICallbacks) => {
   /* -------------------------------------------------------------------------- */
   /*                                   STATES                                   */
   /* -------------------------------------------------------------------------- */
-  const [payload, setPayload] = useState<ICreateUrl>({
+  const DEFAULT_PAYLOAD = {
     title: '',
     url: '',
     qrCode: DEFAULT_QR_CODE,
-  });
+  };
+  const [payload, setPayload] = useState<ICreateUrl>(DEFAULT_PAYLOAD);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   /* -------------------------------------------------------------------------- */
@@ -101,12 +102,17 @@ export const CreateUrlModal = ({ onClose, onSubmit }: ICallbacks) => {
       success: 'Successfully created a new url',
       error: (e) => Utils.capitalize(e.response.data.message.toString()),
     });
-
-    onSubmit && (await onSubmit());
+    await cleanUp();
   };
 
   const isSubmitDisabled = (): boolean => {
     return !payload.url || !!errorMessage;
+  };
+
+  const cleanUp = async (): Promise<void> => {
+    onSubmit && (await onSubmit());
+    setPayload(DEFAULT_PAYLOAD);
+    setErrorMessage('');
   };
 
   /* -------------------------------------------------------------------------- */

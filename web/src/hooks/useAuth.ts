@@ -1,12 +1,7 @@
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import {
-  CLIENT_ROUTES,
-  DEFAULT_USER,
-  IUser,
-  WHITELISTED_ROUTES,
-} from '../common';
+import { CLIENT_ROUTES, IUser, WHITELISTED_ROUTES } from '../common';
 import { AuthService } from '../services';
 import { Utils } from '../utils';
 
@@ -14,6 +9,7 @@ export const useAuth = () => {
   /* -------------------------------------------------------------------------- */
   /*                                   STATES                                   */
   /* -------------------------------------------------------------------------- */
+  const DEFAULT_USER = { username: '' };
   const [user, setUser] = useState<IUser>(DEFAULT_USER);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();
@@ -47,7 +43,7 @@ export const useAuth = () => {
   };
 
   const resetUser = (): void => {
-    setUser(DEFAULT_USER);
+    setUser(defaultUser);
   };
 
   const goToLanding = (): void => {
