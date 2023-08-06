@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -48,5 +49,13 @@ export class UrlController {
     @Body() qrCode: CreateQrCodeDto,
   ): Promise<void> {
     return await this.urlService.createQrCode(auth.username, qrCode);
+  }
+
+  @Delete('/:redirectHash')
+  async deleteUrl(
+    @Auth() auth: IAuth,
+    @Param('redirectHash') redirectHash: string,
+  ) {
+    return await this.urlService.deleteUrl(auth.username, redirectHash);
   }
 }
