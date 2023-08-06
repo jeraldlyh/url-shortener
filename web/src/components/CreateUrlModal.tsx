@@ -1,11 +1,17 @@
 import { QRCodeSVG } from 'qrcode.react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { COLORS, IBaseModalProps, ICreateUrl, Modal } from '../common';
+import {
+  ICreateUrl,
+  Modal,
+  MODAL_IDS,
+  PRESET_COLORS,
+  TModalProps,
+} from '../common';
 import { UrlService } from '../services';
 import { Utils } from '../utils';
 
-export const CreateUrlModal = (props: IBaseModalProps) => {
+export const CreateUrlModal = (props: TModalProps) => {
   /* -------------------------------------------------------------------------- */
   /*                                   STATES                                   */
   /* -------------------------------------------------------------------------- */
@@ -49,71 +55,84 @@ export const CreateUrlModal = (props: IBaseModalProps) => {
   const renderQrCode = (): JSX.Element | undefined => {
     if (!enabled) return;
 
+    const renderPresetColours = (): JSX.Element[] => {
+      return PRESET_COLORS.map((color) => (
+        <button
+          className="h-9 w-9 rounded-full"
+          style={{ backgroundColor: color }}
+          onClick={() => handleOnColorPreset(color)}
+        />
+      ));
+    };
+
     return (
-      <div className="flex flex-col items-center">
-        <div className="flex w-full items-center justify-between">
-          <div className="flex">
-            <div
-              className={`h-11 w-11 rounded-l-lg bg-[${payload.qrFgColor}]`}
-              style={{ backgroundColor: payload.qrFgColor }}
-            />
-            <input
-              className="w-25 rounded-r-lg border border-custom-gray-secondary bg-inherit p-2 placeholder:text-sm placeholder:italic focus:border focus:border-custom-gold-primary focus:outline-none"
-              placeholder="#000000"
-              type="text"
-              value={payload.qrFgColor}
-              onChange={(e) => handleOnChange('qrFgColor', e.target.value)}
-            />
-          </div>
-          <button
-            className="h-9 w-9 rounded-full bg-custom-qr-primary"
-            onClick={() => handleOnColorPreset(COLORS.QR.PRIMARY)}
+      <div className="flex w-full flex-col items-center space-y-4">
+        <div className="input-group w-full">
+          <div
+            className={`h-auto w-1/6 rounded-l-lg bg-[${payload.qrFgColor}]`}
+            style={{ backgroundColor: payload.qrFgColor }}
           />
-          <button
-            className="h-9 w-9 rounded-full bg-custom-qr-secondary"
-            onClick={() => handleOnColorPreset(COLORS.QR.SECONDARY)}
-          />
-          <button
-            className="h-9 w-9 rounded-full bg-custom-qr-tertiary"
-            onClick={() => handleOnColorPreset(COLORS.QR.TERTIARY)}
+          <input
+            className="input input-bordered w-5/6 px-3 placeholder:text-sm placeholder:italic focus:outline-none"
+            placeholder="#000000"
+            type="text"
+            value={payload.qrFgColor}
+            onChange={(e) => handleOnChange('qrFgColor', e.target.value)}
           />
         </div>
-        <QRCodeSVG
-          className="my-7"
-          value={payload.url}
-          fgColor={payload.qrFgColor}
-        />
+        <div className="w-full">
+          <div className="mb-2 self-start">
+            <span className="font-semibold">Presets </span>
+            <span className="italic">(optional)</span>
+          </div>
+          <div className="flex w-full">
+            <div className="grid w-1/3 grid-cols-3 gap-4">
+              {renderPresetColours()}
+            </div>
+            <div className="mx-auto rounded-lg border-[0.5px] p-4">
+              <QRCodeSVG
+                value={payload.url}
+                fgColor={payload.qrFgColor || '#000'}
+              />
+            </div>
+          </div>
+        </div>
       </div>
     );
   };
 
   return (
-    <Modal title="Create a shortened URL" {...props} onSubmit={handleSubmit}>
-      <div className="flex flex-col space-y-4 text-custom-gray-primary">
-        <div className="flex flex-col space-y-2">
-          <span className="font-semibold">Destination</span>
+    <Modal
+      {...props}
+      id={MODAL_IDS.CREATE_URL}
+      title="Create a shortened URL"
+      onSubmit={handleSubmit}
+    >
+      <div className="flex flex-col space-y-2">
+        <div className="flex flex-col">
+          <span className="mb-2 font-semibold">Destination</span>
           <input
-            className="rounded-lg border border-custom-gray-secondary bg-inherit p-2 placeholder:text-sm placeholder:italic focus:border focus:border-custom-gold-primary focus:outline-none"
+            className="input input-bordered px-3 placeholder:text-sm placeholder:italic focus:outline-none"
             placeholder="https://jeraldlyh.com"
             onChange={(e) => handleOnChange('url', e.target.value)}
           />
         </div>
-        <div className="flex flex-col space-y-2">
-          <div>
+        <div className="flex flex-col">
+          <div className="mb-2">
             <span className="font-semibold">Title </span>
             <span className="italic">(optional)</span>
           </div>
           <input
-            className="rounded-lg border border-custom-gray-secondary bg-inherit p-2 placeholder:text-sm placeholder:italic focus:border focus:border-custom-gold-primary focus:outline-none"
+            className="input input-bordered px-3 placeholder:text-sm placeholder:italic focus:outline-none"
             onChange={(e) => handleOnChange('title', e.target.value)}
           />
         </div>
-        <div className="flex flex-col space-y-2">
-          <div>
+        <div className="flex flex-col">
+          <div className="mb-2">
             <span className="font-semibold">QR code </span>
             <span className="italic">(optional)</span>
           </div>
-          <div className="flex items-center space-x-3">
+          <div className="mb-2 flex items-center space-x-3">
             <input
               type="checkbox"
               className="toggle"
@@ -122,20 +141,18 @@ export const CreateUrlModal = (props: IBaseModalProps) => {
             />
             <span>Generate a QR code for anyone to scan it</span>
           </div>
-          {renderQrCode()}
         </div>
+        {renderQrCode()}
       </div>
-      <div className="mt-4 flex justify-between space-x-4">
+      <div className="mt-5 flex justify-between space-x-4">
         <button
-          type="button"
-          className="w-full justify-center rounded-md bg-custom-gold-primary py-3 text-sm font-semibold text-custom-gray-primary hover:bg-custom-gold-secondary"
+          className="btn btn-primary w-1/2 flex-shrink"
           onClick={handleSubmit}
         >
           Confirm
         </button>
         <button
-          type="button"
-          className="w-full justify-center rounded-md border border-custom-gold-primary bg-inherit text-sm font-semibold text-custom-gray-primary hover:border-0 hover:bg-custom-gray-secondary"
+          className="btn btn-secondary w-1/2 flex-shrink"
           onClick={props.onClose}
         >
           Cancel

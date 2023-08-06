@@ -1,3 +1,5 @@
+import { IQrCode } from './types';
+
 export const COLORS = {
   QR: {
     PRIMARY: '#FFCB74',
@@ -35,3 +37,25 @@ export const WHITELISTED_ROUTES = new Set([
 ]);
 
 export const DEFAULT_USER = { username: '' };
+export const DEFAULT_QR_CODE: IQrCode = {
+  isCreated: false,
+  redirectUrl: '',
+  fgColor: '',
+};
+
+export const MODAL_IDS = {
+  CREATE_URL: 'create-url',
+  VIEW_URL: 'view-url',
+};
+
+export const PRESET_COLORS = [
+  '#D6CCC2',
+  '#264653',
+  '#2A9D8F',
+  '#E9C46A',
+  '#F4A261',
+  '#E76F51',
+  '#E63946',
+  '#023047',
+  '#231999',
+];

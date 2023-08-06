@@ -1,12 +1,9 @@
 import QRCode from 'qrcode.react';
-import { useState } from 'react';
-import { IBaseModalProps, IDownload, Modal } from '../common';
+import { Fragment, useState } from 'react';
+import { IDownload, IQrCode, Modal, MODAL_IDS, TModalProps } from '../common';
 import { ImageSelect } from './ImageSelect';
 
-interface IProps extends IBaseModalProps {
-  redirectUrl: string;
-  fgColor?: string;
-}
+interface IProps extends TModalProps, IQrCode {}
 
 const handleDownloadQr = (link: string): void => {
   const anchor = document.createElement('a');
@@ -45,7 +42,7 @@ export const ViewUrlModal = (props: IProps) => {
   /* -------------------------------------------------------------------------- */
   /*                                    STATE                                   */
   /* -------------------------------------------------------------------------- */
-  const { redirectUrl, fgColor, ...otherProps } = props;
+  const { isCreated, redirectUrl, fgColor, ...otherProps } = props;
   const defaultOption = IMAGE_DOWNLOAD_TYPES[0];
   const [selected, setSelected] = useState<IDownload>(defaultOption);
 
@@ -59,12 +56,15 @@ export const ViewUrlModal = (props: IProps) => {
 
     setSelected(selectedOption);
   };
+
   /* -------------------------------------------------------------------------- */
   /*                                   RENDER                                   */
   /* -------------------------------------------------------------------------- */
-  return (
-    <Modal title="Your QR code is ready 🥳" {...otherProps}>
-      <div className="flex w-full flex-col items-center text-custom-gray-primary">
+  const renderBody = (): JSX.Element => {
+    if (!isCreated || !redirectUrl) return <div>create qr</div>;
+
+    return (
+      <Fragment>
         <span className="font-semilight mb-2 text-sm italic">
           Scan the image below to checkout your QR code
         </span>
@@ -74,7 +74,7 @@ export const ViewUrlModal = (props: IProps) => {
             id="qrCode"
             className="my-2"
             value={redirectUrl}
-            {...(fgColor && { fgColor: fgColor })}
+            fgColor={fgColor || '#000000'}
           />
         </div>
         <div className="my-5 flex w-full flex-col space-y-2">
@@ -95,7 +95,17 @@ export const ViewUrlModal = (props: IProps) => {
             Cancel
           </button>
         </div>
-      </div>
+      </Fragment>
+    );
+  };
+
+  return (
+    <Modal
+      id={MODAL_IDS.VIEW_URL}
+      title="Your QR code is ready 🥳"
+      {...otherProps}
+    >
+      <div className="flex w-full flex-col items-center">{renderBody()}</div>
     </Modal>
   );
 };

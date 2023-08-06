@@ -8,10 +8,13 @@ export enum EPage {
 export interface IUrl {
   url: string;
   title?: string;
-  qrFgColor?: string;
-  redirectHash: string;
-  createdAt: string;
+  redirectHash?: string;
+  qrCode: {
+    fgColor?: string;
+    isCreated: boolean;
+  };
   copied?: boolean;
+  createdAt: string;
 }
 
 export interface ICreateUrl {
@@ -21,10 +24,12 @@ export interface ICreateUrl {
 }
 
 export interface IBaseModalProps {
+  id: string;
   onSubmit?: () => Promise<void>;
   onClose?: () => void;
-  isOpen: boolean;
 }
+
+export type TModalProps = Omit<IBaseModalProps, 'id'>;
 
 export interface IUser {
   username: string | null;
@@ -34,4 +39,10 @@ export interface IDownload {
   option: 'PNG' | 'SVG';
   description: string;
   handleDownload: () => void;
+}
+
+export interface IQrCode {
+  isCreated: boolean;
+  redirectUrl?: string;
+  fgColor?: string;
 }
