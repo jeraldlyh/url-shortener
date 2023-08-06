@@ -11,9 +11,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import {
   AiFillCopy,
-  AiFillDelete,
-  AiFillEye,
   AiFillPlusCircle,
+  AiOutlineCloudDownload,
+  AiOutlineDelete,
   AiOutlineLeft,
   AiOutlineRight,
 } from 'react-icons/ai';
@@ -83,7 +83,7 @@ export const Dashboard = () => {
                 text={redirectUrl}
                 onCopy={handleCopyToClipboard}
               >
-                <label className="swap swap-rotate text-lg">
+                <label className="swap-rotate swap text-lg">
                   <input type="checkbox" />
                   <AiFillCopy className="swap-off cursor-pointer" />
                   <TiTickOutline className="swap-on cursor-pointer" />
@@ -128,11 +128,11 @@ export const Dashboard = () => {
 
           return (
             <div className="flex space-x-3 text-lg">
-              <AiFillEye
+              <AiOutlineCloudDownload
                 className="cursor-pointer hover:text-custom-gold-primary"
                 onClick={handleViewUrl}
               />
-              <AiFillDelete className="cursor-pointer hover:text-custom-gold-primary" />
+              <AiOutlineDelete className="cursor-pointer hover:text-custom-gold-primary" />
             </div>
           );
         },

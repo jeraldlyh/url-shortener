@@ -41,7 +41,7 @@ export const Modal = ({ onClose, isOpen, title, children }: IModalProps) => {
               <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-custom-white p-6 text-left align-middle shadow-xl transition-all">
                 <Dialog.Title
                   as="h3"
-                  className="mb-3 text-xl font-semibold text-gray-900"
+                  className="mb-3 text-center text-xl font-semibold text-gray-900"
                 >
                   {title}
                 </Dialog.Title>

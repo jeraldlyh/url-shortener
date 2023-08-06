@@ -63,15 +63,20 @@ export const ViewUrlModal = (props: IProps) => {
   /*                                   RENDER                                   */
   /* -------------------------------------------------------------------------- */
   return (
-    <Modal title="Download your QR Code" {...otherProps}>
+    <Modal title="Your QR code is ready 🥳" {...otherProps}>
       <div className="flex w-full flex-col items-center text-custom-gray-primary">
-        <QRCode
-          renderAs={selected.option === 'PNG' ? 'canvas' : 'svg'}
-          id="qrCode"
-          className="my-2"
-          value={redirectUrl}
-          {...(fgColor && { fgColor: fgColor })}
-        />
+        <span className="font-semilight mb-2 text-sm italic">
+          Scan the image below to checkout your QR code
+        </span>
+        <div className="border p-4">
+          <QRCode
+            renderAs={selected.option === 'PNG' ? 'canvas' : 'svg'}
+            id="qrCode"
+            className="my-2"
+            value={redirectUrl}
+            {...(fgColor && { fgColor: fgColor })}
+          />
+        </div>
         <div className="my-5 flex w-full flex-col space-y-2">
           <ImageSelect
             selected={selected.option}
