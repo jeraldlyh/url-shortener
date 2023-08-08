@@ -39,6 +39,7 @@ export const CreateUrlModal = ({ onClose, onSubmit }: ICallbacks) => {
         try {
           await CREATE_URL_SCHEMA.validate(payload);
           setErrorMessage('');
+          console.log('ok');
         } catch (error) {
           setErrorMessage((error as ValidationError).message);
         } finally {
@@ -102,15 +103,20 @@ export const CreateUrlModal = ({ onClose, onSubmit }: ICallbacks) => {
       success: 'Successfully created a new url',
       error: (e) => Utils.capitalize(e.response.data.message.toString()),
     });
-    await cleanUp();
+    onSubmit && (await onSubmit());
+    resetState();
+  };
+
+  const handleClose = (): void => {
+    onClose && onClose();
+    resetState();
   };
 
   const isSubmitDisabled = (): boolean => {
     return !payload.url || !!errorMessage;
   };
 
-  const cleanUp = async (): Promise<void> => {
-    onSubmit && (await onSubmit());
+  const resetState = (): void => {
     setPayload(DEFAULT_PAYLOAD);
     setErrorMessage('');
   };
@@ -157,7 +163,7 @@ export const CreateUrlModal = ({ onClose, onSubmit }: ICallbacks) => {
       isSubmitDisabled={isSubmitDisabled()}
       submitText="Confirm"
       onSubmit={handleSubmit}
-      onClose={onClose}
+      onClose={handleClose}
     >
       <div className="flex flex-col space-y-2">
         <div className="flex flex-col space-y-2">
@@ -166,6 +172,7 @@ export const CreateUrlModal = ({ onClose, onSubmit }: ICallbacks) => {
             <input
               className="input input-bordered w-full px-3 placeholder:text-sm placeholder:italic"
               placeholder="https://jeraldlyh.com"
+              value={payload.url}
               onChange={(e) => handleOnChange('url', e.target.value)}
             />
             {renderErrorMessage()}
@@ -178,6 +185,7 @@ export const CreateUrlModal = ({ onClose, onSubmit }: ICallbacks) => {
           </div>
           <input
             className="input input-bordered px-3 placeholder:text-sm placeholder:italic"
+            value={payload.title}
             onChange={(e) => handleOnChange('title', e.target.value)}
           />
         </div>
