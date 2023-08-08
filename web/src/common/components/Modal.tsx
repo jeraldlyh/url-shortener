@@ -16,7 +16,7 @@ export const Modal = ({
           {title}
         </p>
         {children}
-        <div className="mt-5 flex w-full space-x-4">
+        <div className="mt-5 flex w-full flex-col-reverse md:flex-row md:space-x-4">
           <button
             className="btn btn-secondary w-full flex-shrink"
             onClick={onClose}
@@ -24,7 +24,7 @@ export const Modal = ({
             Cancel
           </button>
           <button
-            className="btn btn-primary w-full flex-shrink"
+            className="btn btn-primary mb-2 w-full flex-shrink md:m-0"
             onClick={onSubmit}
             disabled={isSubmitDisabled}
           >

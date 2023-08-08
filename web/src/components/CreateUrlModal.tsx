@@ -37,16 +37,17 @@ export const CreateUrlModal = ({ onClose, onSubmit }: ICallbacks) => {
       case 'title':
       case 'url':
         try {
-          await CREATE_URL_SCHEMA.validate(payload);
-          setErrorMessage('');
-          console.log('ok');
-        } catch (error) {
-          setErrorMessage((error as ValidationError).message);
-        } finally {
           setPayload({
             ...payload,
             [key]: value,
           });
+
+          await CREATE_URL_SCHEMA.validate(payload);
+          setErrorMessage('');
+          console.log('ok');
+        } catch (error) {
+          console.log(payload);
+          setErrorMessage((error as ValidationError).message);
         }
         return;
       case 'qrCode':
