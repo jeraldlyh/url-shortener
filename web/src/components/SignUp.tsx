@@ -1,9 +1,7 @@
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
-import icon from '../../public/icon.png';
-import { CLIENT_ROUTES, Container } from '../common';
+import { CLIENT_ROUTES, Container, UrlIcon } from '../common';
 import { useAuth } from '../hooks';
 
 export const SignUp = () => {
@@ -38,18 +36,16 @@ export const SignUp = () => {
   /* -------------------------------------------------------------------------- */
   return (
     <Container styles="justify-center">
-      <div className="flex w-full max-w-md flex-col items-center justify-center rounded-2xl">
-        <div className="h-[100px] w-[100px]">
-          <Image src={icon} sizes="100vw" alt="logo" />
-        </div>
-        <span className="my-3 w-full text-center text-4xl font-bold">
+      <div className="flex w-full max-w-md flex-col items-center justify-center">
+        <UrlIcon />
+        <span className="my-3 w-full text-center text-2xl font-bold sm:text-3xl md:text-4xl">
           Create an account
         </span>
         <span className="mb-8 text-center text-sm italic">
           An account allows you to create and delete shortened URLs
         </span>
         <input
-          className="input input-bordered mb-2 w-full"
+          className="input input-bordered mb-2 w-full text-sm sm:text-base"
           type="text"
           placeholder="Username"
           value={username}
@@ -57,7 +53,7 @@ export const SignUp = () => {
         />
         <div className="relative w-full">
           <input
-            className="input input-bordered relative w-full"
+            className="input input-bordered relative w-full text-sm sm:text-base"
             type={hasVisibility ? 'text' : 'password'}
             placeholder="Password"
             value={password}
@@ -82,12 +78,9 @@ export const SignUp = () => {
         >
           Create
         </button>
-        <div className="text-sm">
+        <div className="text-xs sm:text-sm">
           <span>Already have an account? </span>
-          <button
-            className="btn-link text-accent-focus"
-            onClick={handleGoToSignIn}
-          >
+          <button className="btn-link text-neutral" onClick={handleGoToSignIn}>
             Sign in
           </button>
         </div>

@@ -164,7 +164,7 @@ export const CreateUrlModal = ({ onClose, onSubmit }: ICallbacks) => {
           <span className="mb-2 font-semibold">Destination</span>
           <div className="relative w-full">
             <input
-              className="input input-bordered w-full px-3 placeholder:text-sm placeholder:italic focus:outline-none"
+              className="input input-accent w-full px-3 placeholder:text-sm placeholder:italic"
               placeholder="https://jeraldlyh.com"
               onChange={(e) => handleOnChange('url', e.target.value)}
             />
@@ -177,7 +177,7 @@ export const CreateUrlModal = ({ onClose, onSubmit }: ICallbacks) => {
             <span className="italic">(optional)</span>
           </div>
           <input
-            className="input input-bordered px-3 placeholder:text-sm placeholder:italic focus:outline-none"
+            className="input input-accent px-3 placeholder:text-sm placeholder:italic"
             onChange={(e) => handleOnChange('title', e.target.value)}
           />
         </div>
