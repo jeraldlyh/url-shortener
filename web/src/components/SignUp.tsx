@@ -45,7 +45,7 @@ export const SignUp = () => {
         <span className="my-3 w-full text-center text-4xl font-bold">
           Create an account
         </span>
-        <span className="mb-8 text-center text-sm italic text-custom-white">
+        <span className="mb-8 text-center text-sm italic">
           An account allows you to create and delete shortened URLs
         </span>
         <input
@@ -85,7 +85,7 @@ export const SignUp = () => {
         <div className="text-sm">
           <span>Already have an account? </span>
           <button
-            className="btn-link text-custom-gold-primary"
+            className="btn-link text-accent-focus"
             onClick={handleGoToSignIn}
           >
             Sign in

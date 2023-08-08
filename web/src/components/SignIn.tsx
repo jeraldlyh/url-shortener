@@ -45,7 +45,7 @@ export const SignIn = () => {
         <span className="my-3 w-full text-center text-4xl font-bold">
           Create an account
         </span>
-        <span className="mb-8 text-center text-sm italic text-custom-white">
+        <span className="mb-8 text-center text-sm italic">
           Unlock the full power of shortened links
         </span>
         <input
@@ -83,9 +83,9 @@ export const SignIn = () => {
           Sign In
         </button>
         <div className="text-sm">
-          <span>Don't have an account? </span>
+          <span>Don&rsquo;t have an account? </span>
           <button
-            className="btn-link text-custom-gold-primary"
+            className="btn-link text-accent-focus"
             onClick={handleGoToSignUp}
           >
             Create an account

@@ -85,10 +85,7 @@ export const Dashboard = () => {
                   <TiTickOutline className="swap-on cursor-pointer" />
                 </label>
               </CopyToClipboard>
-              <a
-                className="text-ellipsis text-custom-gold-primary"
-                href={redirectUrl}
-              >
+              <a className="text-ellipsis text-accent-focus" href={redirectUrl}>
                 {redirectUrl}
               </a>
             </div>
@@ -135,11 +132,11 @@ export const Dashboard = () => {
           return (
             <div className="flex space-x-3 text-lg">
               <AiOutlineCloudDownload
-                className="cursor-pointer hover:text-custom-gold-primary"
+                className="cursor-pointer hover:text-accent-focus"
                 onClick={handleViewUrl}
               />
               <AiOutlineDelete
-                className="cursor-pointer hover:text-custom-gold-primary"
+                className="cursor-pointer hover:text-accent-focus"
                 onClick={handleDeleteUrl}
               />
             </div>
@@ -288,10 +285,7 @@ export const Dashboard = () => {
       <div className="mt-5 flex w-full flex-col items-center rounded-2xl border border-neutral p-10">
         <div className="mb-5 flex w-full items-center justify-between self-start text-2xl">
           <span className="font-bold">Dashboard</span>
-          <button
-            className="hover:text-custom-gold-primary"
-            onClick={() => handleOpenModal('CREATE_URL')}
-          >
+          <button onClick={() => handleOpenModal('CREATE_URL')}>
             <AiFillPlusCircle />
           </button>
         </div>

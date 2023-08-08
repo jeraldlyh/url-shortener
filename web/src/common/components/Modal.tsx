@@ -10,7 +10,7 @@ export const Modal = ({
   onClose,
 }: IBaseModalProps) => {
   return (
-    <dialog id={id} className="modal bg-custom-black/75">
+    <dialog id={id} className="modal bg-neutral/75">
       <div className="modal-box">
         <p className="mb-3 text-center text-xl font-semibold">{title}</p>
         {children}

@@ -7,7 +7,7 @@ interface IProps {
 
 export const Container = ({ children, styles }: IProps) => {
   const classname = clsx({
-    'flex h-full w-full max-w-5xl flex-col items-center': true,
+    'flex h-full w-full md:px-24 px-12 flex-col items-center': true,
     ...(styles && { [styles]: true }),
   });
 
