@@ -7,20 +7,22 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { Fragment, useEffect, useMemo, useState } from 'react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import CopyToClipboard from 'react-copy-to-clipboard';
 import {
   AiFillCopy,
+  AiFillDelete,
   AiFillPlusCircle,
-  AiOutlineCloudDownload,
-  AiOutlineDelete,
   AiOutlineLeft,
   AiOutlineRight,
 } from 'react-icons/ai';
+import { BiSolidDownload } from 'react-icons/bi';
 import { TiTickOutline } from 'react-icons/ti';
+import { useMediaQuery } from 'react-responsive';
 import {
   BACKEND_BASE_URL,
   Container,
   DEFAULT_QR_CODE,
+  DEVICE_WIDTHS,
   IQrCode,
   IUrl,
   MODAL_IDS,
@@ -42,17 +44,15 @@ export const Dashboard = () => {
   const [deleteRedirectHash, setDeleteRedirectHash] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { signOut } = useAuth();
-
-  useEffect(() => {
-    fetchUrls();
-  }, []);
+  const isDesktop = useMediaQuery({ minWidth: DEVICE_WIDTHS.DESKTOP });
+  const isMobile = useMediaQuery({ maxWidth: DEVICE_WIDTHS.MOBILE });
 
   const columns = useMemo<ColumnDef<IUrl>[]>(
     () => [
       {
-        header: 'Title',
+        header: () => <span className="uppercase">Title</span>,
         cell: (props) =>
-          props.getValue() || props.row.original.url.split('.')[1],
+          props.getValue<string>() || props.row.original.url.split('.')[1],
         accessorKey: 'title',
       },
       {
@@ -73,6 +73,8 @@ export const Dashboard = () => {
             return true;
           };
 
+          const isChecked = (): boolean => copiedUrls.has(props.row.index);
+
           return (
             <div className="flex items-center space-x-2">
               <CopyToClipboard
@@ -80,12 +82,15 @@ export const Dashboard = () => {
                 onCopy={handleCopyToClipboard}
               >
                 <label className="swap swap-rotate text-lg">
-                  <input type="checkbox" />
+                  <input type="checkbox" checked={isChecked()} />
                   <AiFillCopy className="swap-off cursor-pointer" />
                   <TiTickOutline className="swap-on cursor-pointer" />
                 </label>
               </CopyToClipboard>
-              <a className="text-ellipsis text-accent-focus" href={redirectUrl}>
+              <a
+                className="link-secondary link text-ellipsis"
+                href={redirectUrl}
+              >
                 {redirectUrl}
               </a>
             </div>
@@ -94,19 +99,28 @@ export const Dashboard = () => {
         accessorKey: 'redirectHash',
       },
       {
-        header: 'Created',
-        cell: (props) =>
-          new Date(props.getValue<string>()).toLocaleDateString('en-US', {
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric',
-            minute: 'numeric',
-            hour: 'numeric',
-          }),
-        accessorKey: 'createdAt',
+        ...(isDesktop
+          ? {
+              header: () => <span className="uppercase">Created</span>,
+              cell: (props) =>
+                new Date(props.getValue<string>()).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
+                  minute: 'numeric',
+                  hour: 'numeric',
+                }),
+              accessorKey: 'createdAt',
+            }
+          : {
+              id: 'tablet', // NOTE: Use id to handle responsive
+              header: '',
+              cell: '',
+            }),
       },
       {
-        header: 'Actions',
+        id: 'actions',
+        header: () => <span className="uppercase">Actions</span>,
         cell: (props) => {
           const {
             redirectHash,
@@ -131,12 +145,12 @@ export const Dashboard = () => {
 
           return (
             <div className="flex space-x-3 text-lg">
-              <AiOutlineCloudDownload
-                className="cursor-pointer hover:text-accent-focus"
+              <BiSolidDownload
+                className="cursor-pointer hover:text-primary-focus"
                 onClick={handleViewUrl}
               />
-              <AiOutlineDelete
-                className="cursor-pointer hover:text-accent-focus"
+              <AiFillDelete
+                className="cursor-pointer hover:text-primary-focus"
                 onClick={handleDeleteUrl}
               />
             </div>
@@ -144,7 +158,7 @@ export const Dashboard = () => {
         },
       },
     ],
-    [copiedUrls],
+    [copiedUrls, isDesktop],
   );
 
   const data = urls as IUrl[];
@@ -155,6 +169,13 @@ export const Dashboard = () => {
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
+
+  /* -------------------------------------------------------------------------- */
+  /*                                   EFFECTS                                  */
+  /* -------------------------------------------------------------------------- */
+  useEffect(() => {
+    fetchUrls();
+  }, []);
 
   /* -------------------------------------------------------------------------- */
   /*                              HANDLER FUNCTIONS                             */
@@ -216,15 +237,19 @@ export const Dashboard = () => {
         key={headerGroup.id || index}
         className="border-b-[0.5px] border-gray-500"
       >
-        {headerGroup.headers.map((header, index) => (
-          <th
-            key={header.id || index}
-            className="p-4 text-start"
-            colSpan={header.colSpan}
-          >
-            {flexRender(header.column.columnDef.header, header.getContext())}
-          </th>
-        ))}
+        {headerGroup.headers
+          .filter((header) => {
+            return header.id !== 'tablet';
+          })
+          .map((header, index) => (
+            <th
+              key={header.id || index}
+              className="p-4 text-start"
+              colSpan={header.colSpan}
+            >
+              {flexRender(header.column.columnDef.header, header.getContext())}
+            </th>
+          ))}
       </tr>
     ));
   };
@@ -232,11 +257,14 @@ export const Dashboard = () => {
   const renderTableBody = (): JSX.Element[] => {
     return table.getRowModel().rows.map((row) => (
       <tr key={row.id} className="border-b-[0.5px] border-gray-500">
-        {row.getVisibleCells().map((cell) => (
-          <td key={cell.id} className="text-ellipsis px-4 py-5">
-            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-          </td>
-        ))}
+        {row
+          .getVisibleCells()
+          .filter((cell) => cell.column.id !== 'tablet')
+          .map((cell) => (
+            <td key={cell.id} className="text-ellipsis px-4 py-5">
+              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            </td>
+          ))}
       </tr>
     ));
   };
@@ -285,7 +313,10 @@ export const Dashboard = () => {
       <div className="card mt-5 flex h-full w-full flex-col items-center bg-base-200 px-10 py-8 text-base-content shadow-xl">
         <div className="mb-5 flex w-full items-center justify-between self-start text-2xl">
           <span className="text-xl font-bold">Dashboard</span>
-          <button onClick={() => handleOpenModal('CREATE_URL')}>
+          <button
+            className="hover:text-primary-focus"
+            onClick={() => handleOpenModal('CREATE_URL')}
+          >
             <AiFillPlusCircle />
           </button>
         </div>

@@ -8,7 +8,7 @@ export const NavBar = ({ onLogout }: IProps) => {
   return (
     <div className="navbar rounded-box flex justify-between bg-base-100 px-10 shadow-xl">
       <a className="btn btn-ghost text-xl font-bold normal-case">LinkNow</a>
-      <button className="text-2xl hover:text-accent-focus" onClick={onLogout}>
+      <button className="text-2xl hover:text-primary-focus" onClick={onLogout}>
         <IoLogOut />
       </button>
     </div>

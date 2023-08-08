@@ -64,3 +64,9 @@ export const PRESET_COLORS = [
   '#023047',
   '#231999',
 ];
+
+export const DEVICE_WIDTHS = {
+  MOBILE: 640,
+  TABLET: 768,
+  DESKTOP: 1024,
+};
