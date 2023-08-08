@@ -279,12 +279,12 @@ export const Dashboard = () => {
   };
 
   return (
-    <Container styles="my-4">
+    <Container styles="py-12">
       {renderModal()}
       <NavBar onLogout={signOut} />
-      <div className="mt-5 flex w-full flex-col items-center rounded-2xl border border-neutral p-10">
+      <div className="card mt-5 flex h-full w-full flex-col items-center bg-base-200 px-10 py-8 text-base-content shadow-xl">
         <div className="mb-5 flex w-full items-center justify-between self-start text-2xl">
-          <span className="font-bold">Dashboard</span>
+          <span className="text-xl font-bold">Dashboard</span>
           <button onClick={() => handleOpenModal('CREATE_URL')}>
             <AiFillPlusCircle />
           </button>
