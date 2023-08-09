@@ -29,6 +29,7 @@ export const Pagination = ({ urls, onClick, table }: IProps) => {
     if (!table.getCanNextPage()) return;
 
     setIndex(index + 1);
+    table.nextPage();
   };
 
   /* -------------------------------------------------------------------------- */

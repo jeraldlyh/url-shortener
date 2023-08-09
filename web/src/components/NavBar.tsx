@@ -6,7 +6,7 @@ interface IProps {
 
 export const NavBar = ({ onLogout }: IProps) => {
   return (
-    <div className="navbar rounded-box flex justify-between bg-base-100 pl-5 pr-10 shadow-xl md:pl-6">
+    <div className="navbar rounded-box flex h-[5%] justify-between bg-base-100 pl-5 pr-10 shadow-xl md:pl-6">
       <a className="btn btn-ghost text-lg font-bold normal-case md:text-xl">
         LinkNow
       </a>

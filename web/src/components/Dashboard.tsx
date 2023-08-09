@@ -51,6 +51,17 @@ export const Dashboard = () => {
   const table = useReactTable({
     data,
     columns,
+    initialState: {
+      pagination: {
+        ...(isDesktop
+          ? {
+              pageSize: 10,
+            }
+          : {
+              pageSize: 3,
+            }),
+      },
+    },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -61,6 +72,7 @@ export const Dashboard = () => {
   /* -------------------------------------------------------------------------- */
   useEffect(() => {
     fetchUrls();
+    // table.setPageSize(isDesktop ? 10 : 3);
   }, []);
 
   /* -------------------------------------------------------------------------- */
@@ -123,15 +135,15 @@ export const Dashboard = () => {
     }
 
     return table.getHeaderGroups().map((headerGroup, index) => (
-      <tr
-        key={headerGroup.id || index}
-        className="border-b-[0.5px] border-gray-500"
-      >
-        <th className="flex w-full">
-          <span className="w-1/12 text-start uppercase">Title</span>
-          <span className="w-6/12 text-start uppercase">URL</span>
-          <span className="w-3/12 text-start uppercase">Created at</span>
-          <span className="w-1/12 text-start uppercase">Actions</span>
+      <tr key={headerGroup.id || index}>
+        <th className="flex flex-col">
+          <div className="flex w-full">
+            <span className="w-1/12 text-start uppercase">Title</span>
+            <span className="w-6/12 text-start uppercase">URL</span>
+            <span className="w-3/12 text-start uppercase">Created at</span>
+            <span className="w-1/12 text-start uppercase">Actions</span>
+          </div>
+          <div className="divider m-0" />
         </th>
       </tr>
     ));
@@ -198,12 +210,14 @@ export const Dashboard = () => {
                 </span>
                 <span className="flex items-center space-x-3 text-sm md:text-lg">
                   <BiLink />
-                  <a className="link-secondary link">{originalUrl}</a>
+                  <a className="link-secondary link max-w-[200px] shrink overflow-hidden text-ellipsis md:max-w-none">
+                    {originalUrl}
+                  </a>
                 </span>
                 <span className="flex items-center space-x-3 text-sm md:text-lg">
                   <FaLocationArrow />
                   <a
-                    className="link-primary link w-full shrink"
+                    className="link-primary link max-w-[200px] shrink overflow-hidden text-ellipsis md:max-w-none"
                     href={redirectUrl}
                   >
                     {redirectUrl}
@@ -219,7 +233,7 @@ export const Dashboard = () => {
                   text={redirectUrl}
                   onCopy={handleCopyToClipboard}
                 >
-                  <button className="btn btn-outline btn-sm flex w-full shrink space-x-2 md:btn-md">
+                  <button className="btn btn-outline btn-sm flex-grow space-x-2 md:btn-md">
                     <label className="swap">
                       <input type="checkbox" checked={isChecked()} />
                       <div className="swap-off flex items-center space-x-2">
@@ -247,38 +261,41 @@ export const Dashboard = () => {
       }
 
       return (
-        <tr key={row.id} className="border-b-[0.5px] border-gray-500">
-          <td className="flex py-3">
-            <span className="w-1/12 text-start">{formatTitle()}</span>
-            <span className="flex w-6/12 items-center space-x-2 text-start">
-              <CopyToClipboard
-                text={redirectUrl}
-                onCopy={handleCopyToClipboard}
-              >
-                <label className="swap swap-rotate text-lg">
-                  <input type="checkbox" checked={isChecked()} />
-                  <AiFillCopy className="swap-off cursor-pointer" />
-                  <TiTickOutline className="swap-on cursor-pointer" />
-                </label>
-              </CopyToClipboard>
-              <a
-                className="link-secondary link text-ellipsis"
-                href={redirectUrl}
-              >
-                {redirectUrl}
-              </a>
-            </span>
-            <span className="w-3/12 text-start">{formatCreatedAt()}</span>
-            <span className="flex w-1/12 space-x-3 text-lg">
-              <BiSolidDownload
-                className="cursor-pointer hover:text-primary-focus"
-                onClick={handleViewUrl}
-              />
-              <AiFillDelete
-                className="cursor-pointer hover:text-primary-focus"
-                onClick={handleDeleteUrl}
-              />
-            </span>
+        <tr key={row.id}>
+          <td className="flex flex-col pt-3">
+            <div className="flex w-full">
+              <span className="w-1/12 text-start">{formatTitle()}</span>
+              <span className="flex w-6/12 items-center space-x-2 text-start">
+                <CopyToClipboard
+                  text={redirectUrl}
+                  onCopy={handleCopyToClipboard}
+                >
+                  <label className="swap swap-rotate text-lg">
+                    <input type="checkbox" checked={isChecked()} />
+                    <AiFillCopy className="swap-off cursor-pointer" />
+                    <TiTickOutline className="swap-on cursor-pointer" />
+                  </label>
+                </CopyToClipboard>
+                <a
+                  className="link-secondary link text-ellipsis"
+                  href={redirectUrl}
+                >
+                  {redirectUrl}
+                </a>
+              </span>
+              <span className="w-3/12 text-start">{formatCreatedAt()}</span>
+              <span className="flex w-1/12 space-x-3 text-lg">
+                <BiSolidDownload
+                  className="cursor-pointer hover:text-primary-focus"
+                  onClick={handleViewUrl}
+                />
+                <AiFillDelete
+                  className="cursor-pointer hover:text-primary-focus"
+                  onClick={handleDeleteUrl}
+                />
+              </span>
+            </div>
+            <div className="divider m-0" />
           </td>
         </tr>
       );
@@ -289,7 +306,7 @@ export const Dashboard = () => {
     <Container styles="py-12">
       {renderModal()}
       <NavBar onLogout={signOut} />
-      <div className="card mt-5 flex h-full w-full flex-col items-center bg-base-200 px-10 py-8 text-base-content shadow-xl">
+      <div className="card mt-5 flex h-[90%] w-full flex-col items-center bg-base-200 px-10 py-8 text-base-content shadow-xl">
         <div className="mb-5 flex w-full items-center justify-between self-start text-2xl">
           <span className="text-lg font-bold md:text-xl">Dashboard</span>
           <button
@@ -299,10 +316,12 @@ export const Dashboard = () => {
             <AiFillPlusCircle />
           </button>
         </div>
-        <table className="w-full overflow-y-scroll">
-          <thead>{renderTableHeader()}</thead>
-          <tbody>{renderTableBody()}</tbody>
-        </table>
+        <div className="h-full w-full overflow-y-scroll">
+          <table className="w-full">
+            <thead>{renderTableHeader()}</thead>
+            <tbody className="overflow-y-scroll">{renderTableBody()}</tbody>
+          </table>
+        </div>
         <Pagination
           onClick={() => handleOpenModal('CREATE_URL')}
           urls={urls}
