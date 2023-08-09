@@ -26,7 +26,7 @@ export const QrCodeCanvas = ({
   };
 
   return (
-    <div className="flex w-full flex-col items-center space-y-4">
+    <div className="flex w-full flex-col items-center space-y-4 pb-1">
       <div className="input-group w-full">
         <div
           className={`h-auto w-1/6 rounded-l-lg bg-[${fgColor}]`}
