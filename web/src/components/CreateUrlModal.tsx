@@ -37,15 +37,17 @@ export const CreateUrlModal = ({ onClose, onSubmit }: ICallbacks) => {
       case 'title':
       case 'url':
         try {
-          await CREATE_URL_SCHEMA.validate(payload);
-          setErrorMessage('');
-        } catch (error) {
-          setErrorMessage((error as ValidationError).message);
-        } finally {
           setPayload({
             ...payload,
             [key]: value,
           });
+
+          await CREATE_URL_SCHEMA.validate(payload);
+          setErrorMessage('');
+          console.log('ok');
+        } catch (error) {
+          console.log(payload);
+          setErrorMessage((error as ValidationError).message);
         }
         return;
       case 'qrCode':
@@ -102,15 +104,20 @@ export const CreateUrlModal = ({ onClose, onSubmit }: ICallbacks) => {
       success: 'Successfully created a new url',
       error: (e) => Utils.capitalize(e.response.data.message.toString()),
     });
-    await cleanUp();
+    onSubmit && (await onSubmit());
+    resetState();
+  };
+
+  const handleClose = (): void => {
+    onClose && onClose();
+    resetState();
   };
 
   const isSubmitDisabled = (): boolean => {
     return !payload.url || !!errorMessage;
   };
 
-  const cleanUp = async (): Promise<void> => {
-    onSubmit && (await onSubmit());
+  const resetState = (): void => {
     setPayload(DEFAULT_PAYLOAD);
     setErrorMessage('');
   };
@@ -157,36 +164,38 @@ export const CreateUrlModal = ({ onClose, onSubmit }: ICallbacks) => {
       isSubmitDisabled={isSubmitDisabled()}
       submitText="Confirm"
       onSubmit={handleSubmit}
-      onClose={onClose}
+      onClose={handleClose}
     >
       <div className="flex flex-col space-y-2">
-        <div className="flex flex-col">
-          <span className="mb-2 font-semibold">Destination</span>
+        <div className="flex flex-col space-y-2">
+          <span className="font-semibold">Destination</span>
           <div className="relative w-full">
             <input
-              className="input input-bordered w-full px-3 placeholder:text-sm placeholder:italic focus:outline-none"
+              className="input input-bordered w-full px-3 placeholder:text-sm placeholder:italic"
               placeholder="https://jeraldlyh.com"
+              value={payload.url}
               onChange={(e) => handleOnChange('url', e.target.value)}
             />
             {renderErrorMessage()}
           </div>
         </div>
-        <div className="flex flex-col">
-          <div className="mb-2">
+        <div className="flex flex-col space-y-2">
+          <div className="">
             <span className="font-semibold">Title </span>
             <span className="italic">(optional)</span>
           </div>
           <input
-            className="input input-bordered px-3 placeholder:text-sm placeholder:italic focus:outline-none"
+            className="input input-bordered px-3 placeholder:text-sm placeholder:italic"
+            value={payload.title}
             onChange={(e) => handleOnChange('title', e.target.value)}
           />
         </div>
-        <div className="flex flex-col">
-          <div className="mb-2">
+        <div className="flex flex-col space-y-2">
+          <div>
             <span className="font-semibold">QR code </span>
             <span className="italic">(optional)</span>
           </div>
-          <div className="mb-2 flex items-center space-x-3">
+          <div className="flex items-center space-x-3">
             <input
               type="checkbox"
               className="toggle"
@@ -195,7 +204,9 @@ export const CreateUrlModal = ({ onClose, onSubmit }: ICallbacks) => {
                 handleOnChange('qrCode', !payload.qrCode.isCreated)
               }
             />
-            <span>Generate a QR code for anyone to scan it</span>
+            <span className="text-sm">
+              Generate a QR code for anyone to scan it
+            </span>
           </div>
         </div>
         {renderQrCode()}

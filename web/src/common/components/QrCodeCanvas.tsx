@@ -15,8 +15,9 @@ export const QrCodeCanvas = ({
   onPresetChange,
 }: IProps) => {
   const renderPresetColours = (): JSX.Element[] => {
-    return PRESET_COLORS.map((color) => (
+    return PRESET_COLORS.map((color, index) => (
       <button
+        key={index}
         className="h-9 w-9 rounded-full"
         style={{ backgroundColor: color }}
         onClick={() => onPresetChange(color)}
@@ -25,7 +26,7 @@ export const QrCodeCanvas = ({
   };
 
   return (
-    <div className="flex w-full flex-col items-center space-y-4">
+    <div className="flex w-full flex-col items-center space-y-4 pb-1">
       <div className="input-group w-full">
         <div
           className={`h-auto w-1/6 rounded-l-lg bg-[${fgColor}]`}
@@ -39,18 +40,18 @@ export const QrCodeCanvas = ({
           onChange={(e) => onTextChange(e.target.value)}
         />
       </div>
-      <div className="flex w-full">
-        <div className="flex w-1/2 flex-col space-y-3">
+      <div className="flex w-full flex-col space-y-4 sm:flex-row sm:space-y-0">
+        <div className="flex w-full flex-col space-y-3 sm:w-1/2">
           <div>
             <span className="font-semibold">Presets </span>
             <span className="italic">(optional)</span>
           </div>
-          <div className="grid w-full grid-cols-3 gap-4">
+          <div className="grid w-full grid-cols-6 gap-2 sm:grid-cols-3 sm:gap-4">
             {renderPresetColours()}
           </div>
         </div>
-        <div className="flex flex-col space-y-3">
-          <span className="font-semibold">Preview</span>
+        <div className="flex w-full flex-col items-center space-y-3 sm:w-1/2">
+          <span className="self-start font-semibold sm:flex-none">Preview</span>
           <div className="rounded-lg border border-base-content/20 p-4">
             <QRCodeSVG value={url} fgColor={fgColor} />
           </div>

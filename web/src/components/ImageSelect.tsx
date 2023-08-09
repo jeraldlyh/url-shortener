@@ -61,7 +61,7 @@ export const ImageTypeSelect = ({ selected, images, onChange }: IProps) => {
   return (
     <Listbox value={selected} onChange={onChange}>
       <div className="relative mt-1 h-10">
-        <Listbox.Button className="h-full w-full cursor-pointer rounded-lg px-4 py-2 text-left shadow-md">
+        <Listbox.Button className="h-full w-full cursor-pointer rounded-lg border border-primary px-4 py-2 text-left shadow-xl">
           <span className="font-semibold">{selected}</span>
           <span className="pointer-events-none absolute inset-y-0 right-2 flex items-center">
             <PiCaretUpDownBold

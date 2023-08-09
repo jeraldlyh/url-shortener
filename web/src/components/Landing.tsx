@@ -25,19 +25,19 @@ export const Landing = () => {
   return (
     <Container styles="relative space-y-5 justify-center">
       <LandingIcon />
-      <div className="flex flex-col items-center font-bold uppercase tracking-widest text-custom-white">
-        <span className="text-6xl">Tiny URLs</span>
-        <span className="text-8xl">Big Impact</span>
+      <div className="flex flex-col items-center font-bold uppercase tracking-widest">
+        <span className="text-2xl lg:text-5xl">Tiny URLs</span>
+        <span className="text-4xl sm:text-5xl lg:text-8xl">Big Impact</span>
       </div>
-      <div className="flex flex-col space-y-3">
+      <div className="flex w-full flex-col items-center space-y-3">
         <button
-          className="btn btn-primary font-semibold"
+          className="btn btn-primary w-full max-w-xs font-semibold lg:max-w-sm"
           onClick={handleGetStarted}
         >
           Get started
         </button>
         <button
-          className="btn btn-secondary btn-outline font-semibold"
+          className="btn btn-secondary btn-outline w-full max-w-xs font-semibold lg:max-w-sm"
           onClick={handleContinue}
         >
           Continue

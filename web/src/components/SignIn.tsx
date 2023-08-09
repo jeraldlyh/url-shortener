@@ -1,9 +1,7 @@
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
-import icon from '../../public/icon.png';
-import { CLIENT_ROUTES, Container } from '../common';
+import { CLIENT_ROUTES, Container, UrlIcon } from '../common';
 import { useAuth } from '../hooks';
 
 export const SignIn = () => {
@@ -38,18 +36,16 @@ export const SignIn = () => {
   /* -------------------------------------------------------------------------- */
   return (
     <Container styles="justify-center">
-      <div className="flex w-full max-w-md flex-col items-center justify-center rounded-2xl">
-        <div className="h-[100px] w-[100px]">
-          <Image src={icon} sizes="100vw" alt="logo" />
-        </div>
-        <span className="my-3 w-full text-center text-4xl font-bold">
-          Create an account
+      <div className="flex w-full max-w-md flex-col items-center justify-center">
+        <UrlIcon />
+        <span className="my-3 w-full text-center text-2xl font-bold sm:text-3xl md:text-4xl">
+          Login
         </span>
-        <span className="mb-8 text-center text-sm italic text-custom-white">
+        <span className="mb-8 text-center text-sm italic">
           Unlock the full power of shortened links
         </span>
         <input
-          className="input input-bordered mb-2 w-full"
+          className="input input-bordered mb-2 w-full text-sm sm:text-base"
           type="text"
           placeholder="Username"
           value={username}
@@ -57,7 +53,7 @@ export const SignIn = () => {
         />
         <div className="relative w-full">
           <input
-            className="input input-bordered relative w-full"
+            className="input input-bordered relative w-full text-sm sm:text-base"
             type={hasVisibility ? 'text' : 'password'}
             placeholder="Password"
             value={password}
@@ -82,12 +78,9 @@ export const SignIn = () => {
         >
           Sign In
         </button>
-        <div className="text-sm">
-          <span>Don't have an account? </span>
-          <button
-            className="btn-link text-custom-gold-primary"
-            onClick={handleGoToSignUp}
-          >
+        <div className="text-center text-xs sm:text-sm">
+          <span>Don&rsquo;t have an account? </span>
+          <button className="btn-link text-neutral" onClick={handleGoToSignUp}>
             Create an account
           </button>
         </div>

@@ -10,11 +10,13 @@ export const Modal = ({
   onClose,
 }: IBaseModalProps) => {
   return (
-    <dialog id={id} className="modal bg-custom-black/75">
+    <dialog id={id} className="modal bg-neutral/75">
       <div className="modal-box">
-        <p className="mb-3 text-center text-xl font-semibold">{title}</p>
+        <p className="mb-3 text-center text-lg font-semibold md:text-xl">
+          {title}
+        </p>
         {children}
-        <div className="mt-3 flex w-full space-x-4">
+        <div className="mt-3 flex w-full flex-col-reverse md:flex-row md:space-x-4">
           <button
             className="btn btn-secondary w-full flex-shrink"
             onClick={onClose}
@@ -22,7 +24,7 @@ export const Modal = ({
             Cancel
           </button>
           <button
-            className="btn btn-primary w-full flex-shrink"
+            className="btn btn-primary mb-2 w-full flex-shrink md:m-0"
             onClick={onSubmit}
             disabled={isSubmitDisabled}
           >
