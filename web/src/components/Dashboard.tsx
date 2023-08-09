@@ -12,8 +12,6 @@ import {
   AiFillCopy,
   AiFillDelete,
   AiFillPlusCircle,
-  AiOutlineLeft,
-  AiOutlineRight,
 } from 'react-icons/ai';
 import { BiLink, BiSolidDownload } from 'react-icons/bi';
 import { FaLocationArrow } from 'react-icons/fa';
@@ -33,6 +31,7 @@ import { UrlService } from '../services';
 import { CreateUrlModal } from './CreateUrlModal';
 import { DeleteUrlModal } from './DeleteUrlModal';
 import { NavBar } from './NavBar';
+import { Pagination } from './Pagination';
 import { ViewUrlModal } from './ViewUrlModal';
 
 export const Dashboard = () => {
@@ -221,23 +220,23 @@ export const Dashboard = () => {
                   onCopy={handleCopyToClipboard}
                 >
                   <button className="btn btn-outline btn-sm flex w-full shrink space-x-2 md:btn-md">
-                    <label className="swap swap-rotate">
+                    <label className="swap">
                       <input type="checkbox" checked={isChecked()} />
-                      <div className="swap-off flex items-center space-x-2 text-sm md:text-lg">
-                        <AiFillCopy />
-                        <span>Copy</span>
+                      <div className="swap-off flex items-center space-x-2">
+                        <AiFillCopy className="text-xl md:text-lg" />
+                        <span className="text-sm md:text-base">Copy</span>
                       </div>
-                      <div className="swap-on flex items-center space-x-2 text-sm md:text-lg">
-                        <TiTickOutline />
-                        <span>Copied</span>
+                      <div className="swap-on flex items-center space-x-2">
+                        <TiTickOutline className="text-xl md:text-lg" />
+                        <span className="text-sm md:text-base">Copied</span>
                       </div>
                     </label>
                   </button>
                 </CopyToClipboard>
-                <button className="btn btn-primary btn-outline btn-sm md:btn-md">
+                <button className="btn btn-outline btn-sm md:btn-md">
                   <BiSolidDownload onClick={handleViewUrl} />
                 </button>
-                <button className="btn btn-secondary btn-outline btn-sm md:btn-md">
+                <button className="btn btn-outline btn-sm md:btn-md">
                   <AiFillDelete onClick={handleDeleteUrl} />
                 </button>
               </div>
@@ -256,7 +255,7 @@ export const Dashboard = () => {
                 text={redirectUrl}
                 onCopy={handleCopyToClipboard}
               >
-                <label className="swap-rotate swap text-lg">
+                <label className="swap swap-rotate text-lg">
                   <input type="checkbox" checked={isChecked()} />
                   <AiFillCopy className="swap-off cursor-pointer" />
                   <TiTickOutline className="swap-on cursor-pointer" />
@@ -286,43 +285,6 @@ export const Dashboard = () => {
     });
   };
 
-  const renderPagination = (): JSX.Element => {
-    if (!urls || urls?.length === 0) {
-      return (
-        <button
-          className="btn btn-primary my-4 w-full"
-          onClick={() => handleOpenModal('CREATE_URL')}
-        >
-          Create your first link
-        </button>
-      );
-    }
-    return (
-      <div className="join mt-4">
-        <button
-          className="btn join-item disabled:cursor-not-allowed"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          <AiOutlineLeft />
-        </button>
-        <button
-          className="btn join-item"
-          disabled={!table.getCanPreviousPage() && !table.getCanNextPage()}
-        >
-          Page {table.getPageCount()}
-        </button>
-        <button
-          className="btn join-item disabled:cursor-not-allowed"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          <AiOutlineRight />
-        </button>
-      </div>
-    );
-  };
-
   return (
     <Container styles="py-12">
       {renderModal()}
@@ -341,7 +303,11 @@ export const Dashboard = () => {
           <thead>{renderTableHeader()}</thead>
           <tbody>{renderTableBody()}</tbody>
         </table>
-        {renderPagination()}
+        <Pagination
+          onClick={() => handleOpenModal('CREATE_URL')}
+          urls={urls}
+          table={table}
+        />
       </div>
     </Container>
   );
