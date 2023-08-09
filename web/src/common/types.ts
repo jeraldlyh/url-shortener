@@ -55,3 +55,5 @@ export interface ICreateUrl {
   title?: string;
   qrCode: IQrCode;
 }
+
+export type Theme = 'dark' | 'light';

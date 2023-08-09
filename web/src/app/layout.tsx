@@ -13,8 +13,11 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  /* -------------------------------------------------------------------------- */
+  /*                                   RENDER                                   */
+  /* -------------------------------------------------------------------------- */
   return (
-    <html lang="en" data-theme="dark">
+    <html lang="en" data-theme="light">
       <Toaster
         position="top-center"
         reverseOrder={false}
