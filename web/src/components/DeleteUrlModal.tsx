@@ -38,8 +38,8 @@ export const DeleteUrlModal = ({ redirectHash, onClose, onSubmit }: IProps) => {
       <div className="alert alert-warning my-5">
         <BiError />
         <span>
-          The QR code that's attached to this link will also be removed from
-          your account
+          The QR code that&rsquo;s attached to this link will also be removed
+          from your account
         </span>
       </div>
     </Modal>

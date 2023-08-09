@@ -210,7 +210,11 @@ export const Dashboard = () => {
                 </span>
                 <span className="flex items-center space-x-3 text-sm md:text-lg">
                   <BiLink />
-                  <a className="link-secondary link max-w-[200px] shrink overflow-hidden text-ellipsis md:max-w-none">
+                  <a
+                    className="link-secondary link max-w-[200px] shrink overflow-hidden text-ellipsis md:max-w-none"
+                    href={originalUrl}
+                    target="_blank"
+                  >
                     {originalUrl}
                   </a>
                 </span>
@@ -219,6 +223,7 @@ export const Dashboard = () => {
                   <a
                     className="link-primary link max-w-[200px] shrink overflow-hidden text-ellipsis md:max-w-none"
                     href={redirectUrl}
+                    target="_blank"
                   >
                     {redirectUrl}
                   </a>
@@ -279,12 +284,13 @@ export const Dashboard = () => {
                 <a
                   className="link-secondary link text-ellipsis"
                   href={redirectUrl}
+                  target="_blank"
                 >
                   {redirectUrl}
                 </a>
               </span>
               <span className="w-3/12 text-start">{formatCreatedAt()}</span>
-              <span className="flex w-1/12 space-x-3 text-lg">
+              <span className="flex w-1/12 items-center justify-end space-x-3 text-lg">
                 <BiSolidDownload
                   className="cursor-pointer hover:text-primary-focus"
                   onClick={handleViewUrl}
