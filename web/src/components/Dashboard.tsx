@@ -1,6 +1,5 @@
 import {
   ColumnDef,
-  flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
@@ -9,13 +8,15 @@ import {
 import { Fragment, useEffect, useMemo, useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import {
+  AiFillCalendar,
   AiFillCopy,
   AiFillDelete,
   AiFillPlusCircle,
   AiOutlineLeft,
   AiOutlineRight,
 } from 'react-icons/ai';
-import { BiSolidDownload } from 'react-icons/bi';
+import { BiLink, BiSolidDownload } from 'react-icons/bi';
+import { FaLocationArrow } from 'react-icons/fa';
 import { TiTickOutline } from 'react-icons/ti';
 import { useMediaQuery } from 'react-responsive';
 import {
@@ -45,121 +46,7 @@ export const Dashboard = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { signOut } = useAuth();
   const isDesktop = useMediaQuery({ minWidth: DEVICE_WIDTHS.DESKTOP });
-  const isMobile = useMediaQuery({ maxWidth: DEVICE_WIDTHS.MOBILE });
-
-  const columns = useMemo<ColumnDef<IUrl>[]>(
-    () => [
-      {
-        header: () => <span className="uppercase">Title</span>,
-        cell: (props) =>
-          props.getValue<string>() || props.row.original.url.split('.')[1],
-        accessorKey: 'title',
-      },
-      {
-        header: 'URL',
-        cell: (props) => {
-          const redirectHash = props.getValue<string>();
-          const redirectUrl = `${BACKEND_BASE_URL}/url/${redirectHash}`;
-          const isCopied = copiedUrls.has(props.row.index);
-
-          // NOTE: Prevent user from copying multiple times
-          const handleCopyToClipboard = (): boolean => {
-            if (isCopied) return false;
-
-            const updatedCopiedUrls = new Set(copiedUrls);
-            updatedCopiedUrls.add(props.row.index);
-
-            setCopiedUrls(updatedCopiedUrls);
-            return true;
-          };
-
-          const isChecked = (): boolean => copiedUrls.has(props.row.index);
-
-          return (
-            <div className="flex items-center space-x-2">
-              <CopyToClipboard
-                text={redirectUrl}
-                onCopy={handleCopyToClipboard}
-              >
-                <label className="swap swap-rotate text-lg">
-                  <input type="checkbox" checked={isChecked()} />
-                  <AiFillCopy className="swap-off cursor-pointer" />
-                  <TiTickOutline className="swap-on cursor-pointer" />
-                </label>
-              </CopyToClipboard>
-              <a
-                className="link-secondary link text-ellipsis"
-                href={redirectUrl}
-              >
-                {redirectUrl}
-              </a>
-            </div>
-          );
-        },
-        accessorKey: 'redirectHash',
-      },
-      {
-        ...(isDesktop
-          ? {
-              header: () => <span className="uppercase">Created</span>,
-              cell: (props) =>
-                new Date(props.getValue<string>()).toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric',
-                  year: 'numeric',
-                  minute: 'numeric',
-                  hour: 'numeric',
-                }),
-              accessorKey: 'createdAt',
-            }
-          : {
-              id: 'tablet', // NOTE: Use id to handle responsive
-              header: '',
-              cell: '',
-            }),
-      },
-      {
-        id: 'actions',
-        header: () => <span className="uppercase">Actions</span>,
-        cell: (props) => {
-          const {
-            redirectHash,
-            qrCode: { fgColor, isCreated },
-          } = props.row.original;
-
-          const handleViewUrl = (): void => {
-            const redirectUrl = `${BACKEND_BASE_URL}/url/${redirectHash}`;
-
-            setViewQrCode({
-              isCreated,
-              redirectUrl,
-              fgColor,
-            });
-            handleOpenModal('VIEW_URL');
-          };
-
-          const handleDeleteUrl = (): void => {
-            setDeleteRedirectHash(redirectHash);
-            handleOpenModal('DELETE_URL');
-          };
-
-          return (
-            <div className="flex space-x-3 text-lg">
-              <BiSolidDownload
-                className="cursor-pointer hover:text-primary-focus"
-                onClick={handleViewUrl}
-              />
-              <AiFillDelete
-                className="cursor-pointer hover:text-primary-focus"
-                onClick={handleDeleteUrl}
-              />
-            </div>
-          );
-        },
-      },
-    ],
-    [copiedUrls, isDesktop],
-  );
+  const columns = useMemo<ColumnDef<IUrl>[]>(() => [], []);
 
   const data = urls as IUrl[];
   const table = useReactTable({
@@ -231,42 +118,172 @@ export const Dashboard = () => {
     );
   };
 
-  const renderTableHeader = (): JSX.Element[] => {
+  const renderTableHeader = (): JSX.Element[] | undefined => {
+    if (!isDesktop) {
+      return;
+    }
+
     return table.getHeaderGroups().map((headerGroup, index) => (
       <tr
         key={headerGroup.id || index}
         className="border-b-[0.5px] border-gray-500"
       >
-        {headerGroup.headers
-          .filter((header) => {
-            return header.id !== 'tablet';
-          })
-          .map((header, index) => (
-            <th
-              key={header.id || index}
-              className="p-4 text-start"
-              colSpan={header.colSpan}
-            >
-              {flexRender(header.column.columnDef.header, header.getContext())}
-            </th>
-          ))}
+        <th className="flex w-full">
+          <span className="w-1/12 text-start uppercase">Title</span>
+          <span className="w-6/12 text-start uppercase">URL</span>
+          <span className="w-3/12 text-start uppercase">Created at</span>
+          <span className="w-1/12 text-start uppercase">Actions</span>
+        </th>
       </tr>
     ));
   };
 
   const renderTableBody = (): JSX.Element[] => {
-    return table.getRowModel().rows.map((row) => (
-      <tr key={row.id} className="border-b-[0.5px] border-gray-500">
-        {row
-          .getVisibleCells()
-          .filter((cell) => cell.column.id !== 'tablet')
-          .map((cell) => (
-            <td key={cell.id} className="text-ellipsis px-4 py-5">
-              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+    return table.getRowModel().rows.map((row, index) => {
+      const {
+        url: originalUrl,
+        redirectHash,
+        createdAt,
+        qrCode: { fgColor, isCreated },
+      } = row.original;
+      const redirectUrl = `${BACKEND_BASE_URL}/url/${row.original.redirectHash}`;
+      const isCopied = copiedUrls.has(index);
+
+      // NOTE: Prevent user from copying multiple times
+      const handleCopyToClipboard = (): boolean => {
+        if (isCopied) return false;
+        const updatedCopiedUrls = new Set(copiedUrls);
+        updatedCopiedUrls.add(index);
+        setCopiedUrls(updatedCopiedUrls);
+        return true;
+      };
+
+      const isChecked = (): boolean => copiedUrls.has(index);
+
+      const formatTitle = (): string =>
+        row.original.title || row.original.url.split('.')[1];
+
+      const formatCreatedAt = (): string =>
+        new Date(createdAt).toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+          ...(isDesktop && {
+            minute: 'numeric',
+            hour: 'numeric',
+          }),
+        });
+
+      const handleViewUrl = (): void => {
+        const redirectUrl = `${BACKEND_BASE_URL}/url/${redirectHash}`;
+        setViewQrCode({
+          isCreated,
+          redirectUrl,
+          fgColor,
+        });
+        handleOpenModal('VIEW_URL');
+      };
+
+      const handleDeleteUrl = (): void => {
+        setDeleteRedirectHash(redirectHash);
+        handleOpenModal('DELETE_URL');
+      };
+
+      if (!isDesktop) {
+        return (
+          <tr key={row.id}>
+            <td className="flex flex-col space-y-2">
+              <div className="flex flex-col space-y-3">
+                <span className="text-base font-semibold md:text-lg">
+                  {formatTitle()}
+                </span>
+                <span className="flex items-center space-x-3 text-sm md:text-lg">
+                  <BiLink />
+                  <a className="link-secondary link">{originalUrl}</a>
+                </span>
+                <span className="flex items-center space-x-3 text-sm md:text-lg">
+                  <FaLocationArrow />
+                  <a
+                    className="link-primary link w-full shrink"
+                    href={redirectUrl}
+                  >
+                    {redirectUrl}
+                  </a>
+                </span>
+                <span className="flex items-center space-x-3 text-sm md:text-lg">
+                  <AiFillCalendar />
+                  <span>{formatCreatedAt()}</span>
+                </span>
+              </div>
+              <div className="flex space-x-2">
+                <CopyToClipboard
+                  text={redirectUrl}
+                  onCopy={handleCopyToClipboard}
+                >
+                  <button className="btn btn-outline btn-sm flex w-full shrink space-x-2 md:btn-md">
+                    <label className="swap swap-rotate">
+                      <input type="checkbox" checked={isChecked()} />
+                      <div className="swap-off flex items-center space-x-2 text-sm md:text-lg">
+                        <AiFillCopy />
+                        <span>Copy</span>
+                      </div>
+                      <div className="swap-on flex items-center space-x-2 text-sm md:text-lg">
+                        <TiTickOutline />
+                        <span>Copied</span>
+                      </div>
+                    </label>
+                  </button>
+                </CopyToClipboard>
+                <button className="btn btn-primary btn-outline btn-sm md:btn-md">
+                  <BiSolidDownload onClick={handleViewUrl} />
+                </button>
+                <button className="btn btn-secondary btn-outline btn-sm md:btn-md">
+                  <AiFillDelete onClick={handleDeleteUrl} />
+                </button>
+              </div>
+              <div className="divider" />
             </td>
-          ))}
-      </tr>
-    ));
+          </tr>
+        );
+      }
+
+      return (
+        <tr key={row.id} className="border-b-[0.5px] border-gray-500">
+          <td className="flex py-3">
+            <span className="w-1/12 text-start">{formatTitle()}</span>
+            <span className="flex w-6/12 items-center space-x-2 text-start">
+              <CopyToClipboard
+                text={redirectUrl}
+                onCopy={handleCopyToClipboard}
+              >
+                <label className="swap-rotate swap text-lg">
+                  <input type="checkbox" checked={isChecked()} />
+                  <AiFillCopy className="swap-off cursor-pointer" />
+                  <TiTickOutline className="swap-on cursor-pointer" />
+                </label>
+              </CopyToClipboard>
+              <a
+                className="link-secondary link text-ellipsis"
+                href={redirectUrl}
+              >
+                {redirectUrl}
+              </a>
+            </span>
+            <span className="w-3/12 text-start">{formatCreatedAt()}</span>
+            <span className="flex w-1/12 space-x-3 text-lg">
+              <BiSolidDownload
+                className="cursor-pointer hover:text-primary-focus"
+                onClick={handleViewUrl}
+              />
+              <AiFillDelete
+                className="cursor-pointer hover:text-primary-focus"
+                onClick={handleDeleteUrl}
+              />
+            </span>
+          </td>
+        </tr>
+      );
+    });
   };
 
   const renderPagination = (): JSX.Element => {
@@ -312,7 +329,7 @@ export const Dashboard = () => {
       <NavBar onLogout={signOut} />
       <div className="card mt-5 flex h-full w-full flex-col items-center bg-base-200 px-10 py-8 text-base-content shadow-xl">
         <div className="mb-5 flex w-full items-center justify-between self-start text-2xl">
-          <span className="text-xl font-bold">Dashboard</span>
+          <span className="text-lg font-bold md:text-xl">Dashboard</span>
           <button
             className="hover:text-primary-focus"
             onClick={() => handleOpenModal('CREATE_URL')}
