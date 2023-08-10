@@ -18,10 +18,12 @@ export class AccountService {
 
     if (existingUser) throw new BadRequestException('Account already exists');
 
-    const salt = await genSalt(+process.env.AUTH_SALT_ROUNDS);
-    const hashedPassword = await hash(account.password, salt);
-
-    account.password = hashedPassword;
+    account.password = await this._hashPassword(account.password);
     return await this.accountRepository.createAccount(account);
+  }
+
+  async _hashPassword(password: string): Promise<string> {
+    const salt = await genSalt(+process.env.AUTH_SALT_ROUNDS);
+    return await hash(password, salt);
   }
 }
