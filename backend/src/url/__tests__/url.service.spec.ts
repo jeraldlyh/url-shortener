@@ -4,7 +4,7 @@ import { AuthStub } from '../../auth/__tests__/auth.stubs';
 import { IUrl } from '../url.model';
 import { UrlRepository } from '../url.repository';
 import { UrlService } from '../url.service';
-import { CreateQrCodeDtoStub, RedirectHashStub, UrlStub } from './url.stubs';
+import { CreateQrCodeDtoStub, RedirectHashStub, UrlStub } from './url.stub';
 
 const mockValidateIfUrlExist = jest.fn();
 jest.mock('../url.repository', () => ({

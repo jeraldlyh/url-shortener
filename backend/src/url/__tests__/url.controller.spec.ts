@@ -11,7 +11,7 @@ import {
   RedirectHashStub,
   RedirectUrlStub,
   UrlStub,
-} from './url.stubs';
+} from './url.stub';
 
 jest.mock('../url.service', () => ({
   UrlService: jest.fn().mockImplementation(() => ({
