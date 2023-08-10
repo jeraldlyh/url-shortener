@@ -61,20 +61,24 @@ describe('UrlService', () => {
 
   describe('when createUrl is called', () => {
     it('should call urlRepository', async () => {
+      const auth = AuthStub();
+      const urls = UrlStub();
       const customAlphabetMock = jest.spyOn(nanoId, 'customAlphabet');
       customAlphabetMock.mockImplementation(() =>
         jest.fn().mockReturnValue(RedirectHashStub()),
       );
 
-      await urlService.createUrl(AuthStub().username, UrlStub()[0]);
+      await urlService.createUrl(auth.username, urls[0]);
 
       expect(urlRepository.createUrl).toHaveBeenCalledWith(
-        AuthStub().username,
-        UrlStub()[0],
+        auth.username,
+        urls[0],
       );
     });
 
     it('should regerate redirect hash if it exists', async () => {
+      const auth = AuthStub();
+      const urls = UrlStub();
       const regeneratedHash = RedirectHashStub() + 'a';
       const customAlphabetMock = jest.spyOn(nanoId, 'customAlphabet');
       customAlphabetMock.mockImplementation(() =>
@@ -87,50 +91,47 @@ describe('UrlService', () => {
         .mockResolvedValueOnce(true)
         .mockResolvedValueOnce(false);
 
-      await urlService.createUrl(AuthStub().username, UrlStub()[0]);
+      await urlService.createUrl(auth.username, urls[0]);
 
-      const updatedUrl = UrlStub()[0];
+      const updatedUrl = urls[0];
       updatedUrl.redirectHash = regeneratedHash;
 
       expect(urlRepository.createUrl).toHaveBeenCalledWith(
-        AuthStub().username,
+        auth.username,
         updatedUrl,
       );
     });
   });
 
   describe('when createQrCode is called', () => {
-    beforeEach(async () => {
-      await urlService.createQrCode(AuthStub().username, CreateQrCodeDtoStub());
-    });
-
-    it('should update the fgColor for qrCode', () => {
-      const { qrCode } = CreateQrCodeDtoStub();
+    it('should update the fgColor for qrCode', async () => {
+      const auth = AuthStub();
+      const qrCodeDto = CreateQrCodeDtoStub();
+      await urlService.createQrCode(auth.username, qrCodeDto);
 
       const updatedUrls = UrlStub();
       updatedUrls[0].qrCode = {
-        ...qrCode,
+        ...qrCodeDto.qrCode,
         isCreated: true,
       };
 
       expect(urlRepository.updateQrCode).toBeCalledWith(
-        AuthStub().username,
+        auth.username,
         updatedUrls,
       );
     });
   });
 
   describe('when deleteQrCode is called', () => {
-    beforeEach(async () => {
-      await urlService.deleteUrl(AuthStub().username, RedirectHashStub());
-    });
+    it('should soft delete the url', async () => {
+      const auth = AuthStub();
+      await urlService.deleteUrl(auth.username, RedirectHashStub());
 
-    it('should soft delete the url', () => {
       const updatedUrls = UrlStub();
       updatedUrls[0].isDeleted = true;
 
       expect(urlRepository.updateQrCode).toBeCalledWith(
-        AuthStub().username,
+        auth.username,
         updatedUrls,
       );
     });
