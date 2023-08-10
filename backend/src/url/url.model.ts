@@ -28,7 +28,7 @@ export interface IUrl extends IBaseModel {
   isDeleted: boolean;
 }
 
-interface IQrCode {
+export interface IQrCode {
   fgColor?: string;
   isCreated: boolean;
 }

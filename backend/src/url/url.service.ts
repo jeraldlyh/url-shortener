@@ -27,6 +27,7 @@ export class UrlService {
     url.redirectHash = redirectHash;
     url.createdAt = new Date();
     url.isDeleted = false;
+
     return await this.urlRepository.createUrl(username, url);
   }
 
@@ -35,7 +36,6 @@ export class UrlService {
   ): Promise<string | undefined> {
     const urls = await this.urlRepository.getAllUrl();
     const entry = urls.get(redirectHash);
-    console.log(urls, entry, redirectHash);
 
     return entry?.url;
   }
@@ -51,10 +51,10 @@ export class UrlService {
       return url;
     });
 
-    return await this.urlRepository.updateQrCodes(username, updatedUrls);
+    return await this.urlRepository.updateQrCode(username, updatedUrls);
   }
 
-  async deleteUrl(username: string, redirectHash: string) {
+  async deleteUrl(username: string, redirectHash: string): Promise<void> {
     const urls = await this.urlRepository.getAllUrlByUsername(username);
     const updatedUrls = urls.map((url) => {
       if (url.redirectHash === redirectHash) {
@@ -63,6 +63,6 @@ export class UrlService {
       return url;
     });
 
-    return await this.urlRepository.updateQrCodes(username, updatedUrls);
+    return await this.urlRepository.updateQrCode(username, updatedUrls);
   }
 }

@@ -13,6 +13,7 @@ import { AuthGuard } from '../auth/auth.guard';
 import { IAuth } from '../auth/auth.types';
 import { CreateQrCodeDto, IUrl, Url } from './url.model';
 import { UrlService } from './url.service';
+import { IRedirectUrl } from './url.types';
 
 @Controller('url')
 @UseGuards(AuthGuard)
@@ -21,7 +22,9 @@ export class UrlController {
 
   @Get('/:redirectHash')
   @Redirect()
-  async redirect(@Param('redirectHash') redirectHash: string) {
+  async redirect(
+    @Param('redirectHash') redirectHash: string,
+  ): Promise<IRedirectUrl> {
     const redirectUrl = await this.urlService.getRedirectUrlByHash(
       redirectHash,
     );
@@ -55,7 +58,7 @@ export class UrlController {
   async deleteUrl(
     @Auth() auth: IAuth,
     @Param('redirectHash') redirectHash: string,
-  ) {
+  ): Promise<void> {
     return await this.urlService.deleteUrl(auth.username, redirectHash);
   }
 }
