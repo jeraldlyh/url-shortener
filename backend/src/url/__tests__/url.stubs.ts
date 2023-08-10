@@ -11,24 +11,24 @@ export const AuthGuardMock = {
   },
 };
 
-export const RedirectUrlStub = 'http://localhost:3000';
-export const RedirectHashStub = 'abcef';
-export const QrCodeStub: IQrCode = {
+export const RedirectUrlStub = () => 'http://localhost:3000';
+export const RedirectHashStub = () => 'abcef';
+export const QrCodeStub = (fgColor?: string): IQrCode => ({
   isCreated: true,
-  fgColor: '#000',
-};
+  fgColor: fgColor || '#000',
+});
 
-export const UrlStub: IUrl[] = [
+export const UrlStub = (): IUrl[] => [
   {
     url: 'http://localhost:3000',
-    qrCode: QrCodeStub,
-    redirectHash: RedirectHashStub,
+    qrCode: QrCodeStub(),
+    redirectHash: RedirectHashStub(),
     isDeleted: false,
     createdAt: new Date(),
   },
 ];
 
-export const CreateQrCodeDtoStub: CreateQrCodeDto = {
-  redirectHash: RedirectHashStub,
-  qrCode: QrCodeStub,
-};
+export const CreateQrCodeDtoStub = (): CreateQrCodeDto => ({
+  redirectHash: RedirectHashStub(),
+  qrCode: QrCodeStub('#111'),
+});

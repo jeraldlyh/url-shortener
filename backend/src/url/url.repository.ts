@@ -52,7 +52,7 @@ export class UrlRepository {
       });
   }
 
-  async updateQrCodes(username: string, urls: Url[]): Promise<void> {
+  async updateQrCode(username: string, urls: Url[]): Promise<void> {
     const serializedUrls = urls.map((url) => UrlConverter.toFirestore(url));
     console.log(serializedUrls);
     await firebase

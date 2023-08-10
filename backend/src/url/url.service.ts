@@ -27,6 +27,7 @@ export class UrlService {
     url.redirectHash = redirectHash;
     url.createdAt = new Date();
     url.isDeleted = false;
+
     return await this.urlRepository.createUrl(username, url);
   }
 
@@ -50,7 +51,7 @@ export class UrlService {
       return url;
     });
 
-    return await this.urlRepository.updateQrCodes(username, updatedUrls);
+    return await this.urlRepository.updateQrCode(username, updatedUrls);
   }
 
   async deleteUrl(username: string, redirectHash: string): Promise<void> {
@@ -62,6 +63,6 @@ export class UrlService {
       return url;
     });
 
-    return await this.urlRepository.updateQrCodes(username, updatedUrls);
+    return await this.urlRepository.updateQrCode(username, updatedUrls);
   }
 }

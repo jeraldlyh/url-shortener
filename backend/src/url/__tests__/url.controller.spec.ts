@@ -56,12 +56,12 @@ describe('UrlController', () => {
     let redirectUrl: IRedirectUrl;
 
     beforeEach(async () => {
-      redirectUrl = await urlController.redirect(RedirectHashStub);
+      redirectUrl = await urlController.redirect(RedirectHashStub());
     });
 
     it('should call urlService', () => {
       expect(urlService.getRedirectUrlByHash).toHaveBeenCalledWith(
-        RedirectHashStub,
+        RedirectHashStub(),
       );
     });
 
@@ -74,12 +74,12 @@ describe('UrlController', () => {
     let urls: IUrl[];
 
     beforeEach(async () => {
-      urls = await urlController.getAllUrlByUsername(AuthStub);
+      urls = await urlController.getAllUrlByUsername(AuthStub());
     });
 
     it('should call urlService', () => {
       expect(urlService.getAllUrlByUsername).toHaveBeenCalledWith(
-        AuthStub.username,
+        AuthStub().username,
       );
     });
 
@@ -90,39 +90,39 @@ describe('UrlController', () => {
 
   describe('when createUrl is called', () => {
     beforeEach(async () => {
-      await urlController.createUrl(AuthStub, UrlStub[0]);
+      await urlController.createUrl(AuthStub(), UrlStub()[0]);
     });
 
     it('should call urlService', () => {
       expect(urlService.createUrl).toHaveBeenCalledWith(
-        AuthStub.username,
-        UrlStub[0],
+        AuthStub().username,
+        UrlStub()[0],
       );
     });
   });
 
   describe('when createQrCode is called', () => {
     beforeEach(async () => {
-      await urlController.createQrCode(AuthStub, CreateQrCodeDtoStub);
+      await urlController.createQrCode(AuthStub(), CreateQrCodeDtoStub());
     });
 
     it('should call urlService', () => {
       expect(urlService.createQrCode).toHaveBeenCalledWith(
-        AuthStub.username,
-        CreateQrCodeDtoStub,
+        AuthStub().username,
+        CreateQrCodeDtoStub(),
       );
     });
   });
 
   describe('when deleteQrCode is called', () => {
     beforeEach(async () => {
-      await urlController.deleteUrl(AuthStub, RedirectHashStub);
+      await urlController.deleteUrl(AuthStub(), RedirectHashStub());
     });
 
     it('should call urlService', () => {
       expect(urlService.deleteUrl).toHaveBeenCalledWith(
-        AuthStub.username,
-        RedirectHashStub,
+        AuthStub().username,
+        RedirectHashStub(),
       );
     });
   });
