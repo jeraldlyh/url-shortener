@@ -12,7 +12,7 @@ export class AuthController {
   @Post('/signUp')
   async signUp(
     @Body() account: Account,
-    @Response({ passthrough: true }) response: IResponse,
+    @Response({ passthrough: true }) response: Partial<IResponse>,
   ): Promise<string> {
     const token = await this.authService.createAccount(account);
 
@@ -23,7 +23,7 @@ export class AuthController {
   @Post('/signIn')
   async signIn(
     @Body() account: Account,
-    @Response({ passthrough: true }) response: IResponse,
+    @Response({ passthrough: true }) response: Partial<IResponse>,
   ): Promise<string> {
     const token = await this.authService.validateUser(account);
 
@@ -34,7 +34,7 @@ export class AuthController {
   @Post('/signOut')
   @UseGuards(AuthGuard)
   async signOut(
-    @Response({ passthrough: true }) response: IResponse,
+    @Response({ passthrough: true }) response: Partial<IResponse>,
   ): Promise<void> {
     response.clearCookie('accessToken', { httpOnly: true });
   }

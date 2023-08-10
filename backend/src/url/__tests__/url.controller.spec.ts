@@ -38,8 +38,6 @@ describe('UrlController', () => {
 
     urlController = module.get<UrlController>(UrlController);
     urlService = module.get<UrlService>(UrlService);
-
-    jest.clearAllMocks();
   });
 
   describe('urlController', () => {

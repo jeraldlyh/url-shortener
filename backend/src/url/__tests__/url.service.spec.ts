@@ -28,7 +28,6 @@ describe('UrlService', () => {
     urlService = module.get<UrlService>(UrlService);
     urlRepository = module.get<UrlRepository>(UrlRepository);
 
-    jest.clearAllMocks();
     jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
   });
 
