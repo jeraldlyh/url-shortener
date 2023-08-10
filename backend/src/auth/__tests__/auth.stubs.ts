@@ -6,3 +6,5 @@ export const AuthStub = (): IAuth => ({
   exp: '123',
   token: '123',
 });
+
+export const JwtStub = (): string => 'test';
