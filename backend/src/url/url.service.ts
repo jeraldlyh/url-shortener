@@ -35,7 +35,6 @@ export class UrlService {
   ): Promise<string | undefined> {
     const urls = await this.urlRepository.getAllUrl();
     const entry = urls.get(redirectHash);
-    console.log(urls, entry, redirectHash);
 
     return entry?.url;
   }
@@ -54,7 +53,7 @@ export class UrlService {
     return await this.urlRepository.updateQrCodes(username, updatedUrls);
   }
 
-  async deleteUrl(username: string, redirectHash: string) {
+  async deleteUrl(username: string, redirectHash: string): Promise<void> {
     const urls = await this.urlRepository.getAllUrlByUsername(username);
     const updatedUrls = urls.map((url) => {
       if (url.redirectHash === redirectHash) {
