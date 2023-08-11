@@ -30,7 +30,7 @@ export const useAuth = () => {
       if (!isLoggedIn && !isPathAllowed) {
         resetUser();
         goToLanding();
-      } else {
+      } else if (pathname !== '/404') {
         goToDashboard();
       }
     } catch (error) {
