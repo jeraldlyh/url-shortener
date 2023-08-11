@@ -1,15 +1,16 @@
-import { Body, Controller, Post, Response, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Response } from '@nestjs/common';
 import { Response as IResponse } from 'express';
 import { Account } from '../account/account.model';
 import { Auth } from './auth.decorator';
-import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { IAuth } from './auth.types';
+import { Public } from './public.decorator';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/signUp')
+  @Public()
   async signUp(
     @Body() account: Account,
     @Response({ passthrough: true }) response: Partial<IResponse>,
@@ -21,6 +22,7 @@ export class AuthController {
   }
 
   @Post('/signIn')
+  @Public()
   async signIn(
     @Body() account: Account,
     @Response({ passthrough: true }) response: Partial<IResponse>,
@@ -32,7 +34,6 @@ export class AuthController {
   }
 
   @Post('/signOut')
-  @UseGuards(AuthGuard)
   async signOut(
     @Response({ passthrough: true }) response: Partial<IResponse>,
   ): Promise<void> {
@@ -40,7 +41,6 @@ export class AuthController {
   }
 
   @Post('/validate')
-  @UseGuards(AuthGuard)
   async validate(@Auth() auth: IAuth): Promise<boolean> {
     console.log(auth);
     return await this.authService.validateToken(auth.token);

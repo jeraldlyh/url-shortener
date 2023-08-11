@@ -6,23 +6,22 @@ import {
   Param,
   Post,
   Redirect,
-  UseGuards,
 } from '@nestjs/common';
 import { Auth } from '../auth/auth.decorator';
-import { AuthGuard } from '../auth/auth.guard';
 import { IAuth } from '../auth/auth.types';
+import { Public } from '../auth/public.decorator';
 import { WEB_URL } from '../common/url';
 import { CreateQrCodeDto, IUrl, Url } from './url.model';
 import { UrlService } from './url.service';
 import { IRedirectUrl } from './url.types';
 
 @Controller('url')
-@UseGuards(AuthGuard)
 export class UrlController {
   constructor(private readonly urlService: UrlService) {}
 
   @Get('/:redirectHash')
   @Redirect()
+  @Public()
   async redirect(
     @Param('redirectHash') redirectHash: string,
   ): Promise<IRedirectUrl> {

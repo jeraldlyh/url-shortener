@@ -1,9 +1,11 @@
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
+import { JwtService } from '@nestjs/jwt';
 import * as cookieParser from 'cookie-parser';
 import firebase from 'firebase-admin';
 import { AppModule } from './app/app.module';
+import { AuthGuard } from './auth/auth.guard';
 import { WEB_URL } from './common/url';
 
 async function bootstrap() {
@@ -23,6 +25,9 @@ async function bootstrap() {
   });
   firebase.firestore().settings({ ignoreUndefinedProperties: true });
 
+  const reflector = app.get(Reflector);
+
+  app.useGlobalGuards(new AuthGuard(app.get(JwtService), reflector));
   app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser());
   app.enableCors({
