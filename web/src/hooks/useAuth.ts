@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -33,7 +34,14 @@ export const useAuth = () => {
       } else if (pathname !== CLIENT_ROUTES.NOT_FOUND) {
         goToDashboard();
       }
-    } catch (error) {}
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response?.data.message !== 'Missing token') {
+          resetUser();
+          goToLanding();
+        }
+      }
+    }
 
     setIsLoading(false);
   };
