@@ -1,7 +1,7 @@
 import { UnauthorizedException } from '@nestjs/common';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
-import { genSalt, hash } from 'bcrypt';
+import { genSalt, hash } from 'bcryptjs';
 import { AccountModule } from '../../account/account.module';
 import { AccountService } from '../../account/account.service';
 import { AccountStub } from '../../account/__tests__/account.stub';
