@@ -282,7 +282,7 @@ export const Dashboard = () => {
                   </label>
                 </CopyToClipboard>
                 <a
-                  className="link-secondary link w-full max-w-[300px] overflow-hidden text-ellipsis"
+                  className="link-secondary link w-full max-w-[300px] overflow-hidden text-ellipsis whitespace-nowrap"
                   href={redirectUrl}
                   target="_blank"
                 >
