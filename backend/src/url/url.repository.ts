@@ -54,7 +54,6 @@ export class UrlRepository {
 
   async updateQrCode(username: string, urls: Url[]): Promise<void> {
     const serializedUrls = urls.map((url) => UrlConverter.toFirestore(url));
-    console.log(serializedUrls);
     await firebase
       .firestore()
       .collection(this.accountCollection)

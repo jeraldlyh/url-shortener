@@ -44,9 +44,7 @@ export const CreateUrlModal = ({ onClose, onSubmit }: ICallbacks) => {
 
           await CREATE_URL_SCHEMA.validate(payload);
           setErrorMessage('');
-          console.log('ok');
         } catch (error) {
-          console.log(payload);
           setErrorMessage((error as ValidationError).message);
         }
         return;
