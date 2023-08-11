@@ -30,7 +30,7 @@ export class UrlController {
     );
 
     if (!redirectUrl) {
-      return { url: `${process.env.BASE_URL}/404` };
+      return { url: `${process.env.WEB_URL}/404` };
     }
 
     return { url: redirectUrl };
