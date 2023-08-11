@@ -4,7 +4,7 @@ import { BASE_URL } from '../common';
 
 export default function ErrorPage() {
   return (
-    <div className="flex h-96 w-[500px] flex-col items-center justify-center self-center">
+    <div className="flex w-[500px] flex-col items-center justify-center self-center">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         data-name="Layer 1"
@@ -420,12 +420,12 @@ export default function ErrorPage() {
         />
       </svg>
 
-      <span className="mb-3 mt-6 text-center text-4xl font-bold">
+      <span className="my-6 text-center text-4xl font-bold">
         This link or QR code has been deactivated
       </span>
       <span className="text-center">
         Head over to{' '}
-        <a href={BASE_URL} className="link">
+        <a href={BASE_URL} className="link-primary link">
           LinkNow
         </a>{' '}
         to create short links and QR codes

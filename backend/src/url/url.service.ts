@@ -37,7 +37,7 @@ export class UrlService {
     const urls = await this.urlRepository.getAllUrl();
     const entry = urls.get(redirectHash);
 
-    return entry?.url;
+    return !entry.isDeleted && entry?.url;
   }
 
   async createQrCode(username: string, qrCode: CreateQrCodeDto): Promise<void> {
