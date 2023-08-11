@@ -30,13 +30,10 @@ export const useAuth = () => {
       if (!isLoggedIn && !isPathAllowed) {
         resetUser();
         goToLanding();
-      } else if (pathname !== '/404') {
+      } else if (pathname !== CLIENT_ROUTES.NOT_FOUND) {
         goToDashboard();
       }
-    } catch (error) {
-      resetUser();
-      goToLanding();
-    }
+    } catch (error) {}
 
     setIsLoading(false);
   };
@@ -79,6 +76,7 @@ export const useAuth = () => {
       loading: 'Attempting to sign up',
       success: (data) => {
         setUser({ username: data });
+        console.log('ok', data);
 
         return 'Signed up & logged in';
       },

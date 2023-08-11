@@ -18,6 +18,7 @@ export const CLIENT_ROUTES = {
   DASHBOARD: '/dashboard',
   SIGNIN: '/signIn',
   SIGNUP: '/signUp',
+  NOT_FOUND: '/404',
 };
 
 export const SERVER_ROUTES = {
