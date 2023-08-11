@@ -211,7 +211,7 @@ export const Dashboard = () => {
                 <span className="flex items-center space-x-3 text-sm md:text-lg">
                   <BiLink />
                   <a
-                    className="link-secondary link max-w-[200px] shrink overflow-hidden text-ellipsis md:max-w-none"
+                    className="link-secondary link max-w-[200px] shrink overflow-hidden text-ellipsis whitespace-nowrap md:max-w-none"
                     href={originalUrl}
                     target="_blank"
                   >
@@ -221,7 +221,7 @@ export const Dashboard = () => {
                 <span className="flex items-center space-x-3 text-sm md:text-lg">
                   <FaLocationArrow />
                   <a
-                    className="link-primary link max-w-[200px] shrink overflow-hidden text-ellipsis md:max-w-none"
+                    className="link-primary link max-w-[200px] shrink overflow-hidden text-ellipsis whitespace-nowrap md:max-w-none"
                     href={redirectUrl}
                     target="_blank"
                   >
