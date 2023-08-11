@@ -23,20 +23,19 @@ export const useAuth = () => {
   /*                              HELPER FUNCTIONS                              */
   /* -------------------------------------------------------------------------- */
   const validateIsUserLoggedIn = async (): Promise<void> => {
-    const isPathAllowed = WHITELISTED_ROUTES.has(pathname);
+    try {
+      const isPathAllowed = WHITELISTED_ROUTES.has(pathname);
+      const isLoggedIn = await AuthService.validateUserAuth();
 
-    if (!isPathAllowed) {
-      try {
-        const isLoggedIn = await AuthService.validateUserAuth();
-
-        if (!isLoggedIn) {
-          resetUser();
-          goToLanding();
-        }
-      } catch (error) {
+      if (!isLoggedIn && !isPathAllowed) {
         resetUser();
         goToLanding();
+      } else {
+        goToDashboard();
       }
+    } catch (error) {
+      resetUser();
+      goToLanding();
     }
 
     setIsLoading(false);
