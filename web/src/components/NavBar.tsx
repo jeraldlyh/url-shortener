@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BsFillMoonFill, BsFillSunFill } from 'react-icons/bs';
 import { IoLogOut } from 'react-icons/io5';
 
@@ -7,6 +8,14 @@ interface IProps {
 
 export const NavBar = ({ onLogout }: IProps) => {
   /* -------------------------------------------------------------------------- */
+  /*                                   EFFECTS                                  */
+  /* -------------------------------------------------------------------------- */
+  useEffect(() => {
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    setTheme(currentTheme);
+  }, []);
+
+  /* -------------------------------------------------------------------------- */
   /*                              HELPER FUNCTIONS                              */
   /* -------------------------------------------------------------------------- */
   const handleThemeChange = (): void => {
@@ -15,8 +24,12 @@ export const NavBar = ({ onLogout }: IProps) => {
 
     localStorage.setItem('theme', nextTheme);
 
+    setTheme(nextTheme);
+  };
+
+  const setTheme = (theme: string): void => {
     const htmlElement = document.querySelector('html');
-    htmlElement?.setAttribute('data-theme', nextTheme);
+    htmlElement?.setAttribute('data-theme', theme);
   };
 
   /* -------------------------------------------------------------------------- */
