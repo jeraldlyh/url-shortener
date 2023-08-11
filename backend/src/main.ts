@@ -4,6 +4,7 @@ import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
 import firebase from 'firebase-admin';
 import { AppModule } from './app/app.module';
+import { WEB_URL } from './common/url';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -26,7 +27,7 @@ async function bootstrap() {
   app.use(cookieParser());
   app.enableCors({
     credentials: true,
-    origin: process.env.WEB_URL || 'http://localhost:3000',
+    origin: WEB_URL,
   });
   await app.listen(process.env.PORT || 8000);
 }

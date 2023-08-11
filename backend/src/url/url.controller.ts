@@ -11,6 +11,7 @@ import {
 import { Auth } from '../auth/auth.decorator';
 import { AuthGuard } from '../auth/auth.guard';
 import { IAuth } from '../auth/auth.types';
+import { WEB_URL } from '../common/url';
 import { CreateQrCodeDto, IUrl, Url } from './url.model';
 import { UrlService } from './url.service';
 import { IRedirectUrl } from './url.types';
@@ -30,7 +31,7 @@ export class UrlController {
     );
 
     if (!redirectUrl) {
-      return { url: `${process.env.WEB_URL}/404` };
+      return { url: `${WEB_URL}/404` };
     }
 
     return { url: redirectUrl };
