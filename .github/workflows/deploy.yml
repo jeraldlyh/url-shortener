@@ -46,3 +46,4 @@ jobs:
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           branch: master
           appdir: "backend"
+          usedocker: true
