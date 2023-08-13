@@ -35,13 +35,13 @@ export const SignIn = () => {
   /*                                   RENDER                                   */
   /* -------------------------------------------------------------------------- */
   return (
-    <Container styles="justify-center">
-      <div className="flex w-full max-w-md flex-col items-center justify-center">
+    <Container>
+      <div className="flex w-full max-w-md flex-col items-center justify-center rounded-xl bg-base-100 p-10 shadow-xl">
         <UrlIcon />
         <span className="my-3 w-full text-center text-2xl font-bold sm:text-3xl md:text-4xl">
           Login
         </span>
-        <span className="mb-8 text-center text-sm italic">
+        <span className="mb-5 text-center text-xs italic md:text-sm">
           Unlock the full power of shortened links
         </span>
         <input
@@ -80,7 +80,7 @@ export const SignIn = () => {
         </button>
         <div className="text-center text-xs sm:text-sm">
           <span>Don&rsquo;t have an account? </span>
-          <button className="btn-link text-neutral" onClick={handleGoToSignUp}>
+          <button className="btn-link text-primary" onClick={handleGoToSignUp}>
             Create an account
           </button>
         </div>

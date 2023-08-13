@@ -35,13 +35,13 @@ export const SignUp = () => {
   /*                                   RENDER                                   */
   /* -------------------------------------------------------------------------- */
   return (
-    <Container styles="justify-center">
-      <div className="flex w-full max-w-md flex-col items-center justify-center">
+    <Container>
+      <div className="flex w-full max-w-md flex-col items-center justify-center rounded-xl bg-base-100 p-10 shadow-xl">
         <UrlIcon />
         <span className="my-3 w-full text-center text-2xl font-bold sm:text-3xl md:text-4xl">
           Create an account
         </span>
-        <span className="mb-8 text-center text-sm italic">
+        <span className="mb-8 text-center text-xs italic md:text-sm">
           An account allows you to create and delete shortened URLs
         </span>
         <input
@@ -80,7 +80,7 @@ export const SignUp = () => {
         </button>
         <div className="text-xs sm:text-sm">
           <span>Already have an account? </span>
-          <button className="btn-link text-neutral" onClick={handleGoToSignIn}>
+          <button className="btn-link text-primary" onClick={handleGoToSignIn}>
             Sign in
           </button>
         </div>
