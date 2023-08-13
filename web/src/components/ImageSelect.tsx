@@ -22,11 +22,12 @@ export const ImageTypeSelect = ({ selected, images, onChange }: IProps) => {
         description: string,
         selected: boolean,
       ): JSX.Element => {
-        const classnames = clsx({
+        const buttonClassNames = clsx({
           'mr-3': true,
           'font-medium': selected,
           'font-normal': !selected,
         });
+
         return (
           <div className="flex">
             {selected && (
@@ -34,7 +35,7 @@ export const ImageTypeSelect = ({ selected, images, onChange }: IProps) => {
                 <AiOutlineCheck className="h-5 w-5" aria-hidden="true" />
               </span>
             )}
-            <span className={classnames}>{option}</span>
+            <span className={buttonClassNames}>{option}</span>
             <span className="font-light italic">{description}</span>
           </div>
         );
@@ -60,8 +61,8 @@ export const ImageTypeSelect = ({ selected, images, onChange }: IProps) => {
 
   return (
     <Listbox value={selected} onChange={onChange}>
-      <div className="relative mt-1 h-10">
-        <Listbox.Button className="border-outline h-full w-full cursor-pointer rounded-lg border px-4 py-2 text-left">
+      <div className="relative -mb-2 mt-1 h-10">
+        <Listbox.Button className="h-full w-full cursor-pointer rounded-lg border border-base-content/20 px-4 py-2 text-left">
           <span className="font-semibold">{selected}</span>
           <span className="pointer-events-none absolute inset-y-0 right-2 flex items-center">
             <PiCaretUpDownBold

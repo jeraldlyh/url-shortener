@@ -102,6 +102,7 @@ export const CreateUrlModal = ({ onClose, onSubmit }: ICallbacks) => {
       success: 'Successfully created a new url',
       error: (e) => Utils.capitalize(e.response.data.message.toString()),
     });
+
     onSubmit && (await onSubmit());
     resetState();
   };

@@ -26,7 +26,6 @@ import {
   IUrl,
   MODAL_IDS,
 } from '../common';
-import { useAuth } from '../hooks';
 import { UrlService } from '../services';
 import { CreateUrlModal } from './CreateUrlModal';
 import { DeleteUrlModal } from './DeleteUrlModal';
@@ -43,7 +42,6 @@ export const Dashboard = () => {
   const [viewQrCode, setViewQrCode] = useState<IQrCode>(DEFAULT_QR_CODE);
   const [deleteRedirectHash, setDeleteRedirectHash] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { signOut } = useAuth();
   const isDesktop = useMediaQuery({ minWidth: DEVICE_WIDTHS.DESKTOP });
   const columns = useMemo<ColumnDef<IUrl>[]>(() => [], []);
 
@@ -72,13 +70,13 @@ export const Dashboard = () => {
   /* -------------------------------------------------------------------------- */
   useEffect(() => {
     fetchUrls();
-    // table.setPageSize(isDesktop ? 10 : 3);
   }, []);
 
   /* -------------------------------------------------------------------------- */
   /*                              HANDLER FUNCTIONS                             */
   /* -------------------------------------------------------------------------- */
   const fetchUrls = async (): Promise<void> => {
+    setIsLoading(true);
     const urls = await UrlService.getAllUrls();
     setUrls(urls);
     setIsLoading(false);
@@ -179,10 +177,8 @@ export const Dashboard = () => {
           month: 'short',
           day: 'numeric',
           year: 'numeric',
-          ...(isDesktop && {
-            minute: 'numeric',
-            hour: 'numeric',
-          }),
+          minute: 'numeric',
+          hour: 'numeric',
         });
 
       const handleViewUrl = (): void => {
@@ -203,7 +199,7 @@ export const Dashboard = () => {
       if (!isDesktop) {
         return (
           <tr key={row.id}>
-            <td className="flex flex-col space-y-2">
+            <td className="flex flex-col">
               <div className="flex flex-col space-y-3">
                 <span className="text-base font-semibold md:text-lg">
                   {formatTitle()}
@@ -233,7 +229,7 @@ export const Dashboard = () => {
                   <span>{formatCreatedAt()}</span>
                 </span>
               </div>
-              <div className="flex space-x-2">
+              <div className="mt-3 flex space-x-2">
                 <CopyToClipboard
                   text={redirectUrl}
                   onCopy={handleCopyToClipboard}
@@ -267,7 +263,7 @@ export const Dashboard = () => {
 
       return (
         <tr key={row.id}>
-          <td className="flex flex-col pt-3">
+          <td className="flex flex-col items-center py-2">
             <div className="flex w-full">
               <span className="w-1/12 text-start">{formatTitle()}</span>
               <span className="flex w-6/12 items-center space-x-2 text-start">
@@ -301,8 +297,8 @@ export const Dashboard = () => {
                 />
               </span>
             </div>
-            <div className="divider m-0" />
           </td>
+          <div className="divider m-0" />
         </tr>
       );
     });
@@ -311,7 +307,7 @@ export const Dashboard = () => {
   return (
     <Container styles="py-12">
       {renderModal()}
-      <NavBar onLogout={signOut} />
+      <NavBar />
       <div className="card mt-5 flex h-[90%] w-full flex-col items-center bg-base-200 px-10 py-8 text-base-content shadow-xl">
         <div className="mb-5 flex w-full items-center justify-between self-start text-2xl">
           <span className="text-lg font-bold md:text-xl">Dashboard</span>

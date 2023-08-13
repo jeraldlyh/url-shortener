@@ -16,7 +16,7 @@ export const Modal = ({
           {title}
         </p>
         {children}
-        <div className="mt-3 flex w-full flex-col-reverse md:flex-row md:space-x-4">
+        <div className="mt-4 flex w-full flex-col-reverse md:flex-row md:space-x-4">
           <button
             className="btn btn-secondary w-full flex-shrink"
             onClick={onClose}

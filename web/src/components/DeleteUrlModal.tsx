@@ -33,7 +33,11 @@ export const DeleteUrlModal = ({ redirectHash, onClose, onSubmit }: IProps) => {
       onClose={onClose}
     >
       <span className="font-semilight">
-        Deleting this link will redirect you to the error page
+        Deleting this link will redirect subsequent users who uses this link or
+        scans the QR code to the{' '}
+        <a href="/404" className="link-error link">
+          error page
+        </a>
       </span>
       <div className="alert alert-warning my-5">
         <BiError />
