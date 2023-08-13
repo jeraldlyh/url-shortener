@@ -286,7 +286,7 @@ export const Dashboard = () => {
                 </a>
               </span>
               <span className="w-3/12 text-start">{formatCreatedAt()}</span>
-              <span className="flex w-1/12 items-center justify-end space-x-3 text-lg">
+              <span className="flex w-1/12 items-center space-x-3 text-lg">
                 <BiSolidDownload
                   className="cursor-pointer hover:text-primary-focus"
                   onClick={handleViewUrl}
