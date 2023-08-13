@@ -1,10 +1,11 @@
 import { Body, Controller, Post, Response } from '@nestjs/common';
 import { Response as IResponse } from 'express';
 import { Account } from '../account/account.model';
+import { Public } from '../common';
 import { Auth } from './auth.decorator';
 import { AuthService } from './auth.service';
 import { IAuth } from './auth.types';
-import { Public } from './public.decorator';
+
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

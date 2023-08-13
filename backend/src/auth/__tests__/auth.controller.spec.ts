@@ -1,11 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Response } from 'express';
 import { AccountStub } from '../../account/__tests__/account.stub';
-import { AuthGuardMock } from '../../url/__tests__/url.stub';
 import { AuthController } from '../auth.controller';
 import { AuthGuard } from '../auth.guard';
 import { AuthService } from '../auth.service';
-import { AuthStub } from './auth.stubs';
+import { AuthGuardMock, AuthStub } from './auth.stubs';
 
 jest.mock('../auth.service', () => ({
   AuthService: jest.fn().mockImplementation(() => ({

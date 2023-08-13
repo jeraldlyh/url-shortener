@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { Auth } from '../auth/auth.decorator';
 import { IAuth } from '../auth/auth.types';
-import { Public } from '../auth/public.decorator';
+import { Public } from '../common';
 import { WEB_URL } from '../common/url';
 import { CreateQrCodeDto, IUrl, Url } from './url.model';
 import { UrlService } from './url.service';

@@ -1,12 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthGuard } from '../../auth/auth.guard';
-import { AuthStub } from '../../auth/__tests__/auth.stubs';
+import { AuthGuardMock, AuthStub } from '../../auth/__tests__/auth.stubs';
 import { UrlController } from '../url.controller';
 import { Url } from '../url.model';
 import { UrlService } from '../url.service';
 import { IRedirectUrl } from '../url.types';
 import {
-  AuthGuardMock,
   CreateQrCodeDtoStub,
   RedirectHashStub,
   RedirectUrlStub,

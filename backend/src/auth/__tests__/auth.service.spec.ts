@@ -38,7 +38,6 @@ describe('AuthService', () => {
     accountService = module.get<AccountService>(AccountService);
     jwtService = module.get<JwtService>(JwtService);
 
-    jest.spyOn(jwtService, 'signAsync').mockResolvedValue(JwtStub());
     jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
   });
 
@@ -56,6 +55,7 @@ describe('AuthService', () => {
     let token: string;
 
     beforeEach(async () => {
+      jest.spyOn(jwtService, 'signAsync').mockResolvedValue(JwtStub());
       token = await authService.createAccount(AccountStub());
     });
 
@@ -75,6 +75,10 @@ describe('AuthService', () => {
   });
 
   describe('when validateUser is called', () => {
+    beforeEach(() => {
+      jest.spyOn(jwtService, 'signAsync').mockResolvedValue(JwtStub());
+    });
+
     afterEach(() => {
       mockGetAccount.mockReset();
     });

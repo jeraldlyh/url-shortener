@@ -25,9 +25,7 @@ async function bootstrap() {
   });
   firebase.firestore().settings({ ignoreUndefinedProperties: true });
 
-  const reflector = app.get(Reflector);
-
-  app.useGlobalGuards(new AuthGuard(app.get(JwtService), reflector));
+  app.useGlobalGuards(new AuthGuard(app.get(JwtService), app.get(Reflector)));
   app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser());
   app.enableCors({

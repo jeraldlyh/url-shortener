@@ -1,12 +1,6 @@
-import {
-  instanceToPlain,
-  Transform,
-  TransformFnParams,
-  Type,
-} from 'class-transformer';
+import { instanceToPlain, Type } from 'class-transformer';
 import {
   IsBoolean,
-  IsNotEmpty,
   IsObject,
   IsOptional,
   IsString,
@@ -18,7 +12,7 @@ import {
   QueryDocumentSnapshot,
   Timestamp,
 } from 'firebase-admin/firestore';
-import { BaseModel, IBaseModel } from '../common';
+import { BaseModel, IBaseModel, IsNotEmptyString } from '../common';
 
 export interface IUrl extends IBaseModel {
   url: string;
@@ -48,9 +42,7 @@ export class QrCode implements IQrCode {
 }
 
 export class CreateQrCodeDto implements Pick<IUrl, 'redirectHash'> {
-  @IsString()
-  @IsNotEmpty()
-  @Transform(({ value }: TransformFnParams) => value?.trim())
+  @IsNotEmptyString()
   redirectHash: string;
 
   @IsObject()
@@ -65,10 +57,8 @@ export class CreateQrCodeDto implements Pick<IUrl, 'redirectHash'> {
 }
 
 export class Url extends BaseModel implements IUrl {
-  @IsString()
-  @IsNotEmpty()
+  @IsNotEmptyString()
   @IsUrl()
-  @Transform(({ value }: TransformFnParams) => value?.trim())
   public url: string;
 
   @IsString()

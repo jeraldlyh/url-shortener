@@ -1,11 +1,10 @@
-import { Transform, TransformFnParams } from 'class-transformer';
-import { IsNotEmpty, IsString, Length } from 'class-validator';
+import { Length } from 'class-validator';
 import {
   DocumentData,
   QueryDocumentSnapshot,
   Timestamp,
 } from 'firebase-admin/firestore';
-import { BaseModel, IBaseModel } from '../common';
+import { BaseModel, IBaseModel, IsNotEmptyString } from '../common';
 import { IUrl, QrCode, Url } from '../url/url.model';
 
 export interface IAccount extends IBaseModel {
@@ -15,14 +14,10 @@ export interface IAccount extends IBaseModel {
 }
 
 export class Account extends BaseModel implements IAccount {
-  @IsString()
-  @Transform(({ value }: TransformFnParams) => value?.trim())
-  @IsNotEmpty()
+  @IsNotEmptyString()
   public username: string;
 
-  @IsString()
-  @Transform(({ value }: TransformFnParams) => value?.trim())
-  @IsNotEmpty()
+  @IsNotEmptyString()
   @Length(8)
   public password: string;
 

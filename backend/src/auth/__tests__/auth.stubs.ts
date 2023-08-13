@@ -1,3 +1,4 @@
+import { ExecutionContext } from '@nestjs/common';
 import { IAuth } from '../auth.types';
 
 export const AuthStub = (): IAuth => ({
@@ -8,3 +9,13 @@ export const AuthStub = (): IAuth => ({
 });
 
 export const JwtStub = (): string => 'test';
+
+export const AuthGuardMock = {
+  canActivate(context: ExecutionContext) {
+    const request = context.switchToHttp().getRequest();
+
+    request['user'] = { username: 'user' };
+
+    return true;
+  },
+};

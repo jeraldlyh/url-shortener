@@ -25,8 +25,11 @@ describe('AccountService', () => {
     accountService = module.get<AccountService>(AccountService);
     accountRepository = module.get<AccountRepository>(AccountRepository);
 
-    mockGetAccount.mockReset();
     jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
+  });
+
+  afterEach(() => {
+    mockGetAccount.mockReset();
   });
 
   describe('accountService', () => {
