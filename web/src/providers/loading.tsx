@@ -57,7 +57,7 @@ export const LoadingProvider = ({ children }: IProps) => {
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
       >
-        <div className="flex h-screen w-screen justify-center">{children}</div>
+        <div className="">{children}</div>
       </Transition>
     </Fragment>
   );

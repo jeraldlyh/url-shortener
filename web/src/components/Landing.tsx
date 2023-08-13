@@ -23,21 +23,21 @@ export const Landing = () => {
   /*                                   RENDER                                   */
   /* -------------------------------------------------------------------------- */
   return (
-    <Container styles="relative space-y-5 justify-center">
+    <Container styles="space-y-5 justify-center">
       <LandingIcon />
-      <div className="flex flex-col items-center font-bold uppercase tracking-widest">
-        <span className="text-2xl lg:text-5xl">Tiny URLs</span>
-        <span className="text-4xl sm:text-5xl lg:text-8xl">Big Impact</span>
+      <div className="flex flex-col items-center font-bold uppercase tracking-wide">
+        <span className="text-3xl md:text-4xl">Tiny URLs</span>
+        <span className="text-4xl md:text-5xl lg:text-6xl">Big Impact</span>
       </div>
       <div className="flex w-full flex-col items-center space-y-3">
         <button
-          className="btn btn-primary w-full max-w-xs font-semibold lg:max-w-sm"
+          className="btn btn-primary btn-md flex w-full max-w-xs items-center font-bold md:btn-lg md:max-w-md"
           onClick={handleGetStarted}
         >
           Get started
         </button>
         <button
-          className="btn btn-secondary btn-outline w-full max-w-xs font-semibold lg:max-w-sm"
+          className="btn btn-secondary btn-outline btn-md flex w-full max-w-xs items-center font-bold md:btn-lg md:max-w-md"
           onClick={handleContinue}
         >
           Continue

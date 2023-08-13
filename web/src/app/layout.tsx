@@ -11,9 +11,9 @@ export const metadata: Metadata = {
   icons: [
     {
       rel: 'icon',
-      type: 'image/png',
+      type: 'image/jpg',
       sizes: 'any',
-      url: '/favicon.png',
+      url: '/favicon.jpg',
     },
   ],
   openGraph: {
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     description:
       'Experience big impact with tiny URLs that are easy to share and remember',
     images: {
-      url: '/favicon.png',
+      url: '/favicon.jpg',
     },
     url: 'https://url-shortener.jeraldlyh.com/',
     locale: 'en-US',
