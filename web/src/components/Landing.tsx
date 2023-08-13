@@ -12,11 +12,11 @@ export const Landing = () => {
   /*                              HANDLER FUNCTIONS                             */
   /* -------------------------------------------------------------------------- */
   const handleGetStarted = (): void => {
-    router.push(CLIENT_ROUTES.SIGNUP);
+    router.push(CLIENT_ROUTES.SIGN_UP);
   };
 
   const handleContinue = (): void => {
-    router.push(CLIENT_ROUTES.SIGNIN);
+    router.push(CLIENT_ROUTES.SIGN_IN);
   };
 
   /* -------------------------------------------------------------------------- */

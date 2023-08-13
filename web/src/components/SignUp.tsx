@@ -26,7 +26,7 @@ export const SignUp = () => {
   };
 
   const handleGoToSignIn = (): void => {
-    router.push(CLIENT_ROUTES.SIGNIN);
+    router.push(CLIENT_ROUTES.SIGN_IN);
   };
 
   const isButtonDisabled = () => !username || !password;

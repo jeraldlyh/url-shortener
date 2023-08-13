@@ -34,7 +34,6 @@ const AuthProvider = ({ children }: IAuthProvider) => {
   /* -------------------------------------------------------------------------- */
   /*                                   RENDER                                   */
   /* -------------------------------------------------------------------------- */
-
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 };
 

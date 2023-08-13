@@ -16,8 +16,8 @@ export const BASE_URL =
 export const CLIENT_ROUTES = {
   HOME: '/',
   DASHBOARD: '/dashboard',
-  SIGNIN: '/signIn',
-  SIGNUP: '/signUp',
+  SIGN_IN: '/signIn',
+  SIGN_UP: '/signUp',
   NOT_FOUND: '/404',
 };
 
@@ -29,16 +29,16 @@ export const SERVER_ROUTES = {
     DELETE: '/url',
   },
   AUTH: {
-    SIGNOUT: '/auth/signOut',
-    SIGNIN: '/auth/signIn',
-    SIGNUP: '/auth/signUp',
+    SIGN_OUT: '/auth/signOut',
+    SIGN_IN: '/auth/signIn',
+    SIGN_UP: '/auth/signUp',
     VALIDATE: '/auth/validate',
   },
 };
 
 export const WHITELISTED_ROUTES = new Set([
-  CLIENT_ROUTES.SIGNIN,
-  CLIENT_ROUTES.SIGNUP,
+  CLIENT_ROUTES.SIGN_IN,
+  CLIENT_ROUTES.SIGN_UP,
   CLIENT_ROUTES.HOME,
 ]);
 

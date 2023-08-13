@@ -2,7 +2,7 @@ import { SERVER_ROUTES } from '../common';
 import AxiosService from './axios';
 
 const signUp = async (username: string, password: string): Promise<string> => {
-  const result = await AxiosService.post<string>(SERVER_ROUTES.AUTH.SIGNUP, {
+  const result = await AxiosService.post<string>(SERVER_ROUTES.AUTH.SIGN_UP, {
     username,
     password,
   });
@@ -11,7 +11,7 @@ const signUp = async (username: string, password: string): Promise<string> => {
 };
 
 const signIn = async (username: string, password: string): Promise<string> => {
-  const result = await AxiosService.post<string>(SERVER_ROUTES.AUTH.SIGNIN, {
+  const result = await AxiosService.post<string>(SERVER_ROUTES.AUTH.SIGN_IN, {
     username,
     password,
   });
@@ -20,7 +20,7 @@ const signIn = async (username: string, password: string): Promise<string> => {
 };
 
 const signOut = async (): Promise<void> => {
-  await AxiosService.post<void>(SERVER_ROUTES.AUTH.SIGNOUT);
+  await AxiosService.post<void>(SERVER_ROUTES.AUTH.SIGN_OUT);
 };
 
 const validateUserAuth = async (): Promise<boolean> => {

@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     },
   ],
   openGraph: {
-    title: 'Tiny URLs, Big Impact - LinkNow',
+    title: 'LinkNow | Tiny URLs, Big Impact',
     description:
       'Experience big impact with tiny URLs that are easy to share and remember',
     images: {
@@ -39,16 +39,16 @@ export default function RootLayout({
   /* -------------------------------------------------------------------------- */
   return (
     <html lang="en" data-theme="light">
-      <Toaster
-        position="top-center"
-        reverseOrder={false}
-        gutter={8}
-        containerClassName=""
-        toastOptions={{
-          duration: 5000,
-        }}
-      />
       <body>
+        <Toaster
+          position="top-center"
+          reverseOrder={false}
+          gutter={8}
+          containerClassName=""
+          toastOptions={{
+            duration: 5000,
+          }}
+        />
         <AuthProvider>
           <LoadingProvider>{children}</LoadingProvider>
         </AuthProvider>

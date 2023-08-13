@@ -1,12 +1,14 @@
 import { useEffect } from 'react';
 import { BsFillMoonFill, BsFillSunFill } from 'react-icons/bs';
 import { IoLogOut } from 'react-icons/io5';
+import { useAuth } from '../hooks';
 
-interface IProps {
-  onLogout: () => Promise<void>;
-}
+export const NavBar = () => {
+  /* -------------------------------------------------------------------------- */
+  /*                                    STATE                                   */
+  /* -------------------------------------------------------------------------- */
+  const { signOut } = useAuth();
 
-export const NavBar = ({ onLogout }: IProps) => {
   /* -------------------------------------------------------------------------- */
   /*                                   EFFECTS                                  */
   /* -------------------------------------------------------------------------- */
@@ -36,7 +38,7 @@ export const NavBar = ({ onLogout }: IProps) => {
   /*                                   RENDER                                   */
   /* -------------------------------------------------------------------------- */
   return (
-    <div className="navbar rounded-box flex h-[5%] justify-between bg-base-200 pl-5 pr-10 shadow-xl md:pl-6">
+    <div className="navbar rounded-box flex justify-between bg-base-200 pl-5 pr-10 shadow-xl md:pl-6">
       <a className="btn btn-ghost text-lg font-bold normal-case md:text-xl">
         LinkNow
       </a>
@@ -56,10 +58,7 @@ export const NavBar = ({ onLogout }: IProps) => {
             <BsFillSunFill />
           </div>
         </label>
-        <button
-          className="text-2xl hover:text-primary-focus"
-          onClick={onLogout}
-        >
+        <button className="text-2xl hover:text-primary-focus" onClick={signOut}>
           <IoLogOut />
         </button>
       </div>
