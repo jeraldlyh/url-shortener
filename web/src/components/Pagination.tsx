@@ -1,5 +1,5 @@
 import { Table } from '@tanstack/react-table';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
 import { IUrl } from '../common';
 
@@ -14,6 +14,14 @@ export const Pagination = ({ urls, onClick, table }: IProps) => {
   /*                                    STATE                                   */
   /* -------------------------------------------------------------------------- */
   const [index, setIndex] = useState<number>(1);
+
+  /* -------------------------------------------------------------------------- */
+  /*                                   EFFECTS                                  */
+  /* -------------------------------------------------------------------------- */
+  // NOTE: Reset page number when user creates new url
+  useEffect(() => {
+    setIndex(1);
+  }, [urls]);
 
   /* -------------------------------------------------------------------------- */
   /*                              HELPER FUNCTIONS                              */
@@ -37,15 +45,15 @@ export const Pagination = ({ urls, onClick, table }: IProps) => {
   /* -------------------------------------------------------------------------- */
   if (!urls || urls?.length === 0) {
     return (
-      <button className="btn btn-primary my-4 w-full" onClick={onClick}>
+      <button className="btn btn-primary w-full" onClick={onClick}>
         Create your first link
       </button>
     );
   }
   return (
-    <div className="join mt-4">
+    <div className="join mt-4 border border-base-100 disabled:cursor-not-allowed">
       <button
-        className="btn join-item disabled:cursor-not-allowed"
+        className="btn join-item"
         onClick={handlePreviousPage}
         disabled={!table.getCanPreviousPage()}
       >
@@ -58,7 +66,7 @@ export const Pagination = ({ urls, onClick, table }: IProps) => {
         Page {index}/{table.getPageCount()}
       </button>
       <button
-        className="btn join-item disabled:cursor-not-allowed"
+        className="btn join-item"
         onClick={handleNextPage}
         disabled={!table.getCanNextPage()}
       >
