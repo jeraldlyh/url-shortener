@@ -57,7 +57,7 @@ export const LoadingProvider = ({ children }: IProps) => {
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
       >
-        <div className="">{children}</div>
+        <div>{children}</div>
       </Transition>
     </Fragment>
   );

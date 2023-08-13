@@ -164,7 +164,7 @@ export const CreateUrlModal = ({ onClose, onSubmit }: ICallbacks) => {
       onSubmit={handleSubmit}
       onClose={handleClose}
     >
-      <div className="flex flex-col space-y-2">
+      <div className="flex flex-col space-y-4">
         <div className="flex flex-col space-y-2">
           <span className="font-semibold">Destination</span>
           <div className="relative w-full">

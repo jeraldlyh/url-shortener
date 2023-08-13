@@ -11,7 +11,7 @@ export const Modal = ({
 }: IBaseModalProps) => {
   return (
     <dialog id={id} className="modal bg-neutral/75">
-      <div className="modal-box">
+      <div className="modal-box p-6 md:px-10 md:py-8">
         <p className="mb-3 text-center text-lg font-semibold md:text-xl">
           {title}
         </p>
