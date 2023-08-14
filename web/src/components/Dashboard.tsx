@@ -277,11 +277,11 @@ export const Dashboard = () => {
                   </label>
                 </CopyToClipboard>
                 <a
-                  className="link-secondary link w-full max-w-[300px] overflow-hidden text-ellipsis whitespace-nowrap"
+                  className="link-secondary link w-full max-w-[300px] overflow-hidden text-ellipsis whitespace-nowrap xl:max-w-md"
                   href={redirectUrl}
                   target="_blank"
                 >
-                  {redirectUrl}
+                  {redirectUrl}klasjdklajdlkjakjldaklka
                 </a>
               </span>
               <span className="w-3/12 text-start">{formatCreatedAt()}</span>
