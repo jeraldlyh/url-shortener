@@ -39,7 +39,7 @@ const IMAGE_DOWNLOAD_TYPES: IDownload[] = [
     description: 'Vector-based image that can be resized',
     handleDownload: () => {
       const canvas = document.querySelector('#qrCode') as HTMLCanvasElement;
-      const contentWithSvg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" height="128" width="128" viewBox="0 0 29 29">${canvas.innerHTML}</svg>`;
+      const contentWithSvg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" height="256" width="256" viewBox="0 0 50 50">${canvas.innerHTML}</svg>`;
       const blob = new Blob([contentWithSvg], { type: 'image/svg+xml' });
       const url = URL.createObjectURL(blob);
 
