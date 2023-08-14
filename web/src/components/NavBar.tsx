@@ -43,7 +43,7 @@ export const NavBar = () => {
         LinkNow
       </a>
       <div className="flex space-x-3">
-        <label className="swap swap-rotate">
+        <label className="swap swap-rotate hover:text-primary-focus">
           <input type="checkbox" />
           <div
             onClick={handleThemeChange}

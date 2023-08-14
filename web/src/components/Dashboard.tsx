@@ -169,8 +169,7 @@ export const Dashboard = () => {
 
       const isChecked = (): boolean => copiedUrls.has(index);
 
-      const formatTitle = (): string =>
-        row.original.title || row.original.url.split('.')[1];
+      const formatTitle = (): string => row.original.title || '';
 
       const formatCreatedAt = (): string =>
         new Date(createdAt).toLocaleDateString('en-US', {

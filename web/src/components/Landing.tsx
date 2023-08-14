@@ -31,13 +31,13 @@ export const Landing = () => {
       </div>
       <div className="flex w-full flex-col items-center space-y-3">
         <button
-          className="btn btn-primary btn-md flex w-full max-w-xs items-center font-bold md:btn-lg md:max-w-md"
+          className="btn btn-primary btn-md flex w-full max-w-xs items-center font-bold md:max-w-xs"
           onClick={handleGetStarted}
         >
           Get started
         </button>
         <button
-          className="btn btn-secondary btn-outline btn-md flex w-full max-w-xs items-center font-bold md:btn-lg md:max-w-md"
+          className="btn btn-secondary btn-outline btn-md flex w-full max-w-xs items-center font-bold md:max-w-xs"
           onClick={handleContinue}
         >
           Continue

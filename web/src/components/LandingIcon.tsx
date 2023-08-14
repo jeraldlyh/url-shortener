@@ -1,6 +1,6 @@
 export const LandingIcon = () => {
   return (
-    <div>
+    <div className="w-[240px] md:w-[450px]">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         data-name="Layer 1"

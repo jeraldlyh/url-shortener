@@ -38,7 +38,7 @@ export default function RootLayout({
   /*                                   RENDER                                   */
   /* -------------------------------------------------------------------------- */
   return (
-    <html lang="en" data-theme="light">
+    <html lang="en" data-theme="light" className="font-primary">
       <body>
         <Toaster
           position="top-center"
