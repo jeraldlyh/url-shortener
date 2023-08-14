@@ -12,12 +12,12 @@ Explore the features of the URL Shortener Application, from generating QR codes 
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
     - [Running the Application](#running-the-application)
+    - [Testing the Application](#testing-the-application)
   - [Wireframe](#wireframe)
   - [Features](#features)
     - [Shorten a URL](#shorten-a-url)
     - [Manage Your URLs](#manage-your-urls)
     - [Styling](#styling)
-    - [Automated Testing](#automated-testing)
     - [QR Code Generation](#qr-code-generation)
   - [Contribution](#contribution)
   - [License](#license)
@@ -57,6 +57,14 @@ docker compose up
 
 2. Access the application by opening your web browser and navigating to `http://localhost:3000`
 
+### Testing the Application
+
+The application includes unit tests to ensure its functionality and reliability.
+
+```bash
+npm test
+```
+
 ## Wireframe
 
 The wireframe of the project can be found [here](https://www.figma.com/file/f9iTtOX5iZpeqk1uS1OhmD/Govtech-DCube?type=design&node-id=1%3A65&mode=design&t=IhvVEU0WzCIelBHp-1) on Figma.
@@ -83,10 +91,6 @@ The wireframe of the project can be found [here](https://www.figma.com/file/f9iT
 ### Styling
 
 The frontend application is designed with a unique and modern look. Users are given the option to toggle between light and dark theme. It is also fully responsive, ensuring a great user experience on different devices.
-
-### Automated Testing
-
-The application includes unit tests to ensure its functionality and reliability. You can run these tests using the following command: `npm test`
 
 ### QR Code Generation
 
