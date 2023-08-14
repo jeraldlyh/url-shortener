@@ -12,6 +12,7 @@ Explore the features of the URL Shortener Application, from generating QR codes 
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
     - [Running the Application](#running-the-application)
+  - [Wireframe](#wireframe)
   - [Features](#features)
     - [Shorten a URL](#shorten-a-url)
     - [Manage Your URLs](#manage-your-urls)
@@ -55,6 +56,10 @@ docker compose up
 ```
 
 2. Access the application by opening your web browser and navigating to `http://localhost:3000`
+
+## Wireframe
+
+The wireframe of the project can be found [here](https://www.figma.com/file/f9iTtOX5iZpeqk1uS1OhmD/Govtech-DCube?type=design&node-id=1%3A65&mode=design&t=IhvVEU0WzCIelBHp-1) on Figma.
 
 ## Features
 
