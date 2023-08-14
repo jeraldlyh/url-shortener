@@ -12,6 +12,7 @@ Explore the features of the URL Shortener Application, from generating QR codes 
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
     - [Running the Application](#running-the-application)
+    - [Environment Variables](#environment-variables)
     - [Testing the Application](#testing-the-application)
   - [Wireframe](#wireframe)
   - [Features](#features)
@@ -54,6 +55,16 @@ cd ../backend && npm i
 cd url-shortener
 docker compose up
 ```
+
+### Environment Variables
+
+| Name                     | Description                     |
+| ------------------------ | ------------------------------- |
+| `FIRESTORE_PROJECT_ID`   | Firestore project ID            |
+| `FIRESTORE_PRIVATE_KEY`  | Firestore private key           |
+| `FIRESTORE_CLIENT_EMAIL` | Firestore client email          |
+| `AUTH_SECRET`            | JWT secret key                  |
+| `AUTH_SALT_ROUNDS`       | Cost refactor to calculate hash |
 
 2. Access the application by opening your web browser and navigating to `http://localhost:3000`
 
