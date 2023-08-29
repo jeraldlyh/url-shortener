@@ -1,6 +1,6 @@
 'use client';
 
-import { BASE_URL, Container } from '../common';
+import { Container } from '../common';
 
 export default function ErrorPage() {
   return (
@@ -426,7 +426,7 @@ export default function ErrorPage() {
       </span>
       <span className="text-center">
         Head over to{' '}
-        <a href={BASE_URL} className="link-primary link">
+        <a href={'/'} className="link-primary link">
           LinkNow
         </a>{' '}
         to create short links and QR codes
