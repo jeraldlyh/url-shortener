@@ -2,7 +2,12 @@ import { AxiosError } from 'axios';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { CLIENT_ROUTES, IUser, WHITELISTED_ROUTES } from '../common';
+import {
+  AUTH_ERROR_MESSAGES,
+  CLIENT_ROUTES,
+  IUser,
+  WHITELISTED_ROUTES,
+} from '../common';
 import { AuthService } from '../services';
 import { Utils } from '../utils';
 
@@ -28,15 +33,19 @@ export const useAuth = () => {
       const isPathAllowed = WHITELISTED_ROUTES.has(pathname);
       const isLoggedIn = await AuthService.validateUserAuth();
 
-      if (!isLoggedIn && !isPathAllowed) {
-        resetUser();
-        goToLanding();
+      if (isPathAllowed) {
+        if (isLoggedIn) {
+          goToDashboard();
+        } else {
+          resetUser();
+          goToLanding();
+        }
       } else if (pathname !== CLIENT_ROUTES.NOT_FOUND) {
         goToDashboard();
       }
     } catch (error) {
       if (error instanceof AxiosError) {
-        if (error.response?.data.message !== 'Missing token') {
+        if (AUTH_ERROR_MESSAGES.includes(error.response?.data.message)) {
           resetUser();
           goToLanding();
         }

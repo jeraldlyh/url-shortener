@@ -71,3 +71,5 @@ export const DEVICE_WIDTHS = {
   TABLET: 768,
   DESKTOP: 1024,
 };
+
+export const AUTH_ERROR_MESSAGES = ['Missing token', 'Invalid token'];

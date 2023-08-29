@@ -49,7 +49,7 @@ cd ../backend && npm i
 
 ### Running the Application
 
-1. Run both frontend and backend API sever using `docker-compose` in the project's root directory
+Run both frontend and backend API sever using `docker-compose` in the project's root directory
 
 ```bash
 cd url-shortener
@@ -66,7 +66,7 @@ docker compose up
 | `AUTH_SECRET`            | JWT secret key                  |
 | `AUTH_SALT_ROUNDS`       | Cost refactor to calculate hash |
 
-2. Access the application by opening your web browser and navigating to `http://localhost:3000`
+Access the application by opening your web browser and navigating to `http://localhost:3000`
 
 ### Testing the Application
 
@@ -101,7 +101,7 @@ The wireframe of the project can be found [here](https://www.figma.com/file/f9iT
 
 ### Styling
 
-The frontend application is designed with a unique and modern look. Users are given the option to toggle between light and dark theme. It is also fully responsive, ensuring a great user experience on different devices.
+Experience modern aesthetics with customizable themes. Toggle between a dark theme and the captivating dracula theme. The application is designed to be fully responsive, ensuring seamless usability across devices.
 
 ### QR Code Generation
 
@@ -109,7 +109,15 @@ For added convenience, the application allows you to generate QR codes for your 
 
 ## Contribution
 
-We welcome contributions to enhance the LinkNow - Tiny URLs Big Impact platform. Please follow our guidelines for contributing and adhere to the code of conduct.
+We welcome contributions to enhance the LinkNow platform. Whether you're a developer, designer, or community advocate, your contributions are valuable in making neighborhoods safer and more connected.
+
+**Bug Fixes**: Help us identify and resolve bugs to improve user experience.
+
+**Feature Enhancements**: Add new features that contribute to community engagement and safety.
+
+**Documentation**: Improve existing documentation or create guides for newcomers.
+
+**Feedback**: Share your ideas and suggestions to shape the platform's future.
 
 ## License
 
