@@ -317,7 +317,7 @@ export const Dashboard = () => {
             <AiFillPlusCircle />
           </button>
         </div>
-        <div className="h-full w-full overflow-y-scroll">
+        <div className="h-full w-full">
           <table className="w-full">
             <thead>{renderTableHeader()}</thead>
             <tbody className="overflow-y-scroll">{renderTableBody()}</tbody>
