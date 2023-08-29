@@ -30,6 +30,7 @@ export const useAuth = () => {
   /* -------------------------------------------------------------------------- */
   const validateIsUserLoggedIn = async (): Promise<void> => {
     try {
+      setIsLoading(true);
       const isPathAllowed = WHITELISTED_ROUTES.has(pathname);
       const isLoggedIn = await AuthService.validateUserAuth();
 
@@ -50,9 +51,9 @@ export const useAuth = () => {
           goToLanding();
         }
       }
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   const resetUser = (): void => {
