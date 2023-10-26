@@ -1,6 +1,7 @@
 'use client';
 import { Transition } from '@headlessui/react';
 import Lottie from 'lottie-react';
+import { useRouter } from 'next/navigation';
 import { Fragment, useEffect, useState } from 'react';
 import urlAnimation from '../../public/urlAnimation.json';
 import { useAuth } from '../hooks';
@@ -14,6 +15,7 @@ export const LoadingProvider = ({ children }: IProps) => {
   /*                                    STATE                                   */
   /* -------------------------------------------------------------------------- */
   const auth = useAuth();
+  const router = useRouter();
   const [showAnimation, setShowAnimation] = useState<boolean>(true);
 
   useEffect(() => {
@@ -25,6 +27,10 @@ export const LoadingProvider = ({ children }: IProps) => {
       }, 1500);
 
       return () => clearTimeout(timeoutId);
+    }
+
+    if (!auth.getAccessToken()) {
+      router.push('/signIn');
     }
   }, [auth.isLoading]);
 

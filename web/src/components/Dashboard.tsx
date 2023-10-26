@@ -5,6 +5,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { useRouter } from 'next/navigation';
 import { Fragment, useEffect, useMemo, useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import {
@@ -41,9 +42,9 @@ export const Dashboard = () => {
   const [copiedUrls, setCopiedUrls] = useState<Set<number>>(new Set());
   const [viewQrCode, setViewQrCode] = useState<IQrCode>(DEFAULT_QR_CODE);
   const [deleteRedirectHash, setDeleteRedirectHash] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const isDesktop = useMediaQuery({ minWidth: DEVICE_WIDTHS.DESKTOP });
   const columns = useMemo<ColumnDef<IUrl>[]>(() => [], []);
+  const router = useRouter();
 
   const data = urls as IUrl[];
   const table = useReactTable({
@@ -76,10 +77,12 @@ export const Dashboard = () => {
   /*                              HANDLER FUNCTIONS                             */
   /* -------------------------------------------------------------------------- */
   const fetchUrls = async (): Promise<void> => {
-    setIsLoading(true);
-    const urls = await UrlService.getAllUrls();
-    setUrls(urls);
-    setIsLoading(false);
+    try {
+      const urls = await UrlService.getAllUrls();
+      setUrls(urls);
+    } catch (error) {
+      router.push('/signIn');
+    }
   };
 
   const handleOpenModal = (id: keyof typeof MODAL_IDS): void => {

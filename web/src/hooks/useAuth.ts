@@ -5,7 +5,6 @@ import toast from 'react-hot-toast';
 import {
   AUTH_ERROR_MESSAGES,
   CLIENT_ROUTES,
-  IUser,
   WHITELISTED_ROUTES,
 } from '../common';
 import { AuthService } from '../services';
@@ -15,8 +14,6 @@ export const useAuth = () => {
   /* -------------------------------------------------------------------------- */
   /*                                   STATES                                   */
   /* -------------------------------------------------------------------------- */
-  const DEFAULT_USER = { username: '' };
-  const [user, setUser] = useState<IUser>(DEFAULT_USER);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();
   const pathname = usePathname();
@@ -38,7 +35,7 @@ export const useAuth = () => {
         if (isLoggedIn) {
           goToDashboard();
         } else {
-          resetUser();
+          resetAccessToken();
           goToLanding();
         }
       } else if (pathname !== CLIENT_ROUTES.NOT_FOUND) {
@@ -47,7 +44,7 @@ export const useAuth = () => {
     } catch (error) {
       if (error instanceof AxiosError) {
         if (AUTH_ERROR_MESSAGES.includes(error.response?.data.message)) {
-          resetUser();
+          resetAccessToken();
           goToLanding();
         }
       }
@@ -56,8 +53,12 @@ export const useAuth = () => {
     }
   };
 
-  const resetUser = (): void => {
-    setUser(DEFAULT_USER);
+  const getAccessToken = (): string => {
+    return localStorage.getItem('accessToken') || '';
+  };
+
+  const resetAccessToken = (): void => {
+    localStorage.setItem('accessToken', '');
   };
 
   const goToLanding = (): void => {
@@ -74,7 +75,7 @@ export const useAuth = () => {
     await toast.promise(AuthService.signIn(username, password), {
       loading: 'Attempting to login',
       success: (data) => {
-        setUser({ username: data });
+        localStorage.setItem('accessToken', data);
 
         return 'Logged in';
       },
@@ -93,8 +94,7 @@ export const useAuth = () => {
     await toast.promise(AuthService.signUp(username, password), {
       loading: 'Attempting to sign up',
       success: (data) => {
-        setUser({ username: data });
-        console.log('ok', data);
+        localStorage.setItem('accessToken', data);
 
         return 'Signed up & logged in';
       },
@@ -111,11 +111,15 @@ export const useAuth = () => {
   const signOut = async (): Promise<void> => {
     await toast.promise(AuthService.signOut(), {
       loading: 'Attempting to logout',
-      success: 'Logged out',
+      success: () => {
+        resetAccessToken();
+
+        return 'Logged out';
+      },
       error: (e) => Utils.capitalize(e.response.data.message.toString()),
     });
     goToLanding();
   };
 
-  return { user, signIn, signUp, signOut, isLoading };
+  return { getAccessToken, signIn, signUp, signOut, isLoading };
 };

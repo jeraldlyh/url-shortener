@@ -18,8 +18,8 @@ export class AuthController {
   ): Promise<string> {
     const token = await this.authService.createAccount(account);
 
-    response.cookie('accessToken', token, { httpOnly: true });
-    return account.username;
+    response.cookie('accessToken', token);
+    return token;
   }
 
   @Post('/signIn')
@@ -30,15 +30,15 @@ export class AuthController {
   ): Promise<string> {
     const token = await this.authService.validateUser(account);
 
-    response.cookie('accessToken', token, { httpOnly: true });
-    return account.username;
+    response.cookie('accessToken', token);
+    return token;
   }
 
   @Post('/signOut')
   async signOut(
     @Response({ passthrough: true }) response: Partial<IResponse>,
   ): Promise<void> {
-    response.clearCookie('accessToken', { httpOnly: true });
+    response.clearCookie('accessToken');
   }
 
   @Post('/validate')

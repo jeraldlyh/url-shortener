@@ -30,10 +30,6 @@ export interface IBaseModalProps extends ICallbacks {
   submitText: string;
 }
 
-export interface IUser {
-  username: string | null;
-}
-
 export interface IDownload {
   option: 'PNG' | 'SVG';
   description: string;
